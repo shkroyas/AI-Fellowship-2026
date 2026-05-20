@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  postgres_db:
+    image: postgres:16
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      # Reference the common seed.sql script from Week 2
+      - ../../Week 2/app/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+      # Named volume to persist data locally
+      - postgres_data_w3:/var/lib/postgresql/data
+
+volumes:
+  postgres_data_w3:

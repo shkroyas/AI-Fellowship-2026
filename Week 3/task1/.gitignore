@@ -1,0 +1,21 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Sensitive database credentials
+.env
+
+# Python byte-code and cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Exclude markdown and PDF documentation files from GitHub
+*.md
+*.pdf
+
+# Operating System files
+.DS_Store
+Thumbs.db
