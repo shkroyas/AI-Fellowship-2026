@@ -18,6 +18,7 @@ __pycache__/
 # Markdown/PDF local exports (if compiled)
 *.pdf
 *.md
+screenshots/
 
 # Operating System files
 .DS_Store
