@@ -12,8 +12,8 @@ services:
       # Map container port 5432 to host port 5433 to avoid port collisions on host 5432
       - "5433:5432"
     volumes:
-      # Mount the classicmodels schema seed script relative from Week 2
-      - ../../Week 2/app/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+      # Mount the classicmodels schema + seed data script from the local sql directory
+      - ./sql/seed.sql:/docker-entrypoint-initdb.d/seed.sql
       # Named volume for Postgres database persistence
       - postgres_data_t3:/var/lib/postgresql/data
     networks:
@@ -32,7 +32,7 @@ services:
       - DB_NAME=${DB_NAME:-classicmodels}
       - DB_USER=${DB_USER:-myuser}
       - DB_PASSWORD=${DB_PASSWORD:-mypassword}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GEMINI_API_KEYS=${GEMINI_API_KEYS}
     depends_on:
       - postgres_db
     networks:

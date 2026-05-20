@@ -40,10 +40,11 @@ def run_evaluation():
     print("   TEXT-TO-SQL PIPELINE EVALUATION HARNESS   ")
     print("=" * 100)
     
-    # Check for OPENAI_API_KEY
-    if not os.getenv("OPENAI_API_KEY"):
-        print("Error: OPENAI_API_KEY is not defined in the environment or .env file.")
-        print("Please configure your API key before running evaluations.")
+    # Check for Gemini API Keys
+    has_keys = os.getenv("GEMINI_API_KEYS") or os.getenv("GEMINI_API_KEY") or os.getenv("API_KEY")
+    if not has_keys:
+        print("Error: No Gemini API keys found. Please configure GEMINI_API_KEYS in your environment or .env file.")
+        print("Please configure your API keys before running evaluations.")
         sys.exit(1)
         
     pipeline = TextToSQLPipeline()

@@ -19,8 +19,12 @@ class DatabaseConnection:
 
     def _get_connection(self):
         """Helper to establish and return a new psycopg2 connection."""
-        if self.database_url:
-            return psycopg2.connect(self.database_url)
+        url = self.database_url
+        if url:
+            # If running in Docker (e.g. db_host is postgres_db) but URL has localhost/127.0.0.1, adapt it!
+            if self.db_host not in ["localhost", "127.0.0.1", "::1"]:
+                url = url.replace("@localhost", f"@{self.db_host}").replace("@127.0.0.1", f"@{self.db_host}").replace("@[::1]", f"@{self.db_host}")
+            return psycopg2.connect(url)
         else:
             return psycopg2.connect(
                 host=self.db_host,
