@@ -1,0 +1,24 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Sensitive credentials
+.env
+
+# Execution log files
+logs/query_logs.json
+
+# Python cache & compiles
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Markdown/PDF local exports (if compiled)
+*.pdf
+*.md
+
+# Operating System files
+.DS_Store
+Thumbs.db

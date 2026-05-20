@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres_db:
+    image: postgres:16
+    container_name: postgres_db_t3
+    environment:
+      POSTGRES_USER: ${DB_USER:-myuser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-mypassword}
+      POSTGRES_DB: ${DB_NAME:-classicmodels}
+    ports:
+      # Map container port 5432 to host port 5433 to avoid port collisions on host 5432
+      - "5433:5432"
+    volumes:
+      # Mount the classicmodels schema seed script relative from Week 2
+      - ../../Week 2/app/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+      # Named volume for Postgres database persistence
+      - postgres_data_t3:/var/lib/postgresql/data
+    networks:
+      - text2sql_network
+
+  streamlit_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: streamlit_app_t3
+    ports:
+      - "8501:8501"
+    environment:
+      - DB_HOST=postgres_db
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-classicmodels}
+      - DB_USER=${DB_USER:-myuser}
+      - DB_PASSWORD=${DB_PASSWORD:-mypassword}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - postgres_db
+    networks:
+      - text2sql_network
+
+volumes:
+  postgres_data_t3:
+
+networks:
+  text2sql_network:
+    driver: bridge
