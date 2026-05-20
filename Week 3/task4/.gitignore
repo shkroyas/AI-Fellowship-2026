@@ -1,0 +1,21 @@
+# Local python virtual environment
+.venv/
+venv/
+ENV/
+
+# Secret local configurations
+.env
+
+# Pycache compiles & outputs
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Document exports (if compiled locally)
+*.pdf
+*.md
+
+# OS specific files
+.DS_Store
+Thumbs.db
