@@ -1,0 +1,402 @@
+[
+  {
+    "question": "List all products",
+    "intent": "List all products",
+    "tables": "products",
+    "columns": "productCode, productName, productLine, productScale, productVendor, productDescription, quantityInStock, buyPrice, MSRP",
+    "filters": "None",
+    "joins": "None"
+  },
+  {
+    "question": "Get all customers",
+    "intent": "List all customers",
+    "tables": "customers",
+    "columns": "customerNumber, customerName, contactLastName, contactFirstName, phone, addressLine1, addressLine2, city, state, postalCode, country, salesRepEmployeeNumber, creditLimit",
+    "filters": "None",
+    "joins": "None"
+  },
+  {
+    "question": "Show all orders",
+    "intent": "List all orders",
+    "tables": "orders",
+    "columns": "orderNumber, orderDate, requiredDate, shippedDate, status, comments, customerNumber",
+    "filters": "None",
+    "joins": "None"
+  },
+  {
+    "question": "List all employees",
+    "intent": "List all employees",
+    "tables": "employees",
+    "columns": "employeeNumber, lastName, firstName, extension, email, officeCode, reportsTo, jobTitle",
+    "filters": "None",
+    "joins": "None"
+  },
+  {
+    "question": "Get all offices",
+    "intent": "Get all offices",
+    "tables": "offices",
+    "columns": "officeCode, city, phone, addressLine1, addressLine2, state, country, postalCode, territory",
+    "filters": "None",
+    "joins": "None"
+  },
+  {
+    "question": "Show all product lines",
+    "intent": "List all product lines",
+    "tables": "productlines",
+    "columns": "productLine",
+    "filters": "None",
+    "joins": "None"
+  },
+  {
+    "question": "List all payments",
+    "intent": "List all payments",
+    "tables": "payments",
+    "columns": "customerNumber, checkNumber, paymentDate, amount",
+    "filters": "None",
+    "joins": "None"
+  },
+  {
+    "question": "Get product names and prices",
+    "intent": "Get product names and their prices",
+    "tables": "products",
+    "columns": "productName, buyPrice",
+    "filters": "None",
+    "joins": "None"
+  },
+  {
+    "question": "Get customer names and cities",
+    "intent": "List customer names and their cities",
+    "tables": "customers",
+    "columns": "customerName, city",
+    "filters": "None",
+    "joins": "None"
+  },
+  {
+    "question": "List employee first and last names",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Get all order dates",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Show product vendor list",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Get all product codes",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "List all countries from offices",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Show all order statuses",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Get all payment amounts",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "List all job titles",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Get customer phone numbers",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Show product MSRP values",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "List order numbers",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Get orders with customer names",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Get employees with office city",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Get payments with customer names",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Get order details with product names",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Get products with product line description",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Get customers with sales rep names",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Get orders with customer city",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Get employees and their manager",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Get orderdetails with product vendor",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Get payments with customer country",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Count customers per country",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Total payments per customer",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Number of orders per status",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Products per product line",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Employees per office",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Total stock per product vendor",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Average buy price per product line",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Orders per customer",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Max MSRP per product line",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Min buy price per vendor",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Total number of customers",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Total number of products",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Total revenue from payments",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Average product price",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Max payment amount",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Min payment amount",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Count total orders",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Total quantity in stock",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Average MSRP",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  },
+  {
+    "question": "Number of employees",
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
+  }
+]

@@ -1,0 +1,51 @@
+question,intent,tables,columns,filters,joins
+List all products,List all products,products,"productCode, productName, productLine, productScale, productVendor, productDescription, quantityInStock, buyPrice, MSRP",None,None
+Get all customers,List all customers,customers,"customerNumber, customerName, contactLastName, contactFirstName, phone, addressLine1, addressLine2, city, state, postalCode, country, salesRepEmployeeNumber, creditLimit",None,None
+Show all orders,List all orders,orders,"orderNumber, orderDate, requiredDate, shippedDate, status, comments, customerNumber",None,None
+List all employees,List all employees,employees,"employeeNumber, lastName, firstName, extension, email, officeCode, reportsTo, jobTitle",None,None
+Get all offices,Get all offices,offices,"officeCode, city, phone, addressLine1, addressLine2, state, country, postalCode, territory",None,None
+Show all product lines,List all product lines,productlines,productLine,None,None
+List all payments,List all payments,payments,"customerNumber, checkNumber, paymentDate, amount",None,None
+Get product names and prices,Get product names and their prices,products,"productName, buyPrice",None,None
+Get customer names and cities,List customer names and their cities,customers,"customerName, city",None,None
+List employee first and last names,ERROR,,,,
+Get all order dates,ERROR,,,,
+Show product vendor list,ERROR,,,,
+Get all product codes,ERROR,,,,
+List all countries from offices,ERROR,,,,
+Show all order statuses,ERROR,,,,
+Get all payment amounts,ERROR,,,,
+List all job titles,ERROR,,,,
+Get customer phone numbers,ERROR,,,,
+Show product MSRP values,ERROR,,,,
+List order numbers,ERROR,,,,
+Get orders with customer names,ERROR,,,,
+Get employees with office city,ERROR,,,,
+Get payments with customer names,ERROR,,,,
+Get order details with product names,ERROR,,,,
+Get products with product line description,ERROR,,,,
+Get customers with sales rep names,ERROR,,,,
+Get orders with customer city,ERROR,,,,
+Get employees and their manager,ERROR,,,,
+Get orderdetails with product vendor,ERROR,,,,
+Get payments with customer country,ERROR,,,,
+Count customers per country,ERROR,,,,
+Total payments per customer,ERROR,,,,
+Number of orders per status,ERROR,,,,
+Products per product line,ERROR,,,,
+Employees per office,ERROR,,,,
+Total stock per product vendor,ERROR,,,,
+Average buy price per product line,ERROR,,,,
+Orders per customer,ERROR,,,,
+Max MSRP per product line,ERROR,,,,
+Min buy price per vendor,ERROR,,,,
+Total number of customers,ERROR,,,,
+Total number of products,ERROR,,,,
+Total revenue from payments,ERROR,,,,
+Average product price,ERROR,,,,
+Max payment amount,ERROR,,,,
+Min payment amount,ERROR,,,,
+Count total orders,ERROR,,,,
+Total quantity in stock,ERROR,,,,
+Average MSRP,ERROR,,,,
+Number of employees,ERROR,,,,
