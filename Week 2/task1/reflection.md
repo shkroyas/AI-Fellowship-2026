@@ -1,0 +1,1 @@
+Using `.env` keeps database credentials out of source control, which is safer and easier to manage across environments. PostgreSQL is treated as a separate backing service, so the application code does not hard-code infrastructure details. Docker also keeps local and deployment environments closer together by using the same image and startup process.

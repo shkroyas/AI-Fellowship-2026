@@ -5,7 +5,7 @@ services:
     image: postgres:16
     container_name: postgres_database
     env_file:
-      - .env
+      - ../.env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -13,7 +13,7 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
-      - ./app/seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro
+      - ../app/seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]

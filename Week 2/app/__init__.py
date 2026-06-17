@@ -1,0 +1,1 @@
+"""Application package for the Week 2 assignment."""

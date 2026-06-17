@@ -1,23 +1,35 @@
-# Environments
+# Task 1 - Docker and PostgreSQL
 .env
-.venv
+postgres_data/
+*.log
+log_files_task1.txt
+
+# Task 2 - FastAPI, ORM, and local Python environments
+.venv/
 env/
 venv/
 ENV/
-
-# Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
 
-# IDEs
+# Task 3 - Concurrency, logs, and generated outputs
+log_files_task2.txt
+log_files_task3.txt
+app.log
+
+# Editor and OS files
 .vscode/
 .idea/
-
-# OS generated files
 .DS_Store
 Thumbs.db
-
-# Docker Data
-postgres_data/
+assignment/
+/zip file
