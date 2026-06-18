@@ -9,7 +9,7 @@
   },
   {
     "question": "Get all customers",
-    "intent": "List all customers",
+    "intent": "Get all customers",
     "tables": "customers",
     "columns": "customerNumber, customerName, contactLastName, contactFirstName, phone, addressLine1, addressLine2, city, state, postalCode, country, salesRepEmployeeNumber, creditLimit",
     "filters": "None",
@@ -33,7 +33,7 @@
   },
   {
     "question": "Get all offices",
-    "intent": "Get all offices",
+    "intent": "List all offices",
     "tables": "offices",
     "columns": "officeCode, city, phone, addressLine1, addressLine2, state, country, postalCode, territory",
     "filters": "None",
@@ -65,11 +65,11 @@
   },
   {
     "question": "Get customer names and cities",
-    "intent": "List customer names and their cities",
-    "tables": "customers",
-    "columns": "customerName, city",
-    "filters": "None",
-    "joins": "None"
+    "intent": "ERROR",
+    "tables": "",
+    "columns": "",
+    "filters": "",
+    "joins": ""
   },
   {
     "question": "List employee first and last names",
@@ -121,19 +121,19 @@
   },
   {
     "question": "Get all payment amounts",
-    "intent": "ERROR",
-    "tables": "",
-    "columns": "",
-    "filters": "",
-    "joins": ""
+    "intent": "Get all payment amounts",
+    "tables": "payments",
+    "columns": "amount",
+    "filters": "None",
+    "joins": "None"
   },
   {
     "question": "List all job titles",
-    "intent": "ERROR",
-    "tables": "",
-    "columns": "",
-    "filters": "",
-    "joins": ""
+    "intent": "List all distinct job titles",
+    "tables": "employees",
+    "columns": "jobTitle",
+    "filters": "None",
+    "joins": "None"
   },
   {
     "question": "Get customer phone numbers",
@@ -217,19 +217,19 @@
   },
   {
     "question": "Get employees and their manager",
-    "intent": "ERROR",
-    "tables": "",
-    "columns": "",
-    "filters": "",
-    "joins": ""
+    "intent": "List employees and their managers",
+    "tables": "employees",
+    "columns": "T1.firstName, T1.lastName, T2.firstName, T2.lastName",
+    "filters": "None",
+    "joins": "Join employees as T1 and employees as T2 on T1.reportsTo = T2.employeeNumber"
   },
   {
     "question": "Get orderdetails with product vendor",
-    "intent": "ERROR",
-    "tables": "",
-    "columns": "",
-    "filters": "",
-    "joins": ""
+    "intent": "Retrieve order details with product vendor information",
+    "tables": "orderdetails, products",
+    "columns": "orderdetails.*, products.productVendor",
+    "filters": "None",
+    "joins": "orderdetails.productCode = products.productCode"
   },
   {
     "question": "Get payments with customer country",

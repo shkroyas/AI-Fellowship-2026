@@ -13,23 +13,34 @@ class ValidatorAgent:
         Returns:
             tuple: (is_valid: bool, error_message_if_any: str)
         """
-        if not sql_query:
+        if not sql_query or not sql_query.strip():
             return False, "SQL query is empty or null."
 
-        # Clean query comments and trailing lines to isolate SQL tokens
-        cleaned_no_comments = re.sub(r'(--.*?\n)|(/\*.*?\*/)', '', sql_query, flags=re.DOTALL).strip().upper()
+        cleaned_no_comments = re.sub(r'(--.*?$)|(/\*.*?\*/)', '', sql_query, flags=re.MULTILINE | re.DOTALL)
+        normalized = re.sub(r'\s+', ' ', cleaned_no_comments).strip()
+        upper_query = normalized.upper()
+
+        if upper_query.count(';') > 1:
+            return False, "Security Violation: Multiple SQL statements are not allowed."
+
+        statement = normalized.rstrip(';').strip()
+        upper_statement = statement.upper()
         
-        # Rule 1: Query must start with read-only operations SELECT or WITH
-        if not cleaned_no_comments.startswith("SELECT") and not cleaned_no_comments.startswith("WITH"):
+        if not upper_statement.startswith("SELECT") and not upper_statement.startswith("WITH"):
             return False, "Security Violation: Statement must be a read-only SELECT or WITH statement."
 
-        # Rule 2: Block DML and DDL commands using regex word boundaries (\b)
-        blocked_keywords = ["DELETE", "DROP", "UPDATE", "INSERT", "ALTER", "TRUNCATE"]
+        blocked_keywords = ["DELETE", "DROP", "UPDATE", "INSERT", "ALTER", "TRUNCATE", "CREATE", "COMMENT", "GRANT", "REVOKE", "VACUUM", "COPY", "CALL", "EXEC", "DO"]
         pattern = re.compile(r'\b(' + '|'.join(blocked_keywords) + r')\b', re.IGNORECASE)
         
-        match = pattern.search(sql_query)
+        match = pattern.search(statement)
         if match:
             violated_keyword = match.group(0).upper()
             return False, f"Security Violation: Blocked modification command '{violated_keyword}' detected."
+
+        if re.search(r'\bSELECT\s+INTO\b', upper_statement):
+            return False, "Security Violation: SELECT INTO is not allowed because it creates a table."
+
+        if re.search(r'\bFOR\s+UPDATE\b|\bFOR\s+SHARE\b', upper_statement):
+            return False, "Security Violation: Row-locking clauses are not allowed in this read-only workflow."
 
         return True, None

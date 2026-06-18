@@ -11,6 +11,11 @@ services:
     ports:
       # Map container port 5432 to host port 5434 to avoid port collisions on host 5432/5433
       - "5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-myuser} -d ${DB_NAME:-classicmodels}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     volumes:
       # Mount the classicmodels seed script local to task4
       - ./sql/seed.sql:/docker-entrypoint-initdb.d/seed.sql
@@ -32,9 +37,14 @@ services:
       - DB_NAME=${DB_NAME:-classicmodels}
       - DB_USER=${DB_USER:-myuser}
       - DB_PASSWORD=${DB_PASSWORD:-mypassword}
-      - API_KEY=${API_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_API_KEYS=${GEMINI_API_KEYS}
+      - LLM_PROVIDER=${LLM_PROVIDER}
     depends_on:
-      - postgres_db
+      postgres_db:
+        condition: service_healthy
     networks:
       - agent_network
 

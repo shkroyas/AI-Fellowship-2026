@@ -1,39 +1,42 @@
+from __future__ import annotations
+
+from contextlib import contextmanager
+
 import sqlalchemy as sa
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import declarative_base, sessionmaker
+
 from config import Config
 
-# Dynamic connection string resolution to prevent Docker vs Host network conflicts
-url = Config.DATABASE_URL
 
-if url:
-    # If running inside Docker (DB_HOST is postgres_db) but url has localhost/127.0.0.1, resolve it!
-    if Config.DB_HOST not in ["localhost", "127.0.0.1", "::1"]:
-        url = url.replace("@localhost", f"@{Config.DB_HOST}").replace("@127.0.0.1", f"@{Config.DB_HOST}").replace("@[::1]", f"@{Config.DB_HOST}")
-else:
-    # Build standard connection string
-    url = f"postgresql://{Config.DB_USER}:{sa.util.preloaded.quote_plus(Config.DB_PASSWORD) if hasattr(sa.util, 'preloaded') else Config.DB_PASSWORD}@{sa.util.preloaded.quote_plus(Config.DB_HOST) if hasattr(sa.util, 'preloaded') else Config.DB_HOST}:{Config.DB_PORT}/{Config.DB_NAME}"
-    
-    # Simple fallback without quote_plus if needed
-    url = f"postgresql://{Config.DB_USER}:{Config.DB_PASSWORD}@{Config.DB_HOST}:{Config.DB_PORT}/{Config.DB_NAME}"
+DATABASE_URL = Config.build_database_url()
 
-# Configure standard SQLAlchemy Engine
 engine = sa.create_engine(
-    url,
-    pool_pre_ping=True,  # Automatically recycles stale connections
+    DATABASE_URL,
+    pool_pre_ping=True,
+    pool_recycle=1800,
     pool_size=5,
-    max_overflow=10
+    max_overflow=10,
+    future=True,
 )
 
-# Standard session factory
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Base model metadata
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, future=True)
 Base = declarative_base()
 
+
+@contextmanager
 def get_db_session():
-    """Dependency generator to retrieve clean database sessions."""
-    db = SessionLocal()
+    """Yield a SQLAlchemy session and guarantee cleanup."""
+    session = SessionLocal()
     try:
-        yield db
+        yield session
     finally:
-        db.close()
+        session.close()
+
+
+def ping_database() -> bool:
+    try:
+        with engine.connect() as connection:
+            connection.execute(sa.text("SELECT 1"))
+        return True
+    except Exception:
+        return False

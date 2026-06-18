@@ -1,32 +1,64 @@
-import sys
+from __future__ import annotations
+
+import argparse
+import json
+
+from fastapi import FastAPI
+from pydantic import BaseModel, Field
+
+from db import ping_database
 from graph.workflow import TextToSQLWorkflow
 
-def run_programmatic_workflow(question: str):
-    """Executes the complete Agentic Text-to-SQL Workflow for a given query."""
-    print("=" * 90)
-    print("🚀  TRIGGERING AGENTIC TEXT-TO-SQL STATE WORKFLOW")
-    print("=" * 90)
-    print(f"User Input Question: \"{question}\"\n")
-    
+
+class QueryRequest(BaseModel):
+    question: str = Field(min_length=1)
+
+
+app = FastAPI(title="Agentic Text-to-SQL API", version="1.0.0")
+
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok", "database": ping_database()}
+
+
+@app.post("/query")
+def run_query(request: QueryRequest):
     workflow = TextToSQLWorkflow()
-    final_state = workflow.run(question)
-    
-    print("\n" + "-" * 40 + " EXECUTION STATE DETAILS " + "-" * 40)
-    print(f"1. Strategic Plan:\n{final_state.plan}\n")
-    print(f"2. Final Generated SQL:\n   {final_state.generated_sql}\n")
-    print(f"3. Security Validation Passed: {final_state.is_valid_sql}")
-    print(f"4. Self-Correction Cures Triggered: {final_state.retry_count > 0}")
-    print(f"5. Total Result Records Retrieved: {len(final_state.execution_results) if final_state.execution_results else 0}")
-    
-    if final_state.errors:
-        print(f"6. Captures Exceptions: {final_state.errors}")
-        
-    print("\n" + "=" * 38 + " FINAL NL SUMMARY ANSWER " + "=" * 38)
-    print(final_state.final_answer)
-    print("=" * 90 + "\n")
+    state = workflow.run(request.question.strip())
+    return {
+        "user_query": state.user_query,
+        "plan": state.plan,
+        "generated_sql": state.generated_sql,
+        "is_valid_sql": state.is_valid_sql,
+        "execution_results": state.execution_results,
+        "final_answer": state.final_answer,
+        "errors": state.errors,
+        "retry_count": state.retry_count,
+    }
+
+
+def run_programmatic_workflow(question: str):
+    workflow = TextToSQLWorkflow()
+    state = workflow.run(question)
+    print(json.dumps({
+        "question": state.user_query,
+        "plan": state.plan,
+        "generated_sql": state.generated_sql,
+        "is_valid_sql": state.is_valid_sql,
+        "retry_count": state.retry_count,
+        "errors": state.errors,
+        "rows": len(state.execution_results),
+        "final_answer": state.final_answer,
+    }, indent=2, default=str))
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Run the agentic Text-to-SQL workflow.")
+    parser.add_argument("question", nargs="?", default="How many customers are from the USA?")
+    args = parser.parse_args()
+    run_programmatic_workflow(args.question)
+
 
 if __name__ == "__main__":
-    # Retrieve user input from CLI args or run default benchmark question
-    default_q = "How many customers are from the USA?"
-    query = sys.argv[1] if len(sys.argv) > 1 else default_q
-    run_programmatic_workflow(query)
+    main()

@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
 import json
+from config import Config
 from graph.workflow import TextToSQLWorkflow
-from db import engine
+from db import engine, ping_database
 
 # ---------------------------------------------------------
 # Page Configurations & Design Palette
@@ -60,7 +61,7 @@ st.markdown("""
         background: #0D0E15 !important;
     }
     </style>
-""", unsafe_allow_value=True)
+""", unsafe_allow_html=True)
 
 # Initialize Session Counters
 if "total_runs" not in st.session_state:
@@ -78,10 +79,12 @@ st.sidebar.title("⚙️ Engine Control Room")
 # Database Connection Check
 st.sidebar.subheader("🔌 Database Diagnostics")
 try:
-    with engine.connect() as conn:
-        st.sidebar.markdown('<span class="status-success">PostgreSQL Connected (Port 5434)</span>', unsafe_allow_value=True)
+    if ping_database():
+        st.sidebar.markdown(f'<span class="status-success">PostgreSQL Connected ({Config.DB_HOST}:{Config.DB_PORT})</span>', unsafe_allow_html=True)
+    else:
+        raise RuntimeError("Database ping failed")
 except Exception as e:
-    st.sidebar.markdown(f'<span class="status-error">Disconnected: {str(e)[:40]}...</span>', unsafe_allow_value=True)
+    st.sidebar.markdown(f'<span class="status-error">Disconnected: {str(e)[:40]}...</span>', unsafe_allow_html=True)
 
 st.sidebar.write("---")
 
@@ -123,14 +126,14 @@ st.write("A production-grade Agentic SQL pipeline executing strict workflow rout
 
 # Text-area input form
 with st.container():
-    st.markdown('<div class="glass-card">', unsafe_allow_value=True)
+    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     input_text = st.text_input(
         "Ask a business intelligence question about the ClassicModels database:",
         value=selected_query if selected_query else "",
         placeholder="E.g., How many customers are from the USA?"
     )
     submit_button = st.button("🚀 Trigger Agent Workflow", use_container_width=True)
-    st.markdown('</div>', unsafe_allow_value=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 if submit_button and input_text.strip():
     st.session_state.total_runs += 1
@@ -176,9 +179,9 @@ if submit_button and input_text.strip():
                 # Node 3: Validator Agent Checks
                 with st.expander("🛡️ Step 3: Validator Agent Security Assessment", expanded=True):
                     if final_state.is_valid_sql:
-                        st.markdown('<span class="status-success">Query Passed. No destructive DML or SQL injection command keywords captured.</span>', unsafe_allow_value=True)
+                        st.markdown('<span class="status-success">Query passed validation and stayed read-only.</span>', unsafe_allow_html=True)
                     else:
-                        st.markdown(f'<span class="status-error">Validation Failed: {final_state.errors[0] if final_state.errors else "Invalid SELECT structure"}</span>', unsafe_allow_value=True)
+                        st.markdown(f'<span class="status-error">Validation Failed: {final_state.errors[0] if final_state.errors else "Invalid SELECT structure"}</span>', unsafe_allow_html=True)
                         
                 # Node 4: Self-Correction Node
                 with st.expander("🩹 Step 4: Self-Correction Repair Nodes (Feedback Loop)", expanded=True):

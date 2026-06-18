@@ -13,5 +13,4 @@ class ExecutorAgent:
         Returns:
             tuple: (columns_list, result_rows_as_dicts, error_message_if_any)
         """
-        # Outsource execution to optimized DB operational tools
         return execute_sql(sql_query)

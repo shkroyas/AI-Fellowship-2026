@@ -14,6 +14,8 @@ COPY requirements.txt .
 # Install necessary Python packages
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY .env.example .
+
 # Copy all local project source files into the container
 COPY . .
 

@@ -1,6 +1,9 @@
 streamlit==1.32.0
 google-generativeai==0.8.6
-sqlalchemy==2.0.27
-psycopg2-binary==2.9.9
+openai==1.59.7
+sqlalchemy==2.0.43
+psycopg[binary]==3.2.5
 python-dotenv==1.0.1
 pandas==2.2.1
+fastapi==0.115.6
+uvicorn[standard]==0.34.0

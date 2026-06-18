@@ -1,21 +1,21 @@
 question,intent,tables,columns,filters,joins
 List all products,List all products,products,"productCode, productName, productLine, productScale, productVendor, productDescription, quantityInStock, buyPrice, MSRP",None,None
-Get all customers,List all customers,customers,"customerNumber, customerName, contactLastName, contactFirstName, phone, addressLine1, addressLine2, city, state, postalCode, country, salesRepEmployeeNumber, creditLimit",None,None
+Get all customers,Get all customers,customers,"customerNumber, customerName, contactLastName, contactFirstName, phone, addressLine1, addressLine2, city, state, postalCode, country, salesRepEmployeeNumber, creditLimit",None,None
 Show all orders,List all orders,orders,"orderNumber, orderDate, requiredDate, shippedDate, status, comments, customerNumber",None,None
 List all employees,List all employees,employees,"employeeNumber, lastName, firstName, extension, email, officeCode, reportsTo, jobTitle",None,None
-Get all offices,Get all offices,offices,"officeCode, city, phone, addressLine1, addressLine2, state, country, postalCode, territory",None,None
+Get all offices,List all offices,offices,"officeCode, city, phone, addressLine1, addressLine2, state, country, postalCode, territory",None,None
 Show all product lines,List all product lines,productlines,productLine,None,None
 List all payments,List all payments,payments,"customerNumber, checkNumber, paymentDate, amount",None,None
 Get product names and prices,Get product names and their prices,products,"productName, buyPrice",None,None
-Get customer names and cities,List customer names and their cities,customers,"customerName, city",None,None
+Get customer names and cities,ERROR,,,,
 List employee first and last names,ERROR,,,,
 Get all order dates,ERROR,,,,
 Show product vendor list,ERROR,,,,
 Get all product codes,ERROR,,,,
 List all countries from offices,ERROR,,,,
 Show all order statuses,ERROR,,,,
-Get all payment amounts,ERROR,,,,
-List all job titles,ERROR,,,,
+Get all payment amounts,Get all payment amounts,payments,amount,None,None
+List all job titles,List all distinct job titles,employees,jobTitle,None,None
 Get customer phone numbers,ERROR,,,,
 Show product MSRP values,ERROR,,,,
 List order numbers,ERROR,,,,
@@ -26,8 +26,8 @@ Get order details with product names,ERROR,,,,
 Get products with product line description,ERROR,,,,
 Get customers with sales rep names,ERROR,,,,
 Get orders with customer city,ERROR,,,,
-Get employees and their manager,ERROR,,,,
-Get orderdetails with product vendor,ERROR,,,,
+Get employees and their manager,List employees and their managers,employees,"T1.firstName, T1.lastName, T2.firstName, T2.lastName",None,Join employees as T1 and employees as T2 on T1.reportsTo = T2.employeeNumber
+Get orderdetails with product vendor,Retrieve order details with product vendor information,"orderdetails, products","orderdetails.*, products.productVendor",None,orderdetails.productCode = products.productCode
 Get payments with customer country,ERROR,,,,
 Count customers per country,ERROR,,,,
 Total payments per customer,ERROR,,,,
