@@ -1,6 +1,6 @@
 # Task 2: Productionized AI Assistant
 
-This directory contains the production-ready implementation of the AI Assistant built in Task 1.
+This directory contains the production-ready implementation of the AI Assistant built in Task 1, specifically tailored to productionize the **NyayaSetu Gemma model** (Nepali Legal Assistant) that was fine-tuned in previous sessions.
 
 ## 🌟 Production Enhancements
 
