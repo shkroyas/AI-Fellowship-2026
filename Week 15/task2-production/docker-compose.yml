@@ -1,0 +1,95 @@
+# Docker Compose - Production AI Assistant
+# Complete deployment configuration for all services
+
+version: "3.9"
+
+services:
+  # ── AI Assistant Backend ──
+  backend:
+    build:
+      context: ..
+      dockerfile: task2-production/Dockerfile.backend
+    container_name: ai-assistant-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - LLM_PROVIDER=${LLM_PROVIDER:-gemini}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.0-flash}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
+      - VLLM_BASE_URL=${VLLM_BASE_URL:-http://vllm:8001/v1}
+      - VLLM_MODEL=${VLLM_MODEL:-mistralai/Mistral-7B-Instruct-v0.3}
+      - TEMPERATURE=${TEMPERATURE:-0.7}
+      - TOP_P=${TOP_P:-0.9}
+      - MAX_TOKENS=${MAX_TOKENS:-2048}
+      - CHROMA_PERSIST_DIR=/app/data/chroma_db
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-all-MiniLM-L6-v2}
+    volumes:
+      - chroma_data:/app/data/chroma_db
+      - sample_docs:/app/task1-ai-assistant/data/sample_docs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; r = httpx.get('http://localhost:8000/health'); r.raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - ai-network
+
+  # ── Streamlit Frontend ──
+  frontend:
+    build:
+      context: ..
+      dockerfile: task2-production/Dockerfile.frontend
+    container_name: ai-assistant-frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # ── Local vLLM Server (Optional) ──
+  # Uncomment to serve a local open-source model
+  # Requires NVIDIA GPU with sufficient VRAM
+  # vllm:
+  #   image: vllm/vllm-openai:latest
+  #   container_name: ai-assistant-vllm
+  #   ports:
+  #     - "8001:8001"
+  #   environment:
+  #     - MODEL_NAME=mistralai/Mistral-7B-Instruct-v0.3
+  #   command: >
+  #     --model mistralai/Mistral-7B-Instruct-v0.3
+  #     --port 8001
+  #     --max-model-len 4096
+  #     --gpu-memory-utilization 0.9
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 1
+  #             capabilities: [gpu]
+  #   volumes:
+  #     - model_cache:/root/.cache/huggingface
+  #   networks:
+  #     - ai-network
+
+volumes:
+  chroma_data:
+    driver: local
+  sample_docs:
+    driver: local
+  # model_cache:
+  #   driver: local
+
+networks:
+  ai-network:
+    driver: bridge
