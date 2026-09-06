@@ -124,10 +124,12 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+import os
+
 # ── Configuration ──
 BACKEND_URL = st.sidebar.text_input(
     "🔗 Backend URL",
-    value="http://localhost:8000",
+    value=os.environ.get("BACKEND_URL", "http://localhost:8000"),
     help="URL of the AI Assistant FastAPI backend",
 )
 
