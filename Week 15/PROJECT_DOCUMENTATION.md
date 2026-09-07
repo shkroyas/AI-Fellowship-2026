@@ -84,3 +84,4 @@ The production version simulates the deployment environment using Docker Compose
 ### Notes for the Evaluator
 - All environment variables (e.g., `GOOGLE_API_KEY`, `OPENAI_API_KEY`) must be populated in the `.env` files within each respective directory before running.
 - The transition from Task 1 to Task 2 demonstrates a clear evolution from a raw engineering prototype to a hardened, scalable, cloud-ready architecture.
+
