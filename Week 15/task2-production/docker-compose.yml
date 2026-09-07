@@ -13,18 +13,21 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - LLM_PROVIDER=${LLM_PROVIDER:-gemini}
+      - LLM_PROVIDER=${LLM_PROVIDER:-local_vllm}
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.0-flash}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-3.6-flash}
       - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
-      - VLLM_BASE_URL=${VLLM_BASE_URL:-http://vllm:8001/v1}
-      - VLLM_MODEL=${VLLM_MODEL:-unsloth/gemma-2b-it} # Note: Replace with your local NyayaSetu_Kaggle model path or HuggingFace repo
+      - VLLM_BASE_URL=http://vllm:8001/v1
+      - VLLM_MODEL=${VLLM_MODEL:-unsloth/gemma-2b-it}
       - TEMPERATURE=${TEMPERATURE:-0.7}
       - TOP_P=${TOP_P:-0.9}
-      - MAX_TOKENS=${MAX_TOKENS:-2048}
+      - MAX_TOKENS=${MAX_TOKENS:-300}
       - CHROMA_PERSIST_DIR=/app/data/chroma_db
       - EMBEDDING_MODEL=${EMBEDDING_MODEL:-all-MiniLM-L6-v2}
+    env_file:
+      - ../task1-ai-assistant/.env
     volumes:
       - chroma_data:/app/data/chroma_db
       - sample_docs:/app/task1-ai-assistant/data/sample_docs
@@ -58,37 +61,39 @@ services:
   # ── Local vLLM Server (Optional) ──
   # Uncomment to serve a local open-source model
   # Requires NVIDIA GPU with sufficient VRAM
-  # vllm:
-  #   image: vllm/vllm-openai:latest
-  #   container_name: ai-assistant-vllm
-  #   ports:
-  #     - "8001:8001"
-  #   environment:
-  #     - MODEL_NAME=mistralai/Mistral-7B-Instruct-v0.3
-  #   command: >
-  #     --model mistralai/Mistral-7B-Instruct-v0.3
-  #     --port 8001
-  #     --max-model-len 4096
-  #     --gpu-memory-utilization 0.9
-  #   deploy:
-  #     resources:
-  #       reservations:
-  #         devices:
-  #           - driver: nvidia
-  #             count: 1
-  #             capabilities: [gpu]
-  #   volumes:
-  #     - model_cache:/root/.cache/huggingface
-  #   networks:
-  #     - ai-network
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: ai-assistant-vllm
+    ports:
+      - "8001:8001"
+    environment:
+      - MODEL_NAME=unsloth/gemma-2b-it
+    command: >
+      --model unsloth/gemma-2b-it
+      --port 8001
+      --max-model-len 1024
+      --gpu-memory-utilization 0.92
+      --enforce-eager
+      --max-num-seqs 16
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    volumes:
+      - model_cache:/root/.cache/huggingface
+    networks:
+      - ai-network
 
 volumes:
   chroma_data:
     driver: local
   sample_docs:
     driver: local
-  # model_cache:
-  #   driver: local
+  model_cache:
+    driver: local
 
 networks:
   ai-network:

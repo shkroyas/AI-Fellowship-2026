@@ -61,11 +61,21 @@ class LocalVLLMProvider(LLMProvider):
         try:
             # Build messages
             vllm_messages = []
+            system_prompt = ""
             for msg in messages:
-                m = {"role": msg.role, "content": msg.content}
-                if msg.tool_call_id:
-                    m["tool_call_id"] = msg.tool_call_id
-                vllm_messages.append(m)
+                if msg.role == "system":
+                    system_prompt += msg.content + "\n\n"
+                else:
+                    m = {"role": msg.role, "content": msg.content}
+                    if msg.tool_call_id:
+                        m["tool_call_id"] = msg.tool_call_id
+                    vllm_messages.append(m)
+            
+            # Gemma models do not support the 'system' role, so we merge it into the first user message
+            if system_prompt and vllm_messages and vllm_messages[0]["role"] == "user":
+                vllm_messages[0]["content"] = system_prompt + vllm_messages[0]["content"]
+            elif system_prompt:
+                vllm_messages.insert(0, {"role": "user", "content": system_prompt})
 
             kwargs: dict[str, Any] = {
                 "model": self.model,
@@ -98,11 +108,11 @@ class LocalVLLMProvider(LLMProvider):
                     f"\n\nRespond ONLY with valid JSON matching this schema:\n"
                     f"{json.dumps(structured_output.schema_dict, indent=2)}"
                 )
-                if vllm_messages and vllm_messages[0]["role"] == "system":
-                    vllm_messages[0]["content"] += schema_instruction
+                if vllm_messages and vllm_messages[0]["role"] == "user":
+                    vllm_messages[0]["content"] = f"You are a helpful assistant. {schema_instruction}\n\n" + vllm_messages[0]["content"]
                 else:
                     vllm_messages.insert(0, {
-                        "role": "system",
+                        "role": "user",
                         "content": f"You are a helpful assistant. {schema_instruction}",
                     })
 

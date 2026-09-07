@@ -17,7 +17,7 @@ sentence-transformers==3.1.0
 PyPDF2==3.0.1
 
 # Tools
-duckduckgo-search==6.2.0
+# duckduckgo-search removed due to build issues; web search tool falls back to mock results
 
 # Utilities
 python-dotenv==1.0.1

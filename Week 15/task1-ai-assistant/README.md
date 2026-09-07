@@ -1,172 +1,64 @@
-# Task 1: AI Assistant (Applied AI)
+# AI Assistant Production Architecture (Week 15)
 
-A robust AI assistant utilizing modern LLM APIs and RAG (Retrieval-Augmented Generation) architectures.
+This repository contains the complete implementation for the Week 15 AI Fellowship Assignment. It is divided into two major tasks: **Task 1 (Core AI Assistant)** and **Task 2 (Production Hardening & Deployment)**.
 
-## 🏗️ Architecture
+## 🚀 Task 1: Core AI Assistant
+Task 1 focuses on building the foundational FastAPI backend. 
+- **LLM Integrations**: Dynamically supports Google Gemini, OpenAI GPT-4, and Local vLLM (`unsloth/gemma-2b-it`).
+- **Retrieval-Augmented Generation (RAG)**: Built-in vector database (ChromaDB) using `all-MiniLM-L6-v2` embeddings for document ingestion, chunking, and contextual retrieval.
+- **Tool Calling**: Agents have access to external tools like Web Search, Calculator, and Date/Time functions.
+- **Dynamic Prompting**: Configurable generation parameters (`temperature`, `top_p`, `max_tokens`) with prompt styles (creative, balanced, precise).
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        FastAPI Backend                          │
-│  ┌──────────┐  ┌──────────────┐  ┌──────────────────────────┐  │
-│  │  /chat    │  │ /chat/struct │  │  /documents/ingest       │  │
-│  │  /tools   │  │ /config      │  │  /documents/upload       │  │
-│  └────┬─────┘  └──────┬───────┘  └────────────┬─────────────┘  │
-│       │               │                        │                │
-│  ┌────▼───────────────▼────────────────────────▼─────────────┐  │
-│  │                  Request Router                            │  │
-│  └────┬──────────────┬────────────────────────┬──────────────┘  │
-│       │              │                        │                 │
-│  ┌────▼────┐   ┌─────▼──────┐          ┌──────▼──────────┐     │
-│  │   LLM   │   │    RAG     │          │  Tool Registry  │     │
-│  │Provider │   │  Pipeline  │          │  ┌───────────┐  │     │
-│  │ Layer   │   │            │          │  │Calculator │  │     │
-│  │         │   │ ┌────────┐ │          │  │Web Search │  │     │
-│  │┌───────┐│   │ │Ingester│ │          │  │DateTime   │  │     │
-│  ││Gemini ││   │ │Chunker │ │          │  └───────────┘  │     │
-│  ││OpenAI ││   │ │Embedder│ │          └─────────────────┘     │
-│  ││vLLM   ││   │ └───┬────┘ │                                  │
-│  │└───────┘│   │     │      │                                  │
-│  └─────────┘   │ ┌───▼────┐ │                                  │
-│                │ │ChromaDB│ │                                  │
-│                │ │(Vector)│ │                                  │
-│                │ └────────┘ │                                  │
-│                └────────────┘                                  │
-└─────────────────────────────────────────────────────────────────┘
-```
+## 🛡️ Task 2: Production Hardening
+Task 2 wraps the Task 1 backend in a robust, production-ready environment.
+- **Streamlit Frontend**: A professional, responsive UI that communicates seamlessly with the FastAPI backend over internal Docker networks.
+- **Resilience Middleware**: 
+  - Token Bucket Rate Limiting (429 errors for spam prevention).
+  - Exponential Backoff Retries (resilience against LLM API timeouts).
+  - LRU Caching (TTL-based response caching for identical queries).
+- **Failover Chain**: Automatic Fallback Manager (`Primary vLLM → Secondary Gemini → Tertiary OpenAI`).
+- **Container Orchestration**: Fully Dockerized using `docker-compose` to spin up the UI, Backend, and GPU-accelerated vLLM inference container simultaneously.
 
-## ✨ Features
+## ☁️ Deployment (AWS ECS Fargate)
+The stack is configured to deploy to AWS Elastic Container Service (ECS) using Serverless Fargate.
+- **Elastic Container Registry (ECR)**: Automated scripts to tag and push the `frontend` and `backend` images.
+- **Application Load Balancer (ALB)**: Routes public internet traffic directly to the containerized frontend.
+- **AWS Parameter Store**: Secures API Keys (`GOOGLE_API_KEY`, `OPENAI_API_KEY`) as encrypted secrets injected directly into the Fargate execution roles.
 
-### Core Functionality
-- **LLM Integration**: Supports Google Gemini, OpenAI, and local vLLM (Mistral/Llama)
-- **Prompt Engineering**: Configurable temperature, top_p, and multiple prompt styles
-- **Structured Output**: JSON schema-validated responses using Pydantic
-- **Tool Calling**: Calculator, web search, and datetime tools with extensible registry
+## 🏃 Quick Start Guide
 
-### RAG Pipeline
-- **Document Ingestion**: Supports TXT, MD, PDF, JSON, CSV files
-- **Smart Chunking**: Recursive, sentence-based, and fixed-size strategies
-- **Vector Storage**: ChromaDB with sentence-transformers embeddings
-- **Context Building**: Relevance-scored retrieval with source attribution
-
-### Local Deployment
-- **vLLM Integration**: Serve Mistral-7B or Llama 3 locally
-- **Docker Support**: Full containerization with health checks
-
-## 🚀 Quick Start
-
-### 1. Setup Environment
+### 1. Local Testing (Docker Compose)
+Run the entire production stack (Frontend + Backend) locally:
 ```bash
-# Clone and navigate
-cd task1-ai-assistant
-
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Configure API keys
-cp .env.example .env
-# Edit .env with your API keys
+cd task2-production
+docker compose up --build -d
 ```
+Access the application at: `http://localhost:8501`
 
-### 2. Run the Server
+### 2. Local GPU Testing (vLLM)
+To harness your NVIDIA GPU for local inference, start the vLLM engine first:
 ```bash
-# Start FastAPI server
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-
-# API docs available at http://localhost:8000/docs
+docker run --gpus all \
+    -v ~/.cache/huggingface:/root/.cache/huggingface \
+    -p 8001:8001 \
+    --ipc=host \
+    vllm/vllm-openai:latest \
+    --model unsloth/gemma-2b-it \
+    --port 8001 \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.92 \
+    --enforce-eager \
+    --max-num-seqs 16
 ```
+*(Once running, start `docker compose` to connect the stack).*
 
-### 3. Test the API
+### 3. AWS Deployment
+To push the system to AWS ECR:
 ```bash
-# Chat endpoint
-curl -X POST http://localhost:8000/chat \
-  -H "Content-Type: application/json" \
-  -d '{"message": "What is RAG?", "use_rag": true}'
-
-# Structured output
-curl -X POST http://localhost:8000/chat/structured \
-  -H "Content-Type: application/json" \
-  -d '{"message": "Analyze the benefits of AI", "output_type": "analysis"}'
-
-# Ingest document
-curl -X POST http://localhost:8000/documents/ingest \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Your document content here", "source": "my_doc"}'
+export AWS_ACCOUNT_ID="your-aws-account-id"
+export AWS_REGION="us-east-1"
+cd ../task2-production/deploy/aws
+chmod +x deploy.sh
+./deploy.sh
 ```
-
-### 4. Run with Docker
-```bash
-docker build -t ai-assistant .
-docker run -p 8000:8000 --env-file .env ai-assistant
-```
-
-### 5. Local Model with vLLM
-```bash
-# Install vLLM
-pip install vllm
-
-# Serve Mistral locally
-vllm serve mistralai/Mistral-7B-Instruct-v0.3 --port 8001
-
-# Update .env
-LLM_PROVIDER=local_vllm
-VLLM_BASE_URL=http://localhost:8001/v1
-```
-
-## 📁 Project Structure
-
-```
-task1-ai-assistant/
-├── app/
-│   ├── __init__.py
-│   ├── main.py              # FastAPI application
-│   ├── config.py             # Configuration management
-│   ├── llm/
-│   │   ├── provider.py       # Base LLM interface
-│   │   ├── gemini.py         # Google Gemini provider
-│   │   ├── openai_client.py  # OpenAI provider
-│   │   └── local_vllm.py     # vLLM local provider
-│   ├── rag/
-│   │   ├── ingestion.py      # Document loading
-│   │   ├── chunking.py       # Text chunking
-│   │   ├── embeddings.py     # Vectorization + ChromaDB
-│   │   └── retriever.py      # RAG orchestrator
-│   ├── tools/
-│   │   ├── registry.py       # Tool management
-│   │   ├── calculator.py     # Math tool
-│   │   └── web_search.py     # Web search tool
-│   └── prompts/
-│       └── system_prompts.py # Prompt engineering
-├── data/
-│   └── sample_docs/          # Sample documents for RAG
-├── Dockerfile
-├── requirements.txt
-└── README.md
-```
-
-## 🔧 API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/health` | GET | Health check with provider status |
-| `/chat` | POST | Main chat with RAG + tools |
-| `/chat/structured` | POST | Structured JSON output |
-| `/documents/ingest` | POST | Ingest text into knowledge base |
-| `/documents/upload` | POST | Upload file to knowledge base |
-| `/documents/stats` | GET | RAG pipeline statistics |
-| `/tools` | GET | List available tools |
-| `/config` | GET | Current configuration |
-
-## ⚙️ Prompt Engineering
-
-Four pre-configured prompt styles:
-
-| Style | Temperature | Top-P | Use Case |
-|-------|------------|-------|----------|
-| `creative` | 1.2 | 0.95 | Brainstorming, creative writing |
-| `balanced` | 0.7 | 0.9 | General conversation |
-| `precise` | 0.2 | 0.5 | Factual responses |
-| `deterministic` | 0.0 | 1.0 | Reproducible results |
+Follow the detailed guide in `task2-production/deploy/aws/README.md` to register the ECS tasks.

@@ -23,20 +23,23 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-# Import from Task 1 (shared codebase)
+# Add task1 to path for imports
 import sys
 import os
 
-# Add task1 to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "task1-ai-assistant"))
+# Support both Local execution and Docker execution paths
+base_dir = os.path.dirname(__file__)
+sys.path.insert(0, os.path.abspath(os.path.join(base_dir, "..", "task1-ai-assistant")))       # Docker path (/app/task1-ai-assistant)
+sys.path.insert(0, os.path.abspath(os.path.join(base_dir, "..", "..", "task1-ai-assistant"))) # Local path (../../task1-ai-assistant)
 
 from app.config import settings
-from app.llm.provider import ChatMessage, get_provider, LLMResponse
+from app.llm.provider import ChatMessage, get_provider, LLMResponse, StructuredOutputSchema
 from app.prompts.system_prompts import (
     ASSISTANT_SYSTEM_PROMPT,
     RAG_SYSTEM_PROMPT,
     PROMPT_CONFIGS,
     ANALYSIS_SCHEMA,
+    QA_SCHEMA,
     STRUCTURED_OUTPUT_PROMPT,
 )
 from app.rag.retriever import RAGRetriever
@@ -44,10 +47,10 @@ from app.tools.registry import tool_registry
 from app.tools.calculator import calculator_tool
 from app.tools.web_search import web_search_tool, datetime_tool
 
-from middleware.rate_limiter import RateLimiterMiddleware, rate_limiter
-from middleware.retry import RetryHandler
-from middleware.cache import ResponseCache
-from middleware.fallback import FallbackManager
+from backend.middleware.rate_limiter import RateLimiterMiddleware, rate_limiter
+from backend.middleware.retry import RetryHandler
+from backend.middleware.cache import ResponseCache
+from backend.middleware.fallback import FallbackManager
 
 # Configure logging
 logging.basicConfig(
@@ -110,10 +113,15 @@ app = FastAPI(
 
 # ── Middleware Stack ──
 
-# CORS
+frontend_url = os.environ.get("FRONTEND_URL")
+allowed_origins = [frontend_url] if frontend_url else ["*"]
+if frontend_url and "http://localhost:8501" not in allowed_origins:
+    allowed_origins.append("http://localhost:8501")
+
+# CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -153,10 +161,14 @@ async def error_handling_middleware(request: Request, call_next):
 
 # ── Request/Response Models ──
 
+class ChatMessageDict(BaseModel):
+    role: str
+    content: str
+
 class ChatRequest(BaseModel):
     message: str
     conversation_id: Optional[str] = None
-    history: list[dict[str, str]] = Field(default_factory=list)
+    history: list[ChatMessageDict] = Field(default_factory=list)
     use_rag: bool = True
     use_tools: bool = True
     prompt_style: str = "balanced"
@@ -179,6 +191,12 @@ class ChatResponse(BaseModel):
 class BatchChatRequest(BaseModel):
     """Batch chat request for concurrent processing."""
     requests: list[ChatRequest]
+
+class StructuredChatRequest(BaseModel):
+    """Request model for structured JSON output."""
+    message: str
+    output_type: str = "analysis"
+    provider: Optional[str] = None
 
 
 # ── Core Chat Logic ──
@@ -222,7 +240,7 @@ async def process_chat(request: ChatRequest) -> ChatResponse:
 
         messages.append(ChatMessage(role="system", content=system_prompt))
         for h in request.history:
-            messages.append(ChatMessage(role=h["role"], content=h["content"]))
+            messages.append(ChatMessage(role=h.role, content=h.content))
         messages.append(ChatMessage(role="user", content=request.message))
 
         tools = tool_registry.get_definitions() if request.use_tools else None
@@ -430,3 +448,45 @@ async def metrics():
         "rag": rag_retriever.get_stats() if rag_retriever else None,
         "uptime": time.time(),
     }
+
+
+@app.post("/chat/structured")
+async def chat_structured(request: StructuredChatRequest):
+    """Generate structured JSON output."""
+    provider = get_provider(request.provider)
+    
+    if request.output_type == "analysis":
+        schema_dict = ANALYSIS_SCHEMA
+    elif request.output_type == "qa":
+        schema_dict = QA_SCHEMA
+    else:
+        raise HTTPException(status_code=400, detail="Invalid output_type. Use 'analysis' or 'qa'")
+
+    schema = StructuredOutputSchema(
+        name=request.output_type,
+        description=f"Structured output for {request.output_type}",
+        schema_dict=schema_dict
+    )
+    
+    messages = [
+        ChatMessage(role="system", content=STRUCTURED_OUTPUT_PROMPT),
+        ChatMessage(role="user", content=request.message)
+    ]
+    
+    try:
+        response = await provider.chat(messages=messages, structured_output=schema)
+        # Try to parse JSON from the response content using provider's method
+        try:
+            output_dict = provider._validate_json_output(response.content)
+            return {"output": output_dict}
+        except Exception:
+            # Fallback to basic extraction
+            import json
+            if "{" in response.content:
+                start = response.content.find("{")
+                end = response.content.rfind("}") + 1
+                return {"output": json.loads(response.content[start:end])}
+            return {"output": {"raw": response.content}}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
