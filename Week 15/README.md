@@ -123,10 +123,8 @@ Below are screenshots showcasing the working application interface, tool executi
 
 | Interface and Outputs |
 | :---: |
-| <img src="./Screenshot from 2026-09-03 22-25-01.png" width="800"> |
-| <img src="./Screenshot from 2026-09-03 22-25-34.png" width="800"> |
-| <img src="./Screenshot from 2026-09-03 22-25-53.png" width="800"> |
-| <img src="./Screenshot from 2026-09-03 23-09-58.png" width="800"> |
+| <img src="./screenshots/task1_architecture.png" width="800"> |
+| <img src="./screenshots/task2_architecture.png" width="800"> |
 
 ---
 
