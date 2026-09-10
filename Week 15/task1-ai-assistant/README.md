@@ -19,11 +19,11 @@ Task 2 wraps the Task 1 backend in a robust, production-ready environment.
 - **Failover Chain**: Automatic Fallback Manager (`Primary vLLM → Secondary Gemini → Tertiary OpenAI`).
 - **Container Orchestration**: Fully Dockerized using `docker-compose` to spin up the UI, Backend, and GPU-accelerated vLLM inference container simultaneously.
 
-## ☁️ Deployment (AWS ECS Fargate)
-The stack is configured to deploy to AWS Elastic Container Service (ECS) using Serverless Fargate.
-- **Elastic Container Registry (ECR)**: Automated scripts to tag and push the `frontend` and `backend` images.
-- **Application Load Balancer (ALB)**: Routes public internet traffic directly to the containerized frontend.
-- **AWS Parameter Store**: Secures API Keys (`GOOGLE_API_KEY`, `OPENAI_API_KEY`) as encrypted secrets injected directly into the Fargate execution roles.
+## ☁️ Deployment (Google Cloud Run)
+The stack is configured to deploy to Google Cloud Run using serverless containers.
+- **Google Container Registry (GCR)**: Automated scripts to tag and push the `frontend` and `backend` images.
+- **Cloud Run Endpoints**: Routes public internet traffic directly to the containerized frontend and backend.
+- **Environment Variables**: Secures API Keys (`GOOGLE_API_KEY`, `OPENAI_API_KEY`) injected directly into the Cloud Run service.
 
 ## 🏃 Quick Start Guide
 
@@ -52,13 +52,10 @@ docker run --gpus all \
 ```
 *(Once running, start `docker compose` to connect the stack).*
 
-### 3. AWS Deployment
-To push the system to AWS ECR:
+### 3. Google Cloud Run Deployment
+To push the system to Google Cloud Run:
 ```bash
-export AWS_ACCOUNT_ID="your-aws-account-id"
-export AWS_REGION="us-east-1"
-cd ../task2-production/deploy/aws
-chmod +x deploy.sh
-./deploy.sh
+cd ../task2-production
+chmod +x deploy-cloudrun.sh
+./deploy-cloudrun.sh
 ```
-Follow the detailed guide in `task2-production/deploy/aws/README.md` to register the ECS tasks.

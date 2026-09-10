@@ -5,7 +5,7 @@ This document provides a comprehensive overview of the Week 15 assignment, detai
 ## 📌 Project Overview
 The project is divided into two main tasks:
 - **Task 1 (Core AI Assistant):** Focused on the local development of a robust backend featuring Retrieval-Augmented Generation (RAG), Tool Calling (Web Search, Calculator), and integration with various LLMs (notably local vLLM, Gemini, and OpenAI).
-- **Task 2 (Production Hardening & Deployment):** Focused on preparing the system for production by implementing a Streamlit frontend, Docker container orchestration, resilience middleware (caching, retries, rate limiting, fallback chains), and scripts for AWS deployment.
+- **Task 2 (Production Hardening & Deployment):** Focused on preparing the system for production by implementing a Streamlit frontend, Docker container orchestration, resilience middleware (caching, retries, rate limiting, fallback chains), and scripts for Google Cloud Run deployment.
 
 ---
 
@@ -50,11 +50,11 @@ To ensure the backend API can handle production traffic, several middleware comp
 - **LRU Caching:** Frequently asked identical queries are cached with a Time-To-Live (TTL) to save computation and LLM token costs.
 - **Exponential Backoff:** If an external LLM provider times out, the system automatically retries with increasing delays before failing over.
 
-### 3. AWS ECS Fargate Deployment
-The system was packaged for deployment to AWS Elastic Container Service (ECS) using Fargate (serverless containers).
-- **Deployment Scripts:** Shell scripts (`deploy/aws/deploy.sh`) automate tagging the Docker images and pushing them to AWS Elastic Container Registry (ECR).
-- **Architecture:** The AWS architecture utilizes an Application Load Balancer (ALB) to route incoming internet traffic to the containerized frontend.
-- **Secrets Management:** API keys are removed from local `.env` files and managed securely via AWS Parameter Store, injected as environment variables at runtime.
+### 3. Google Cloud Run Deployment
+The system was packaged for deployment to Google Cloud Run using serverless containers.
+- **Deployment Scripts:** Shell scripts (`deploy-cloudrun.sh`) automate tagging the Docker images and pushing them to Google Container Registry (GCR).
+- **Architecture:** The Google Cloud Run architecture routes incoming internet traffic directly to the containerized frontend.
+- **Secrets Management:** API keys are removed from local `.env` files and managed securely via Google Secret Manager or directly injected as environment variables at runtime.
 
 ---
 

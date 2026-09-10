@@ -125,6 +125,8 @@ Below are screenshots showcasing the working application interface, tool executi
 | :---: |
 | <img src="./screenshots/task1_architecture.png" width="800"> |
 | <img src="./screenshots/task2_architecture.png" width="800"> |
+| <img src="./screenshots/Screenshot from 2026-09-07 01-33-04.png" width="800"> |
+| <img src="./screenshots/Screenshot from 2026-09-04 17-57-11.png" width="800"> |
 
 ---
 

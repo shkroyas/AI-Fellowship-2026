@@ -41,9 +41,9 @@ The services will be available at:
 - **Frontend UI**: http://localhost:8501
 - **Backend API**: http://localhost:8000
 
-## ☁️ AWS Deployment
+## ☁️ Google Cloud Run Deployment
 
-See `deploy/aws/README.md` for comprehensive instructions on deploying this stack to AWS ECS Fargate.
+See `deploy-cloudrun.sh` for the script used to deploy this stack to Google Cloud Run seamlessly.
 
 ## 🧠 Model Optimization Strategy
 
