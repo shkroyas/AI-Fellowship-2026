@@ -1,0 +1,37 @@
+# Python Programming Best Practices
+
+## Code Style
+- Follow PEP 8 guidelines
+- Use meaningful variable names
+- Write docstrings for all functions and classes
+- Keep functions focused on a single responsibility
+
+## Project Structure
+- Use virtual environments (venv or conda)
+- Maintain a requirements.txt or pyproject.toml
+- Organize code into packages and modules
+- Separate concerns (models, views, controllers)
+
+## Error Handling
+- Use specific exceptions, not bare except
+- Implement proper logging with the logging module
+- Use context managers (with statements) for resources
+- Validate inputs early
+
+## Testing
+- Write unit tests for all functions
+- Use pytest as the testing framework
+- Aim for high code coverage
+- Test edge cases and error conditions
+
+## Performance
+- Profile before optimizing
+- Use list comprehensions over loops when appropriate
+- Consider generators for large datasets
+- Use async/await for I/O-bound operations
+
+## Security
+- Never hardcode secrets or API keys
+- Use environment variables for configuration
+- Validate and sanitize all inputs
+- Keep dependencies updated

@@ -1,0 +1,43 @@
+2026-09-13 10:13:31,619 - httpx - INFO - HTTP Request: POST http://testserver/chat/agentic "HTTP/1.1 422 Unprocessable Entity"
+2026-09-13 10:13:31,620 - httpx - INFO - HTTP Request: POST http://testserver/chat/agentic "HTTP/1.1 200 OK"
+2026-09-13 10:13:31,622 - httpx - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent "HTTP/1.1 503 Service Unavailable"
+2026-09-13 10:13:31,622 - httpx - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent "HTTP/1.1 200 OK"
+2026-09-13 10:13:31,625 - httpx - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent "HTTP/1.1 403 Forbidden"
+2026-09-13 10:13:31,626 - httpx - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent "HTTP/1.1 200 OK"
+2026-09-13 10:13:31,628 - httpx - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent "HTTP/1.1 200 OK"
+2026-09-13 10:13:31,629 - httpx - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-09-13 10:13:31,630 - httpx - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent "HTTP/1.1 200 OK"
+2026-09-13 10:13:31,631 - httpx - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent "HTTP/1.1 200 OK"
+2026-09-13 10:13:31,631 - httpx - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent "HTTP/1.1 200 OK"
+2026-09-13 10:13:31,631 - httpx - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent "HTTP/1.1 200 OK"
+2026-09-13 10:13:31,632 - backend.main - INFO - 🚀 Starting Production AI Assistant...
+2026-09-13 10:13:31,632 - app.tools.registry - INFO - Registered tool: calculator
+2026-09-13 10:13:31,632 - app.tools.registry - INFO - Registered tool: web_search
+2026-09-13 10:13:31,632 - app.tools.registry - INFO - Registered tool: get_current_datetime
+2026-09-13 10:13:31,632 - backend.main - INFO - 📚 Ingested 3 chunks
+2026-09-13 10:13:31,632 - app.tools.registry - INFO - Registered tool: calculator
+2026-09-13 10:13:31,633 - app.tools.registry - INFO - Registered tool: web_search
+2026-09-13 10:13:31,633 - app.tools.registry - INFO - Registered tool: get_current_datetime
+2026-09-13 10:13:31,633 - app.tools.registry - INFO - Registered tool: search_knowledge
+2026-09-13 10:13:31,633 - backend.main - INFO - ✅ Production AI Assistant ready
+2026-09-13 10:13:31,633 - backend.main - INFO - 👋 Shutting down...
+2026-09-13 10:13:31,633 - app.tools.registry - INFO - Registered tool: search_knowledge
+2026-09-13 10:13:31,635 - app.tools.registry - INFO - Executed tool 'search_knowledge' successfully
+2026-09-13 10:13:31,637 - app.tools.registry - INFO - Registered tool: search_knowledge
+2026-09-13 10:13:31,637 - app.tools.registry - INFO - Executed tool 'search_knowledge' successfully
+2026-09-13 10:13:31,638 - app.tools.registry - INFO - Registered tool: search_knowledge
+2026-09-13 10:13:31,641 - app.tools.registry - INFO - Registered tool: search_knowledge
+2026-09-13 10:13:31,644 - app.tools.registry - INFO - Executed tool 'search_knowledge' successfully
+2026-09-13 10:13:31,646 - app.tools.registry - INFO - Registered tool: search_knowledge
+2026-09-13 10:13:31,646 - app.tools.registry - INFO - Executed tool 'search_knowledge' successfully
+2026-09-13 10:13:31,650 - app.tools.registry - INFO - Registered tool: search_knowledge
+2026-09-13 10:13:31,651 - app.tools.registry - INFO - Registered tool: search_knowledge
+2026-09-13 10:13:31,652 - app.tools.registry - INFO - Executed tool 'search_knowledge' successfully
+2026-09-13 10:13:31,652 - app.tools.registry - INFO - Executed tool 'search_knowledge' successfully
+2026-09-13 10:13:31,655 - app.evaluation.failure_injection - INFO - FAILURE INJECTION TEST: Provider timeout
+2026-09-13 10:13:31,656 - app.tools.registry - INFO - Registered tool: search_knowledge
+2026-09-13 10:13:31,657 - app.tools.registry - ERROR - Tool 'search_knowledge' failed: injected search outage
+----------------------------------------------------------------------
+Ran 24 tests in 0.051s
+
+OK

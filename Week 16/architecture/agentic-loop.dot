@@ -1,0 +1,22 @@
+digraph Week16 {
+  graph [rankdir=TB, bgcolor="white", nodesep=0.35, ranksep=0.45, label="Week 16 · Single-agent cross-source verification", labelloc=t, fontsize=20, fontname="Helvetica"];
+  node [shape=box, style="rounded,filled", fillcolor="#edf4fb", color="#365d85", fontname="Helvetica", fontsize=11];
+  edge [fontname="Helvetica", fontsize=9, color="#52657b"];
+  request [label="User / Streamlit\nPOST /chat/agentic"];
+  context [label="Original query + bounded evidence\nOptional initial RAG · source and error notes"];
+  compact [label="Over 6,000 characters?\nSummarize; truncate if summary fails",shape=diamond];
+  decide [label="Single model chooses next action\nAt most 5 decision iterations",fillcolor="#d4e7fc"];
+  tools [label="Validate tool + arguments\nReuse identical successful calls"];
+  retrieve [label="Knowledge search · Web search\nCalculator · Date/time"];
+  results [label="Append result or explicit failure"];
+  budget [label="Decision budget\nremaining?",shape=diamond];
+  output [label="Return answer / clarification / error\nTrace + tokens + stopping reason",fillcolor="#dff0e4"];
+  request -> context -> compact -> decide;
+  decide -> tools [label="search / use tool"];
+  tools -> retrieve [label="new valid call"];
+  tools -> results [label="cached result / validation error"];
+  retrieve -> results -> budget;
+  budget -> context [label="yes"];
+  budget -> output [label="no: incomplete verification"];
+  decide -> output [label="answer / ask_user / unrecovered error"];
+}
