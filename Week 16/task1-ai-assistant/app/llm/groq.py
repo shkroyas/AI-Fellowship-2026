@@ -8,6 +8,7 @@ transient errors. 5xx errors trigger key rotation with backoff.
 import asyncio
 import json
 import logging
+import re
 import time
 import uuid
 from collections import deque
@@ -76,36 +77,80 @@ class GroqProvider(LLMProvider):
         self._max_rate_retries = max_rate_retries
         self._max_rate_wait = max_rate_wait
 
+    def _parse_retry_after(self, retry_after_str, rate_limit_reset_str):
+        """Parse retry-after and x-ratelimit-reset headers into delay seconds.
+
+        Handles: numeric seconds, duration strings (e.g. '7.66s', '2m59.56s'),
+        and Unix epoch timestamps.
+        """
+        delay = None
+        if retry_after_str:
+            try:
+                delay = max(1, float(retry_after_str))
+            except ValueError:
+                # Handle duration strings like "7.66s" or "2m59.56s"
+                m = re.match(r"(?:(\d+)m)?(\d+(?:\.\d+)?)s?", retry_after_str)
+                if m:
+                    minutes = int(m.group(1) or 0)
+                    seconds = float(m.group(2))
+                    delay = max(1, minutes * 60 + seconds)
+        if delay is None and rate_limit_reset_str:
+            try:
+                reset_val = float(rate_limit_reset_str)
+                if reset_val > 1000000:
+                    # Unix timestamp — use wall clock for conversion
+                    delay = max(1, reset_val - time.time())
+                else:
+                    delay = max(1, reset_val)
+            except ValueError:
+                pass
+        return delay
+
     async def _pace(self, payload, actual_tokens=0):
         """Token-aware pacing using actual usage when available, estimate otherwise.
 
         Enforces the token budget strictly but caps wait at 30s to avoid hanging.
+        Returns the reservation key so the caller can reconcile with actual usage.
         """
         if actual_tokens > 0:
             cost = actual_tokens
         else:
             # Estimate: input bytes / 3 + max output tokens + overhead
             cost = (len(json.dumps(payload).encode("utf-8")) + 2) // 3 + self.max_tokens + 100
+        # Reject individually oversized requests rather than spinning forever
+        if cost > self._budget:
+            logger.warning("Groq pacing: request cost %d exceeds budget %d, allowing with wait", cost, self._budget)
         while True:
             now = self._clock()
             # Purge reservations older than 61 seconds
             while self._reservations and self._reservations[0][0] <= now - 61:
                 self._reservations.popleft()
-            if sum(c for _, c in self._reservations) + cost <= self._budget:
+            reserved = sum(c for _, c in self._reservations)
+            if reserved + cost <= self._budget:
+                reservation_key = now
                 self._reservations.append((now, cost))
-                return
+                return reservation_key
             # Wait for the oldest reservation to expire, capped at 30s
-            delay = min(30.0, max(0.01, self._reservations[0][0] + 61 - now))
+            if self._reservations:
+                delay = min(30.0, max(0.01, self._reservations[0][0] + 61 - now))
+            else:
+                delay = 1.0
             logger.info("Groq pacing: waiting %.1fs (reserved=%d, cost=%d, budget=%d)",
-                        delay, sum(c for _, c in self._reservations), cost, self._budget)
+                        delay, reserved, cost, self._budget)
             await self._sleep(delay)
 
-    def _record_usage(self, usage):
-        """Record actual token usage for better future pacing."""
-        total = usage.get("prompt_tokens", 0) + usage.get("completion_tokens", 0)
-        if total > 0:
-            now = self._clock()
-            self._reservations.append((now, total))
+    def _reconcile_usage(self, reservation_key, actual_tokens):
+        """Replace the estimated reservation with actual usage (one reservation per request)."""
+        if actual_tokens <= 0:
+            return
+        # Remove the estimate placed by _pace and record actual usage instead
+        try:
+            self._reservations.remove((reservation_key, None))
+        except ValueError:
+            # Estimate may have already expired; just record actual
+            pass
+        now = self._clock()
+        self._reservations.append((now, actual_tokens))
 
     async def _post_with_rate_retry(self, client, payload, slot):
         for attempt in range(self._max_rate_retries + 1):
@@ -127,21 +172,7 @@ class GroqProvider(LLMProvider):
                            retry_after, rate_limit_reset, rate_limit_reset_requests)
 
             # Evidence-based delay: prefer retry-after, then reset-tokens, then default 60s
-            try:
-                delay = max(1, float(retry_after)) if retry_after else None
-            except ValueError:
-                delay = None
-            if delay is None and rate_limit_reset:
-                # x-ratelimit-reset-tokens is often a Unix timestamp or seconds
-                try:
-                    reset_val = float(rate_limit_reset)
-                    # If it's a large number, it's a Unix timestamp; compute relative delay
-                    if reset_val > 1000000:
-                        delay = max(1, reset_val - self._clock())
-                    else:
-                        delay = max(1, reset_val)
-                except ValueError:
-                    delay = None
+            delay = self._parse_retry_after(retry_after, rate_limit_reset)
             if delay is None:
                 delay = 60  # Conservative default
             # If the API says to wait longer than our max, give up immediately
@@ -161,6 +192,15 @@ class GroqProvider(LLMProvider):
             m = {"role": msg.role, "content": msg.content}
             if msg.tool_call_id:
                 m["tool_call_id"] = msg.tool_call_id
+            if msg.tool_calls and msg.role == "assistant":
+                m["tool_calls"] = [
+                    {
+                        "id": tc.id,
+                        "type": "function",
+                        "function": {"name": tc.name, "arguments": json.dumps(tc.arguments)},
+                    }
+                    for tc in msg.tool_calls
+                ]
             api_messages.append(m)
 
         payload = {
@@ -198,6 +238,7 @@ class GroqProvider(LLMProvider):
         choice = data.get("choices", [{}])[0]
         message = choice.get("message", {})
         content = message.get("content") or ""
+        finish_reason = choice.get("finish_reason", "")
         tool_calls = []
 
         if message.get("tool_calls"):
@@ -219,8 +260,10 @@ class GroqProvider(LLMProvider):
             "completion_tokens": usage_data.get("completion_tokens", 0),
         }
 
-        return LLMResponse(content=content, tool_calls=tool_calls,
+        response = LLMResponse(content=content, tool_calls=tool_calls,
                            model=self.model, usage=usage)
+        response.finish_reason = finish_reason
+        return response
 
     async def chat(self, messages, tools=None, structured_output=None):
         payload = self._build_payload(messages, tools, structured_output)
@@ -290,13 +333,26 @@ class GroqProvider(LLMProvider):
                     data = response.json()
                     result = self._parse_response(data)
 
-                    # Record actual usage for better future pacing
+                    # Record actual usage for pacing (single reservation per request)
                     total_tokens = result.usage.get("prompt_tokens", 0) + result.usage.get("completion_tokens", 0)
                     if total_tokens > 0:
-                        self._record_usage(result.usage)
+                        now = self._clock()
+                        self._reservations.append((now, total_tokens))
                         logger.debug("Groq actual tokens: prompt=%d completion=%d total=%d",
                                      result.usage.get("prompt_tokens", 0),
                                      result.usage.get("completion_tokens", 0), total_tokens)
+
+                    # Handle truncated responses (finish_reason="length") — never treat as completed answer
+                    if getattr(result, "finish_reason", "") == "length":
+                        if result.tool_calls:
+                            # Tool call was truncated — drop it and force answer with limitations
+                            result.tool_calls = []
+                            result.content = (result.content or "").strip()
+                            if not result.content:
+                                result.content = "Verification incomplete: the model's response was truncated before producing a result."
+                        elif result.content:
+                            result.content = result.content.strip() + "\n\n[Note: response was truncated by token limit]"
+                        logger.warning("Groq response truncated (finish_reason=length)")
 
                     # Adapt final text response to terminal action if tools available
                     if result.content and not result.tool_calls and tools:

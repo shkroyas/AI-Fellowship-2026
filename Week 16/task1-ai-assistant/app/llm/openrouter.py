@@ -52,6 +52,15 @@ class OpenRouterProvider(LLMProvider):
             m = {"role": msg.role, "content": msg.content}
             if msg.tool_call_id:
                 m["tool_call_id"] = msg.tool_call_id
+            if msg.tool_calls and msg.role == "assistant":
+                m["tool_calls"] = [
+                    {
+                        "id": tc.id,
+                        "type": "function",
+                        "function": {"name": tc.name, "arguments": json.dumps(tc.arguments)},
+                    }
+                    for tc in msg.tool_calls
+                ]
             api_messages.append(m)
 
         payload = {
@@ -88,6 +97,7 @@ class OpenRouterProvider(LLMProvider):
         choice = data["choices"][0]
         message = choice.get("message", {})
         content = message.get("content") or ""
+        finish_reason = choice.get("finish_reason", "")
         tool_calls = []
 
         if message.get("tool_calls"):
@@ -109,8 +119,10 @@ class OpenRouterProvider(LLMProvider):
             "completion_tokens": usage_data.get("completion_tokens", 0),
         }
 
-        return LLMResponse(content=content, tool_calls=tool_calls,
+        response = LLMResponse(content=content, tool_calls=tool_calls,
                            model=self.model, usage=usage)
+        response.finish_reason = finish_reason
+        return response
 
     async def chat(self, messages, tools=None, structured_output=None):
         payload = self._build_payload(messages, tools, structured_output)
@@ -168,10 +180,30 @@ class OpenRouterProvider(LLMProvider):
                                 raise OpenRouterRequestError(retry_response.status_code)
                             data = retry_response.json()
                             result = self._parse_response(data)
+                            # Preserve ACTION/ANSWER/CLARIFY parsing on retry path
                             if result.content and not result.tool_calls and tools:
-                                if any(t.name == "answer" for t in tools):
+                                text = result.content.strip()
+                                upper = text.upper().lstrip()
+                                if upper.startswith("CLARIFY:"):
+                                    result.tool_calls = [ToolCall(id=str(uuid.uuid4()), name="ask_user",
+                                                                 arguments={"question": text.split(":", 1)[1].strip()})]
+                                elif upper.startswith("ACTION:"):
+                                    import re as _re
+                                    m = _re.fullmatch(r"\s*ACTION:\s*(\w+)(?:\s+(.*))?", text, _re.I | _re.S)
+                                    if m:
+                                        tname, targs = m.group(1).lower(), (m.group(2) or "").strip()
+                                        try:
+                                            args = json.loads(targs) if targs.startswith("{") else (
+                                                {} if not targs else {"query": targs})
+                                        except (ValueError, TypeError):
+                                            args = {"query": targs}
+                                        result.tool_calls = [ToolCall(id=str(uuid.uuid4()), name=tname, arguments=args)]
+                                elif upper.startswith("ANSWER:"):
                                     result.tool_calls = [ToolCall(id=str(uuid.uuid4()), name="answer",
-                                                                 arguments={"answer": result.content})]
+                                                                 arguments={"answer": text.split(":", 1)[1].strip()})]
+                                elif any(t.name == "answer" for t in tools):
+                                    result.tool_calls = [ToolCall(id=str(uuid.uuid4()), name="answer",
+                                                                 arguments={"answer": text})]
                             return result
 
                     if response.is_error:
@@ -179,6 +211,17 @@ class OpenRouterProvider(LLMProvider):
 
                     data = response.json()
                     result = self._parse_response(data)
+
+                    # Handle truncated responses (finish_reason="length") — never treat as completed answer
+                    if getattr(result, "finish_reason", "") == "length":
+                        if result.tool_calls:
+                            result.tool_calls = []
+                            result.content = (result.content or "").strip()
+                            if not result.content:
+                                result.content = "Verification incomplete: the model's response was truncated before producing a result."
+                        elif result.content:
+                            result.content = result.content.strip() + "\n\n[Note: response was truncated by token limit]"
+                        logger.warning("OpenRouter response truncated (finish_reason=length)")
 
                     if result.content and not result.tool_calls and tools:
                         if any(t.name == "answer" for t in tools):

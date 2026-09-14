@@ -42,11 +42,16 @@ async def main():
         from app.llm.provider import get_provider
         provider = get_provider()
         fallback = None
-        if settings.openrouter_api_key:
+        if settings.openrouter_api_key and settings.llm_provider != "openrouter":
             try:
                 fallback = get_provider('openrouter')
             except Exception as e:
                 logging.warning("Failed to create OpenRouter fallback: %s", e)
+        elif settings.groq_keys() and settings.llm_provider != "groq":
+            try:
+                fallback = get_provider('groq')
+            except Exception as e:
+                logging.warning("Failed to create Groq fallback: %s", e)
         queries = TEST_QUERIES
         label = (f'Live provider: {provider.model}; shared sequential budget; '
                  f'fallback: {fallback.model if fallback else "disabled"}; '

@@ -16,11 +16,19 @@ from pydantic import BaseModel, Field
 logger = logging.getLogger(__name__)
 
 
+class ToolCall(BaseModel):
+    """Represents a tool call made by the LLM."""
+    id: str
+    name: str
+    arguments: dict[str, Any]
+
+
 class ChatMessage(BaseModel):
     """Represents a single message in a conversation."""
     role: str = Field(..., description="Role: system, user, assistant, or tool")
     content: str = Field(..., description="Message content")
     tool_call_id: Optional[str] = Field(default=None, description="Tool call ID for tool responses")
+    tool_calls: Optional[list[ToolCall]] = Field(default=None, description="Tool calls for assistant messages")
 
 
 class ToolDefinition(BaseModel):
@@ -30,13 +38,6 @@ class ToolDefinition(BaseModel):
     parameters: dict[str, Any]
 
 
-class ToolCall(BaseModel):
-    """Represents a tool call made by the LLM."""
-    id: str
-    name: str
-    arguments: dict[str, Any]
-
-
 class LLMResponse(BaseModel):
     """Standardized response from any LLM provider."""
     content: str = ""
@@ -44,6 +45,7 @@ class LLMResponse(BaseModel):
     raw_response: Optional[Any] = Field(default=None, exclude=True)
     usage: dict[str, int] = Field(default_factory=dict)
     model: str = ""
+    finish_reason: str = ""
 
 
 class StructuredOutputSchema(BaseModel):

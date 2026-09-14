@@ -15,7 +15,7 @@
         "prompt_tokens": 30,
         "completion_tokens": 6
       },
-      "duration_ms": 0.7645709993084893,
+      "duration_ms": 0.7788889997755177,
       "stopped_reason": "model_answered",
       "compacted": false,
       "steps": [
@@ -64,7 +64,7 @@
         "prompt_tokens": 10,
         "completion_tokens": 2
       },
-      "duration_ms": 0.04512600207817741,
+      "duration_ms": 0.04646700108423829,
       "stopped_reason": "clarification",
       "compacted": false,
       "steps": [
@@ -95,7 +95,7 @@
         "prompt_tokens": 0,
         "completion_tokens": 0
       },
-      "duration_ms": 0.03618900154833682,
+      "duration_ms": 0.03682000533444807,
       "stopped_reason": "error",
       "compacted": false,
       "steps": [
@@ -124,7 +124,7 @@
         "prompt_tokens": 10,
         "completion_tokens": 2
       },
-      "duration_ms": 0.04564700066111982,
+      "duration_ms": 0.046276996727101505,
       "stopped_reason": "model_answered",
       "compacted": false,
       "steps": [

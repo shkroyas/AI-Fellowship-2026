@@ -274,10 +274,14 @@ async def chat(request: ChatRequest):
                 })
 
                 # Add tool call and result to messages for follow-up
-                messages.append(ChatMessage(
+                # Preserve the assistant's native tool-call metadata
+                assistant_msg = ChatMessage(
                     role="assistant",
-                    content=f"I'll use the {tc.name} tool.",
-                ))
+                    content="",
+                    tool_call_id=None,
+                    tool_calls=[tc],
+                )
+                messages.append(assistant_msg)
                 messages.append(ChatMessage(
                     role="tool",
                     content=result,

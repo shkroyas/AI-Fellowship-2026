@@ -211,14 +211,6 @@ A separate test forces a provider timeout and checks that the configured fallbac
 
 ## Architecture
 
-### Visual Diagrams
-
-| Diagram | Description | File |
-|---------|-------------|------|
-| System Architecture | Complete system overview with all components | [../architecture/images/system-architecture.png](../architecture/images/system-architecture.png) |
-| Data Flow | Request/response flow through the system | [../architecture/images/data-flow.png](../architecture/images/data-flow.png) |
-| Rate Limit Flow | Provider fallback and rate limit handling | [../architecture/images/rate-limit-flow.png](../architecture/images/rate-limit-flow.png) |
-
 ### System Overview
 
 ```

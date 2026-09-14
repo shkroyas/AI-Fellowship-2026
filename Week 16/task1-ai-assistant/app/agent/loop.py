@@ -187,6 +187,7 @@ class AgenticLoop:
                                              "Successful result reused; executor not invoked", response.usage))
                     continue
                 # Also catch similar queries to the same tool (e.g., rephrased searches)
+                # But preserve distinct queries that differ in years, dates, entities, or negation
                 if not invalid and tc.name in ("search_knowledge", "web_search") and tc.arguments.get("query"):
                     normalized = tc.arguments["query"].lower().strip()
                     for prev_sig, prev_result in successful_calls.items():
@@ -199,7 +200,11 @@ class AgenticLoop:
                                     words1 = set(normalized.split())
                                     words2 = set(prev_query.split())
                                     overlap = len(words1 & words2) / max(len(words1 | words2), 1)
-                                    if overlap > 0.7:
+                                    # Extract numeric tokens (years, dates) to detect distinct queries
+                                    nums1 = set(w for w in words1 if w.isdigit() and len(w) >= 4)
+                                    nums2 = set(w for w in words2 if w.isdigit() and len(w) >= 4)
+                                    years_differ = bool(nums1 ^ nums2)  # Symmetric difference
+                                    if overlap > 0.7 and not years_differ:
                                         self.context_manager.add_finding(tc.name, "Similar query already searched. "
                                             "Use existing result to answer. Cached result: " + prev_result[:500])
                                         steps.append(AgenticStep(iteration, "duplicate_tool_call", tc.name, tc.arguments,
