@@ -1,0 +1,9 @@
+Run,Accuracy,Precision,Recall,F1,ROC-AUC,CV-F1,Model Type,Run ID
+lr_balanced,0.7353,0.8027,0.7257,0.7623,0.8132,0.7511,LogisticRegression,beecb83f
+rf_deep_balanced,0.7246,0.7817,0.7342,0.7572,0.7976,0.7516,RandomForestClassifier,c45c513f
+xgb_weighted,0.7189,0.7758,0.7306,0.7525,0.8006,0.751,XGBClassifier,5ad6485f
+rf_balanced,0.7211,0.7885,0.7148,0.7498,0.7987,0.7467,RandomForestClassifier,b8dcc31b
+xgb_tuned,0.6969,0.2766,0.0675,0.1086,0.5067,0.0,XGBClassifier,1ec83341
+rf_deep,0.7253,0.0,0.0,0.0,0.5319,0.0,RandomForestClassifier,08e9b07a
+rf_depth8,0.7268,0.0,0.0,0.0,0.507,0.0,RandomForestClassifier,63456e34
+lr_baseline,0.7268,0.0,0.0,0.0,0.5071,0.0,LogisticRegression,524f5e2e
