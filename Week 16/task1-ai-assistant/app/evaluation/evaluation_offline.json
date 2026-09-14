@@ -1,0 +1,227 @@
+{
+  "mode": "offline",
+  "description": "Offline scripted provider and tools; synthetic tokens. NOT a live-model quality score.",
+  "generated_at": "2026-09-14T11:55:23.746805+00:00",
+  "queries": [
+    {
+      "id": "cross_source",
+      "query": "compare",
+      "difficulty": "moderate",
+      "expected_tools": [
+        "search_knowledge",
+        "web_search"
+      ],
+      "answer_contains_any": [
+        [
+          "rag"
+        ],
+        [
+          "fine-tuning"
+        ]
+      ],
+      "expected_min_iterations": 3
+    },
+    {
+      "id": "clarification",
+      "query": "ambiguous",
+      "difficulty": "simple",
+      "expected_tools": [],
+      "expected_stop": "clarification"
+    },
+    {
+      "id": "provider_failure",
+      "query": "timeout",
+      "difficulty": "simple",
+      "expected_tools": []
+    },
+    {
+      "id": "wrong_answer",
+      "query": "wrong",
+      "difficulty": "simple",
+      "expected_tools": [],
+      "answer_contains_any": [
+        [
+          "51"
+        ]
+      ]
+    }
+  ],
+  "report": {
+    "results": [
+      {
+        "query_id": "cross_source",
+        "query": "compare",
+        "difficulty": "moderate",
+        "answer": "RAG retrieves documents; fine-tuning changes weights [guide.md].",
+        "sources_consulted": [
+          "search_knowledge",
+          "web_search"
+        ],
+        "iterations_used": 3,
+        "total_tokens": {
+          "prompt_tokens": 30,
+          "completion_tokens": 6
+        },
+        "duration_ms": 0.7645709993084893,
+        "stopped_reason": "model_answered",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "tool_call",
+            "tool_name": "search_knowledge",
+            "tool_args": {
+              "query": "RAG"
+            },
+            "tool_result_summary": "Fixture evidence: RAG retrieves documents; fine-tuning changes weights [guide.md]."
+          },
+          {
+            "iteration": 2,
+            "action": "tool_call",
+            "tool_name": "web_search",
+            "tool_args": {
+              "query": "fine tuning"
+            },
+            "tool_result_summary": "Fixture evidence: RAG retrieves documents; fine-tuning changes weights [guide.md]."
+          },
+          {
+            "iteration": 3,
+            "action": "answer",
+            "tool_name": null,
+            "tool_args": {
+              "answer": "RAG retrieves documents; fine-tuning changes weights [guide.md]."
+            },
+            "tool_result_summary": null
+          }
+        ],
+        "task_completed": true,
+        "tools_correct": true,
+        "trajectory_reasonable": true,
+        "failure_type": null,
+        "failure_notes": ""
+      },
+      {
+        "query_id": "clarification",
+        "query": "ambiguous",
+        "difficulty": "simple",
+        "answer": "What is your budget?",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 10,
+          "completion_tokens": 2
+        },
+        "duration_ms": 0.04512600207817741,
+        "stopped_reason": "clarification",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "ask_user",
+            "tool_name": null,
+            "tool_args": {
+              "question": "What is your budget?"
+            },
+            "tool_result_summary": null
+          }
+        ],
+        "task_completed": true,
+        "tools_correct": true,
+        "trajectory_reasonable": true,
+        "failure_type": null,
+        "failure_notes": ""
+      },
+      {
+        "query_id": "provider_failure",
+        "query": "timeout",
+        "difficulty": "simple",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 0.03618900154833682,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "TimeoutError"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": true,
+        "trajectory_reasonable": true,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "wrong_answer",
+        "query": "wrong",
+        "difficulty": "simple",
+        "answer": "99",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 10,
+          "completion_tokens": 2
+        },
+        "duration_ms": 0.04564700066111982,
+        "stopped_reason": "model_answered",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "answer",
+            "tool_name": null,
+            "tool_args": {
+              "answer": "99"
+            },
+            "tool_result_summary": null
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": true,
+        "trajectory_reasonable": true,
+        "failure_type": "soft",
+        "failure_notes": "Response did not meet required evidence, content, stopping or trajectory criteria"
+      }
+    ],
+    "total_queries": 4,
+    "task_completion_rate": 0.5,
+    "tool_correctness_rate": 1.0,
+    "avg_trajectory_length": 1.5,
+    "avg_tokens_per_query": {
+      "prompt_tokens": 12,
+      "completion_tokens": 2
+    },
+    "failure_summary": {
+      "total_failures": 2,
+      "hard_failures": 1,
+      "soft_failures": 1,
+      "cascading_soft_failures": 0,
+      "failure_details": [
+        {
+          "query_id": "provider_failure",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "wrong_answer",
+          "type": "soft",
+          "notes": "Response did not meet required evidence, content, stopping or trajectory criteria"
+        }
+      ]
+    },
+    "total_tokens_all_queries": {
+      "prompt_tokens": 50,
+      "completion_tokens": 10
+    },
+    "duration_seconds": 0.0
+  }
+}

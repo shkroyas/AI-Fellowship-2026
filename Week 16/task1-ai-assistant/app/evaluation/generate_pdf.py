@@ -1,75 +1,43 @@
-"""Render the current audit and assessed write-up from Markdown source."""
+"""Render the current submission Markdown; metrics are never hard-coded here."""
 from pathlib import Path
 import re
 from fpdf import FPDF
 
-
-class ReportPDF(FPDF):
-    def header(self):
-        self.set_font('Helvetica', 'B', 9)
-        self.set_text_color(55, 65, 81)
-        self.cell(0, 7, 'AI Fellowship | Week 16 | Royas Shakya', new_x='LMARGIN', new_y='NEXT')
-        self.ln(3)
-
-    def footer(self):
-        self.set_y(-12)
-        self.set_font('Helvetica', size=8)
-        self.cell(0, 5, f'Page {self.page_no()}', align='C')
-
-
 def clean(text):
-    text = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', text)
-    text = text.translate(str.maketrans({'—': '-', '–': '-', '“': chr(34), '”': chr(34), '’': chr(39)}))
-    return text.replace('**', '').replace('`', '').encode('latin-1', 'replace').decode('latin-1')
-
+    return re.sub(r'\[([^]]+)\]\(([^)]+)\)',r'\1 (\2)',text).replace('**','').replace('`','')
 
 def render(source, target):
-    pdf = ReportPDF()
-    pdf.set_margins(15, 12, 15)
-    pdf.set_auto_page_break(auto=True, margin=18)
-    pdf.add_page()
-    lines = source.read_text().splitlines()
-    index = 0
-    while index < len(lines):
-        line = lines[index]
-        if not line.strip():
-            pdf.ln(2)
-            index += 1
-            continue
+    pdf=FPDF()
+    pdf.set_auto_page_break(auto=True,margin=15)
+    fonts=Path('/usr/share/fonts/truetype/dejavu')
+    if not (fonts/'DejaVuSans.ttf').exists():
+        raise RuntimeError('Install DejaVu Sans before rendering Unicode documentation')
+    pdf.add_font('DejaVu',fname=str(fonts/'DejaVuSans.ttf'))
+    pdf.add_font('DejaVu',style='B',fname=str(fonts/'DejaVuSans-Bold.ttf'))
+    pdf.add_page(); lines=source.read_text().splitlines(); i=0
+    while i<len(lines):
+        line=lines[i]
         if line.startswith('|'):
-            rows = []
-            while index < len(lines) and lines[index].startswith('|'):
-                row = [clean(cell.strip()) for cell in lines[index].strip('|').split('|')]
-                if not all(re.fullmatch(r'[-: ]+', cell) for cell in row):
-                    rows.append(row)
-                index += 1
-            pdf.set_font('Helvetica', size=8)
-            with pdf.table(line_height=4, padding=2, col_widths=(1, 1.4, 2) if len(rows[0])==3 else None) as table:
-                for cells in rows:
-                    row = table.row()
-                    for cell in cells:
-                        row.cell(cell)
-            pdf.ln(3)
-            continue
-        if line.startswith('#'):
-            pdf.ln(2)
-            pdf.set_text_color(28, 65, 100)
-            pdf.set_font('Helvetica', 'B', 15 if line.startswith('# ') else 11)
-            line = line.lstrip('# ')
-        else:
-            pdf.set_text_color(35, 35, 35)
-            pdf.set_font('Helvetica', size=9)
-        pdf.multi_cell(0, 4.5, clean(line) or ' ', new_x='LMARGIN', new_y='NEXT')
-        index += 1
+            rows=[]
+            while i<len(lines) and lines[i].startswith('|'):
+                cells=[clean(c.strip()) for c in lines[i].strip('|').split('|')]
+                if not all(re.fullmatch(r'[:\- ]+',c or '-') for c in cells): rows.append(cells)
+                i+=1
+            if rows:
+                pdf.set_font('DejaVu',size=7.5)
+                with pdf.table(line_height=4.3,padding=1) as table:
+                    for cells in rows:
+                        row=table.row()
+                        for cell in cells: row.cell(cell)
+            pdf.ln(3);continue
+        heading=line.startswith('#')
+        pdf.set_font('DejaVu',style='B' if heading else '',size=12 if heading else 9)
+        if not line.startswith('```'):
+            pdf.multi_cell(0,6 if heading else 4.5,text=clean(line.lstrip('# ') if heading else line) or ' ',new_x='LMARGIN',new_y='NEXT')
+        i+=1
     pdf.output(str(target))
-    print(target.name)
 
-
-def main():
-    root = Path(__file__).resolve().parents[3]
-    render(root / 'docs/SUBMISSION_REPORT.md', root / 'docs/SUBMISSION_REPORT.pdf')
-    render(root / 'docs/ASSESSMENT.md', root / 'docs/ASSESSMENT.pdf')
-
-
-if __name__ == '__main__':
-    main()
+if __name__=='__main__':
+    root=Path(__file__).resolve().parents[3]
+    render(root/'docs/SUBMISSION_REPORT.md',root/'docs/SUBMISSION_REPORT.pdf')
+    render(root/'docs/ASSESSMENT.md',root/'docs/ASSESSMENT.pdf')

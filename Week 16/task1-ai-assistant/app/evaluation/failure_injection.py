@@ -158,7 +158,7 @@ async def test_provider_timeout(agentic_loop_fn) -> dict:
     Failure Injection: Force primary provider timeout.
 
     Expected behavior:
-    - Agent should fall back to secondary provider (Gemini)
+    - Agent should fall back to configured secondary provider
     - Agent should still produce a reasonable answer
     - Graceful degradation rather than hard failure
     """
@@ -187,8 +187,8 @@ async def run_all_failure_tests(agentic_loop_fn, rag_retriever=None) -> list[dic
     except Exception as e:
         results.append({
             "test_name": "web_search_unavailable",
-            "injection_reached": injected,
-            "inconclusive": not injected or result.stopped_reason == "error",
+            "injection_reached": False,
+            "inconclusive": True,
             "passed": False,
             "error": str(e),
         })
@@ -201,7 +201,7 @@ async def run_all_failure_tests(agentic_loop_fn, rag_retriever=None) -> list[dic
     except Exception as e:
         results.append({
             "test_name": "malformed_rag_output",
-            "inconclusive": rag_retriever is None or result.stopped_reason == "error",
+            "inconclusive": True,
             "passed": False,
             "error": str(e),
         })

@@ -326,7 +326,7 @@ if prompt := st.chat_input("Ask me anything..."):
                     "max_iterations": max_iterations,
                     "provider": provider,
                 },
-                timeout=120.0,  # Longer timeout for agentic loop
+                timeout=900.0,  # Paced free-tier decisions may require several minutes
             )
         else:
             # Call standard chat endpoint

@@ -1,0 +1,99 @@
+{
+  "mode": "live",
+  "description": "Live provider: openai/gpt-oss-20b; shared sequential budget; fallback: nvidia/nemotron-3-super-120b-a12b:free; max output tokens: 1024",
+  "generated_at": "2026-09-14T14:05:21.476487+00:00",
+  "queries": [
+    {
+      "id": "simple_02",
+      "query": "What is the current date and time?",
+      "difficulty": "simple",
+      "expected_min_iterations": 1,
+      "expected_max_iterations": 2,
+      "expected_tools": [
+        "get_current_datetime"
+      ],
+      "description": "Simple tool call, no cross-source verification needed",
+      "expected_quality": "Should call datetime tool and return current time",
+      "answer_contains_any": [
+        [
+          "2026"
+        ]
+      ]
+    }
+  ],
+  "report": {
+    "results": [
+      {
+        "query_id": "simple_02",
+        "query": "What is the current date and time?",
+        "difficulty": "simple",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [
+          "get_current_datetime"
+        ],
+        "iterations_used": 2,
+        "total_tokens": {
+          "prompt_tokens": 1130,
+          "completion_tokens": 30
+        },
+        "duration_ms": 31055.85581199921,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "tool_call",
+            "tool_name": "get_current_datetime",
+            "tool_args": {},
+            "tool_result_summary": "Current date and time: 2026-09-14 19:49:50 "
+          },
+          {
+            "iteration": 2,
+            "action": "provider_fallback",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "GroqRequestError (HTTP 429)"
+          },
+          {
+            "iteration": 2,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "OpenRouterRequestError (HTTP 429)"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": true,
+        "trajectory_reasonable": true,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      }
+    ],
+    "total_queries": 1,
+    "task_completion_rate": 0.0,
+    "tool_correctness_rate": 1.0,
+    "avg_trajectory_length": 2.0,
+    "avg_tokens_per_query": {
+      "prompt_tokens": 1130,
+      "completion_tokens": 30
+    },
+    "failure_summary": {
+      "total_failures": 1,
+      "hard_failures": 1,
+      "soft_failures": 0,
+      "cascading_soft_failures": 0,
+      "failure_details": [
+        {
+          "query_id": "simple_02",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        }
+      ]
+    },
+    "total_tokens_all_queries": {
+      "prompt_tokens": 1130,
+      "completion_tokens": 30
+    },
+    "duration_seconds": 211.16
+  }
+}

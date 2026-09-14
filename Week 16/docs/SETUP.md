@@ -1,83 +1,65 @@
 # Setup and Reproduction
 
-## Requirements
-
-Python 3.12, internet access for initial embedding downloads, and a supported model account with available quota. Tests use the standard-library `unittest` runner; the project does not use an external evaluation framework. The submitted sample documents are under `task1-ai-assistant/data/sample_docs`.
-
-## Core assistant
-
-From the `Week 16` directory:
+From `Week 16/task1-ai-assistant`, use Python 3.12:
 
 ```bash
-cd task1-ai-assistant
 python3 -m venv venv
 . venv/bin/activate
 python -m pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Fill in your own `GOOGLE_API_KEY` and set `GEMINI_MODEL` to a model available to your account. The submitted default is the model used for evaluation; access is account-dependent. `.env` is intentionally excluded from Git. Keep an existing `.env` rather than overwriting it.
+Preserve an existing `.env`. Set `GROQ_API_KEY` and optionally `OPENROUTER_API_KEY` to your own credentials. Leave unused slots blank. Credentials are excluded from the submission. The evaluated models are `openai/gpt-oss-20b` on Groq and `nvidia/nemotron-3.5-lightning:free` on OpenRouter; availability depends on the account. Use:
 
-```bash
-DEBUG=false python -m uvicorn app.main:app --port 8000
+```dotenv
+LLM_PROVIDER=groq
+GROQ_MODEL=openai/gpt-oss-20b
+GROQ_TOKENS_PER_MINUTE=6000
+MAX_TOKENS=768
+OPENROUTER_MODEL=nvidia/nemotron-3.5-lightning:free
 ```
 
-Open `http://localhost:8000/docs`. Startup ingests the sample documents into local ChromaDB. Use this working directory so the default data paths resolve. The `DEBUG=false` override avoids a conflicting shell setting such as `DEBUG=release`.
+`GROQ_API_KEY_2` through `_5` are optional operational failover credentials. They do not increase organization quota. Restart after configuration changes; providers are cached per worker. Do not run live evaluations alongside API traffic using the same organization unless you coordinate their aggregate allowance.
+
+## Run
 
 ```bash
-curl http://localhost:8000/chat/agentic \
+DEBUG=false python -m uvicorn app.main:app --port 8000 --workers 1
+```
+
+Visit `http://localhost:8000/docs`. Startup ingests the sample documents into ChromaDB and initially downloads the embedding model if not cached. Agentic responses include an answer, execution trace, source tool names, iterations, tokens, duration, compaction flag and stop reason. Clarification ends the request; submit a new request with the missing information. The original W15 chat/ingestion endpoints are also available.
+
+```bash
+curl --max-time 900 http://localhost:8000/chat/agentic \
   -H 'Content-Type: application/json' \
-  -d '{"message":"Compare our Python practices with external standards and cite sources.","max_iterations":5}'
+  -d '{"message":"Compare RAG and fine-tuning using our documents and web evidence.","max_iterations":5}'
 ```
 
-The response includes `answer`, `sources_consulted`, `iterations_used`, `total_tokens`, `duration_ms`, `compacted`, `stopped_reason` and `steps`. `sources_consulted` lists successful tool names; document/URL references are part of the evidence and answer. Stop reasons are `model_answered`, `clarification`, `max_iterations` and `error`. A clarification pauses the task and requires a new request containing the missing details. Agentic requests have no persistent conversation store.
-
-The W15 `/chat`, ingestion and structured-output routes remain available. Provider choice uses the request override when supplied, otherwise `LLM_PROVIDER`; the agentic route sends no extra billable health prompt. The legacy `local_vllm` identifier currently selects the local Transformers implementation. The repository also includes the older vLLM client source; it is not the factory's active local backend.
-
-## Tests and evaluations
-
-From `task1-ai-assistant` with the virtual environment active:
+## Verify
 
 ```bash
-python -m unittest discover -s tests -v
-python -m app.evaluation.run_evaluation --mode offline
-DEBUG=false python -m app.evaluation.run_evaluation --mode live --delay 15
-DEBUG=false python -m app.evaluation.run_evaluation --mode live --failure-injection --delay 15
+DEBUG=false python -m unittest discover -s tests -v
+DEBUG=false python -m app.evaluation.run_evaluation --mode offline
+DEBUG=false python -m app.evaluation.run_evaluation --mode live --delay 0
+DEBUG=false python -m app.evaluation.run_evaluation --mode live --failure-injection --delay 0
 ```
 
-Live mode uses the configured credentials and can consume quota. The delay applies to each model call, including compaction. It reduces request frequency but cannot restore exhausted daily quota. Results are written beside the runner as Markdown and JSON; the `evaluation/` directory contains the submitted snapshot. `progress_live.json` checkpoints completed queries. To investigate selected failures without overwriting the full run:
+`--delay` is an optional pause before each query. Provider pacing independently covers every Groq call, including compaction; zero does not disable that pacing. Live runs may take many minutes. They consume account quota, and daily exhaustion cannot be solved by waiting one minute. Provider-reported tokens exclude unknown consumption on unsuccessful requests.
+
+Raw results are saved in `app/evaluation/`; `progress_live.json` checkpoints completed queries. Submitted snapshots are in `../evaluation/`. To diagnose a subset without replacing the full result:
 
 ```bash
-DEBUG=false python -m app.evaluation.run_evaluation --mode live --ids simple_02 simple_03 --delay 15
+DEBUG=false python -m app.evaluation.run_evaluation --mode live --ids complex_01 --delay 0
 ```
 
-Subset output is named `evaluation_live_subset`. Historical 2024 comparison questions in the query set are intentional. Lexical rubrics are transparent proxies, not factual correctness proofs. Review citations, missing-evidence statements and traces before interpreting a completion score. Error strings or unsupported answers must not be counted as successes.
+Expected answer rubrics remain unchanged. Their lexical checks and source/tool traces are proxies; independently review citation support and factual claims. Controlled negative tests are expected to fail the completion rubric and must not be relabeled successful live tasks.
 
-## Production API and Streamlit
+## Production and diagrams
 
-From `Week 16/task2-production`:
+From `Week 16/task2-production`, run `docker compose up --build`. Compose reads the core `.env`. The UI is on port 8501 and API on 8000; enable Agentic Mode. The core and production agentic endpoints use the same provider, loop and fallback behavior. The UI allows 900 seconds for a paced request. Docker deployment and multi-worker operation are not certified by the local regression suite.
 
-```bash
-docker compose up --build
-```
+The architecture is in `../architecture/diagram.md` (Mermaid) and `agentic-loop.svg`. To rebuild documentation PDFs from the current Markdown, install `fpdf2` then run `python app/evaluation/generate_pdf.py` from this directory.
 
-Compose reads `../task1-ai-assistant/.env`. The frontend is at port 8501 and API at port 8000. Enable Agentic Mode in the sidebar. The optional GPU service is behind the `gpu` profile and is not needed for Gemini. The frontend health check uses Python/httpx, which is installed in its image. The production API resolves sample-document paths from the shared core package and registers knowledge search after retriever initialization.
+References: [Groq limits](https://console.groq.com/docs/rate-limits), [OpenRouter limits](https://openrouter.ai/docs/api-reference/limits).
 
-Docker deployment has not been inferred from local tests. Persistent storage, cross-worker rate limits and multi-instance coordination require separate deployment validation. The production single-pass cache/fallback middleware does not imply identical caching/fallback behavior for agentic requests.
-
-## Optional credential slots
-
-The provider accepts `GOOGLE_API_KEY` plus optional `_2` through `_5`. Fill slots sequentially; `GEMINI_ACTIVE_KEY` selects the one-based position among nonempty slots. Restart after changes. Keys are sent in headers and excluded from settings exports. Transient transport or HTTP 500/502/503/504 failures can try the next slot once; HTTP 429 does not rotate credentials and applies a cooldown. Authentication errors stop. Several keys do not increase a project's quota.
-
-Provider reference: [Gemini rate limits](https://ai.google.dev/gemini-api/docs/rate-limits), [generateContent API](https://ai.google.dev/api/generate-content). Web-search reference: [DDGS package documentation](https://pypi.org/project/ddgs/).
-
-## Regenerate the submission PDF
-
-From `Week 16`:
-
-```bash
-task1-ai-assistant/venv/bin/python -m pip install fpdf2
-task1-ai-assistant/venv/bin/python task1-ai-assistant/app/evaluation/generate_pdf.py
-```
-
-The PDF is generated from current Markdown sources. No scores are hard-coded by the renderer.
+GPT-OSS requests use low reasoning effort. A rejected native tool generation (`tool_use_failed`) receives one retry using the existing text decision protocol; rejected arguments are never executed. OpenRouter allows up to 180 seconds for a response (15 seconds to connect). Routine `/health` calls do not send model prompts; use `?probe_model=true` only for an explicit provider check.

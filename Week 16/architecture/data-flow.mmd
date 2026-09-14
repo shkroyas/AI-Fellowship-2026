@@ -1,0 +1,41 @@
+sequenceDiagram
+    participant U as User
+    participant F as FastAPI
+    participant A as Agentic Loop
+    participant L as LLM (Groq/OpenRouter)
+    participant T as Tools
+    participant R as RAG/ChromaDB
+
+    U->>F: POST /chat/agentic {message}
+    F->>A: AgenticLoop.run(query)
+    
+    loop Iteration 1..5
+        A->>A: Context Manager: compact if needed
+        A->>L: chat(messages, tools)
+        
+        alt Groq available
+            L-->>A: tool_calls / answer
+        else Groq 429
+            A->>L: fallback.chat(messages, tools)
+            L-->>A: tool_calls / answer
+        end
+        
+        alt search_knowledge
+            A->>T: execute("search_knowledge", {query})
+            T->>R: vector_search(query)
+            R-->>T: chunks with scores
+            T-->>A: evidence
+        else web_search
+            A->>T: execute("web_search", {query})
+            T-->>A: search results
+        else calculator
+            A->>T: execute("calculator", {expression})
+            T-->>A: result
+        else answer
+            A-->>F: AgenticResult(answer, steps)
+        end
+        
+        A->>A: Add finding to context
+    end
+    
+    F-->>U: {answer, sources, tokens, steps}

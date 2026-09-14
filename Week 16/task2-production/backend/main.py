@@ -15,6 +15,8 @@ import json
 import logging
 import time
 import uuid
+from pathlib import Path
+import app as core_app
 from contextlib import asynccontextmanager
 from typing import Any, Optional
 
@@ -32,8 +34,6 @@ base_dir = os.path.dirname(__file__)
 sys.path.insert(0, os.path.abspath(os.path.join(base_dir, "..", "task1-ai-assistant")))       # Docker path (/app/task1-ai-assistant)
 sys.path.insert(0, os.path.abspath(os.path.join(base_dir, "..", "..", "task1-ai-assistant"))) # Local path (../../task1-ai-assistant)
 
-import app as core_app
-from pathlib import Path
 from app.config import settings
 from app.llm.provider import ChatMessage, get_provider, LLMResponse, StructuredOutputSchema
 from app.prompts.system_prompts import (
@@ -102,7 +102,8 @@ async def lifespan(app: FastAPI):
 
     # Initialize RAG
     try:
-        rag_retriever = RAGRetriever(source_dir=str(Path(core_app.__file__).resolve().parent.parent / "data" / "sample_docs"))
+        sample_dir = Path(core_app.__file__).resolve().parent.parent / "data/sample_docs"
+        rag_retriever = RAGRetriever(source_dir=str(sample_dir))
         count = rag_retriever.ingest_documents()
         logger.info(f"📚 Ingested {count} chunks")
         register_tools()
@@ -110,7 +111,7 @@ async def lifespan(app: FastAPI):
         logger.warning(f"RAG init warning: {e}")
 
     # Register fallback providers
-    fallback_manager.register_providers(["gemini", "openai", "local_vllm"])
+    fallback_manager.register_providers(["groq", "openrouter", "openai"])
 
     logger.info("✅ Production AI Assistant ready")
     yield
@@ -350,7 +351,7 @@ async def process_chat(request: ChatRequest) -> ChatResponse:
 # ── API Endpoints ──
 
 @app.get("/health")
-async def health_check():
+async def health_check(probe_model: bool = False):
     """Comprehensive health check."""
     health = {
         "status": "healthy",
@@ -362,6 +363,10 @@ async def health_check():
             "rate_limiter": rate_limiter.stats() if rate_limiter else {},
         },
     }
+
+    if not probe_model:
+        health["components"]["llm"] = {"available": None, "provider": settings.llm_provider, "probed": False}
+        return health
 
     # Check LLM provider
     try:
@@ -487,7 +492,7 @@ async def metrics():
 async def chat_structured(request: StructuredChatRequest):
     """Generate structured JSON output."""
     provider = get_provider(request.provider)
-
+    
     if request.output_type == "analysis":
         schema_dict = ANALYSIS_SCHEMA
     elif request.output_type == "qa":
@@ -500,12 +505,12 @@ async def chat_structured(request: StructuredChatRequest):
         description=f"Structured output for {request.output_type}",
         schema_dict=schema_dict
     )
-
+    
     messages = [
         ChatMessage(role="system", content=STRUCTURED_OUTPUT_PROMPT),
         ChatMessage(role="user", content=request.message)
     ]
-
+    
     try:
         response = await provider.chat(messages=messages, structured_output=schema)
         # Try to parse JSON from the response content using provider's method
@@ -537,12 +542,18 @@ async def agentic_chat(request: AgenticChatRequest):
         # Honor configuration without an extra, unaccounted model health request.
         provider = get_provider(request.provider or settings.llm_provider)
 
+        fallback_provider = None
+        if (request.provider or settings.llm_provider) == "groq" and settings.openrouter_api_key:
+            fallback_provider = get_provider("openrouter")
+
         # Create and run the agentic loop
         loop = AgenticLoop(
             provider=provider,
             rag_retriever=rag_retriever,
             max_iterations=request.max_iterations,
             compact_threshold_chars=settings.agentic_compact_threshold,
+            fallback_provider=fallback_provider,
+            initial_retrieval=False,
         )
         result = await loop.run(request.message)
 

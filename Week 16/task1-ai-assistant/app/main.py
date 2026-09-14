@@ -112,7 +112,7 @@ app = FastAPI(
     title="AI Assistant API",
     description=(
         "A robust AI assistant with RAG, tool calling, and structured output. "
-        "Supports multiple LLM providers (Gemini, OpenAI, local vLLM)."
+        "Supports multiple LLM providers (Groq, OpenRouter, OpenAI)."
     ),
     version="1.0.0",
     lifespan=lifespan,
@@ -196,13 +196,12 @@ class AgenticChatResponse(BaseModel):
 
 
 @app.get("/health")
-async def health_check():
-    """Health check endpoint."""
-    provider = get_provider()
-    llm_healthy = await provider.health_check()
+async def health_check(probe_model: bool = False):
+    """Service health; model probing is explicit because it consumes quota."""
+    llm_healthy = await get_provider().health_check() if probe_model else None
 
     return {
-        "status": "healthy" if llm_healthy else "degraded",
+        "status": "degraded" if llm_healthy is False else "healthy",
         "llm_provider": settings.llm_provider,
         "llm_available": llm_healthy,
         "rag_initialized": rag_retriever is not None,
@@ -316,12 +315,27 @@ async def agentic_chat(request: AgenticChatRequest):
         # Honor configuration without an extra, unaccounted model health request.
         provider = get_provider(request.provider or settings.llm_provider)
 
+        # Configure an independent fallback for the selected primary provider.
+        fallback_provider = None
+        if (request.provider or settings.llm_provider) == "groq" and settings.openrouter_api_key:
+            try:
+                fallback_provider = get_provider("openrouter")
+            except Exception:
+                pass
+        elif (request.provider or settings.llm_provider) == "openrouter" and settings.groq_keys():
+            try:
+                fallback_provider = get_provider("groq")
+            except Exception:
+                pass
+
         # Create and run the agentic loop
         loop = AgenticLoop(
             provider=provider,
             rag_retriever=rag_retriever,
             max_iterations=request.max_iterations,
             compact_threshold_chars=settings.agentic_compact_threshold,
+            fallback_provider=fallback_provider,
+            initial_retrieval=True,
         )
         result = await loop.run(request.message)
 
@@ -485,9 +499,9 @@ async def get_config():
     return {
         "llm_provider": settings.llm_provider,
         "model": {
-            "gemini": settings.gemini_model,
+            "groq": settings.groq_model,
+            "openrouter": settings.openrouter_model,
             "openai": settings.openai_model,
-            "vllm": settings.vllm_model,
         },
         "generation": {
             "temperature": settings.temperature,

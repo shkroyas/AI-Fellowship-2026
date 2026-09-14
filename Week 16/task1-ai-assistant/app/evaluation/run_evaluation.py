@@ -1,4 +1,8 @@
-"""Reproducible custom harness: offline fixtures or explicit live provider evaluation."""
+"""Reproducible custom harness: offline fixtures or explicit live provider evaluation.
+
+Live mode reuses one paced provider across all queries and wires the configured
+OpenRouter fallback. Keys do not multiply an organization token allowance.
+"""
 import argparse
 import asyncio
 import json
@@ -17,7 +21,7 @@ from app.evaluation.test_queries import TEST_QUERIES
 async def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--mode', choices=['offline', 'live'], default='offline')
-    parser.add_argument('--delay', type=float, default=15, help='Live delay between every model call, including compaction')
+    parser.add_argument('--delay', type=float, default=3, help='Live delay between queries (seconds)')
     parser.add_argument('--failure-injection', action='store_true', help='Run failure injections instead of the query suite (live mode)')
     parser.add_argument('--ids', nargs='+', help='Run only these query IDs; output uses a subset suffix')
     args = parser.parse_args()
@@ -25,7 +29,7 @@ async def main():
     logging.getLogger("app.evaluation.harness").setLevel(logging.INFO)
     retriever = None
     if args.mode == 'live':
-        from app.llm.provider import get_provider
+        from app.config import settings
         from app.rag.retriever import RAGRetriever
         from app.tools.calculator import calculator_tool
         from app.tools.web_search import web_search_tool, datetime_tool
@@ -34,14 +38,19 @@ async def main():
         retriever.ingest_documents()
         for tool in [calculator_tool, web_search_tool, datetime_tool, create_knowledge_search_tool(retriever)]:
             tool_registry.register(**tool)
-        base = get_provider()
-        class Paced:
-            async def chat(self, *a, **kw):
-                await asyncio.sleep(max(0, args.delay))
-                return await base.chat(*a, **kw)
-        provider = Paced()
+
+        from app.llm.provider import get_provider
+        provider = get_provider()
+        fallback = None
+        if settings.openrouter_api_key:
+            try:
+                fallback = get_provider('openrouter')
+            except Exception as e:
+                logging.warning("Failed to create OpenRouter fallback: %s", e)
         queries = TEST_QUERIES
-        label = f'Live provider: {base.model}; delay {args.delay}s per call'
+        label = (f'Live provider: {provider.model}; shared sequential budget; '
+                 f'fallback: {fallback.model if fallback else "disabled"}; '
+                 f'max output tokens: {settings.max_tokens}')
     else:
         for name in ['search_knowledge', 'web_search']:
             tool_registry.register(name, 'Fixture search', {'properties': {'query': {'type': 'string'}}, 'required': ['query']},
@@ -64,7 +73,11 @@ async def main():
             provider_for_run.chat.side_effect = scripts[query]
         else:
             provider_for_run = provider
-        return await AgenticLoop(provider_for_run, retriever, max_iterations).run(query)
+            if args.delay:
+                await asyncio.sleep(args.delay)
+        return await AgenticLoop(provider_for_run, retriever, max_iterations,
+                                fallback_provider=fallback if args.mode == "live" else None,
+                                initial_retrieval=True).run(query)
 
     if args.failure_injection:
         if args.mode != 'live':
@@ -81,6 +94,7 @@ async def main():
         if unknown:
             parser.error('Unknown query IDs: ' + ', '.join(sorted(unknown)))
         queries = [q for q in queries if q['id'] in args.ids]
+
     harness = EvaluationHarness(run, progress_path=Path(__file__).parent / ("progress_" + args.mode + ".json"))
     report = await harness.run_all(queries)
     output = Path(__file__).parent / ('evaluation_' + args.mode + ('_subset' if args.ids else ''))

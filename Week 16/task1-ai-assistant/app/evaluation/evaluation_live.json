@@ -1,0 +1,700 @@
+{
+  "mode": "live",
+  "description": "Live provider: openai/gpt-oss-20b; shared sequential budget; fallback: nvidia/nemotron-3-super-120b-a12b:free; max output tokens: 1024",
+  "generated_at": "2026-09-14T13:54:57.375605+00:00",
+  "queries": [
+    {
+      "id": "simple_01",
+      "query": "What is Retrieval-Augmented Generation (RAG)?",
+      "difficulty": "simple",
+      "expected_min_iterations": 1,
+      "expected_max_iterations": 2,
+      "expected_tools": [
+        "search_knowledge"
+      ],
+      "description": "Factual question answerable from knowledge base alone",
+      "expected_quality": "Should define RAG and reference the knowledge base documents",
+      "answer_contains_any": [
+        [
+          "retrieval",
+          "retrieve"
+        ],
+        [
+          "generation",
+          "generate"
+        ],
+        [
+          "rag_guide",
+          "knowledge base"
+        ]
+      ]
+    },
+    {
+      "id": "simple_02",
+      "query": "What is the current date and time?",
+      "difficulty": "simple",
+      "expected_min_iterations": 1,
+      "expected_max_iterations": 2,
+      "expected_tools": [
+        "get_current_datetime"
+      ],
+      "description": "Simple tool call, no cross-source verification needed",
+      "expected_quality": "Should call datetime tool and return current time",
+      "answer_contains_any": [
+        [
+          "2026"
+        ]
+      ]
+    },
+    {
+      "id": "simple_03",
+      "query": "Calculate 15% of 340.",
+      "difficulty": "simple",
+      "expected_min_iterations": 1,
+      "expected_max_iterations": 2,
+      "expected_tools": [
+        "calculator"
+      ],
+      "description": "Math computation, single tool call",
+      "expected_quality": "Should use calculator and return 51",
+      "answer_contains_any": [
+        [
+          "51"
+        ]
+      ]
+    },
+    {
+      "id": "moderate_01",
+      "query": "What are the best practices for Python code according to our knowledge base, and how do they compare to current industry standards?",
+      "difficulty": "moderate",
+      "expected_min_iterations": 2,
+      "expected_max_iterations": 3,
+      "expected_tools": [
+        "search_knowledge",
+        "web_search"
+      ],
+      "description": "Requires both knowledge base and web search for comparison",
+      "expected_quality": "Should find KB practices, search web for current standards, and compare",
+      "answer_contains_any": [
+        [
+          "python"
+        ],
+        [
+          "standard",
+          "pep"
+        ],
+        [
+          "compar",
+          "both",
+          "align"
+        ]
+      ]
+    },
+    {
+      "id": "moderate_02",
+      "query": "Is the information about AI in our documents still accurate given recent developments in 2024?",
+      "difficulty": "moderate",
+      "expected_min_iterations": 2,
+      "expected_max_iterations": 3,
+      "expected_tools": [
+        "search_knowledge",
+        "web_search"
+      ],
+      "description": "Verification task: check KB content against current web info",
+      "expected_quality": "Should retrieve AI docs from KB, search web for recent AI news, note any gaps",
+      "answer_contains_any": [
+        [
+          "2024"
+        ],
+        [
+          "accurate",
+          "outdated",
+          "gap",
+          "changed"
+        ]
+      ]
+    },
+    {
+      "id": "moderate_03",
+      "query": "What are the key differences between sentence-level and recursive chunking strategies for RAG?",
+      "difficulty": "moderate",
+      "expected_min_iterations": 2,
+      "expected_max_iterations": 3,
+      "expected_tools": [
+        "search_knowledge"
+      ],
+      "description": "Knowledge-intensive question that may need multiple KB searches",
+      "expected_quality": "Should find chunking documentation and provide detailed comparison",
+      "answer_contains_any": [
+        [
+          "sentence"
+        ],
+        [
+          "recursive"
+        ]
+      ]
+    },
+    {
+      "id": "complex_01",
+      "query": "Compare RAG vs fine-tuning for enterprise AI deployments. Which approach is more cost-effective and why? Consider both technical and business perspectives.",
+      "difficulty": "complex",
+      "expected_min_iterations": 3,
+      "expected_max_iterations": 5,
+      "expected_tools": [
+        "search_knowledge",
+        "web_search"
+      ],
+      "description": "Multi-faceted comparison requiring multiple sources and perspectives",
+      "expected_quality": "Should gather info from KB and web, compare on multiple dimensions, give nuanced recommendation",
+      "answer_contains_any": [
+        [
+          "rag",
+          "retrieval"
+        ],
+        [
+          "fine-tun",
+          "fine tun"
+        ],
+        [
+          "cost"
+        ],
+        [
+          "depend",
+          "trade",
+          "recommend"
+        ]
+      ]
+    },
+    {
+      "id": "complex_02",
+      "query": "What are the security implications of using local LLMs versus cloud-based APIs for sensitive data processing? Include compliance considerations.",
+      "difficulty": "complex",
+      "expected_min_iterations": 3,
+      "expected_max_iterations": 5,
+      "expected_tools": [
+        "search_knowledge",
+        "web_search"
+      ],
+      "description": "Cross-domain question requiring security, compliance, and technical info",
+      "expected_quality": "Should search multiple sources, cover security and compliance aspects, note trade-offs",
+      "answer_contains_any": [
+        [
+          "local"
+        ],
+        [
+          "cloud"
+        ],
+        [
+          "security",
+          "privacy"
+        ],
+        [
+          "compliance"
+        ]
+      ]
+    },
+    {
+      "id": "complex_03",
+      "query": "Based on our knowledge base, what embedding models are recommended? How do they compare to the latest embedding benchmarks published in 2024?",
+      "difficulty": "complex",
+      "expected_min_iterations": 3,
+      "expected_max_iterations": 4,
+      "expected_tools": [
+        "search_knowledge",
+        "web_search"
+      ],
+      "description": "Requires KB lookup plus external benchmark comparison",
+      "expected_quality": "Should find embedding docs, search for benchmarks, compare old vs new",
+      "answer_contains_any": [
+        [
+          "embedding"
+        ],
+        [
+          "benchmark"
+        ],
+        [
+          "2024"
+        ]
+      ]
+    },
+    {
+      "id": "complex_04",
+      "query": "What is the recommended chunk size for our RAG pipeline, and is there evidence from recent research that this is optimal? Consider the trade-offs between retrieval precision and context completeness.",
+      "difficulty": "complex",
+      "expected_min_iterations": 3,
+      "expected_max_iterations": 4,
+      "expected_tools": [
+        "search_knowledge",
+        "web_search"
+      ],
+      "description": "Technical deep-dive requiring KB settings lookup and research validation",
+      "expected_quality": "Should find chunk config, search for research on optimal chunk sizes, discuss trade-offs",
+      "answer_contains_any": [
+        [
+          "chunk"
+        ],
+        [
+          "precision"
+        ],
+        [
+          "context"
+        ],
+        [
+          "research",
+          "evidence"
+        ]
+      ]
+    }
+  ],
+  "report": {
+    "results": [
+      {
+        "query_id": "simple_01",
+        "query": "What is Retrieval-Augmented Generation (RAG)?",
+        "difficulty": "simple",
+        "answer": "Retrieval\u2011Augmented Generation (RAG) is a method that augments a large language model (LLM) with external knowledge at inference time. Instead of generating a response solely from the parameters learned during training, the model first retrieves relevant documents or text snippets from a curated knowledge base. These retrieved passages are then injected into the LLM\u2019s prompt (or otherwise provided as context) so the model can combine its internal knowledge with up\u2011to\u2011date or domain\u2011specific information to produce a more accurate, fact\u2011checked, or context\u2011aware answer.\n\nKey steps in a typical RAG pipeline:\n1. **Query embedding** \u2013 the user query is encoded into a vector.\n2. **Retrieval** \u2013 a similarity search (vector, keyword, or hybrid) returns the top\u2011K relevant chunks from the knowledge base.\n3. **Re\u2011ranking / filtering** \u2013 optional re\u2011ranking or filtering to improve relevance.\n4. **Context injection** \u2013 the retrieved chunks are concatenated (or otherwise formatted) and added to the LLM prompt.\n5. **Generation** \u2013 the LLM generates the final response conditioned on the augmented prompt.\n\nRAG is used for tasks that require up\u2011to\u2011date facts, domain\u2011specific terminology, or large background knowledge that would exceed an LLM\u2019s context window. It is also a foundation for advanced variants such as multi\u2011query RAG, self\u2011RAG, or graph\u2011enhanced RAG.\n\nSources: rag_guide.md (sections on \u201cWhat is RAG?\u201d, \u201cRetrieval\u201d, and \u201cContext Injection\u201d).",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 1115,
+          "completion_tokens": 361
+        },
+        "duration_ms": 1176.1956279988226,
+        "stopped_reason": "model_answered",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "answer",
+            "tool_name": null,
+            "tool_args": {
+              "answer": "Retrieval\u2011Augmented Generation (RAG) is a method that augments a large language model (LLM) with external knowledge at inference time. Instead of generating a response solely from the parameters learned during training, the model first retrieves relevant documents or text snippets from a curated knowledge base. These retrieved passages are then injected into the LLM\u2019s prompt (or otherwise provided as context) so the model can combine its internal knowledge with up\u2011to\u2011date or domain\u2011specific information to produce a more accurate, fact\u2011checked, or context\u2011aware answer.\n\nKey steps in a typical RAG pipeline:\n1. **Query embedding** \u2013 the user query is encoded into a vector.\n2. **Retrieval** \u2013 a similarity search (vector, keyword, or hybrid) returns the top\u2011K relevant chunks from the knowledge base.\n3. **Re\u2011ranking / filtering** \u2013 optional re\u2011ranking or filtering to improve relevance.\n4. **Context injection** \u2013 the retrieved chunks are concatenated (or otherwise formatted) and added to the LLM prompt.\n5. **Generation** \u2013 the LLM generates the final response conditioned on the augmented prompt.\n\nRAG is used for tasks that require up\u2011to\u2011date facts, domain\u2011specific terminology, or large background knowledge that would exceed an LLM\u2019s context window. It is also a foundation for advanced variants such as multi\u2011query RAG, self\u2011RAG, or graph\u2011enhanced RAG.\n\nSources: rag_guide.md (sections on \u201cWhat is RAG?\u201d, \u201cRetrieval\u201d, and \u201cContext Injection\u201d)."
+            },
+            "tool_result_summary": null
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": true,
+        "failure_type": "soft",
+        "failure_notes": "Response did not meet required evidence, content, stopping or trajectory criteria"
+      },
+      {
+        "query_id": "simple_02",
+        "query": "What is the current date and time?",
+        "difficulty": "simple",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 30509.979937000026,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "provider_fallback",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "GroqRequestError (HTTP 429)"
+          },
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "OpenRouterRequestError (HTTP 429)"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": true,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "simple_03",
+        "query": "Calculate 15% of 340.",
+        "difficulty": "simple",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 2,
+        "total_tokens": {
+          "prompt_tokens": 1144,
+          "completion_tokens": 43
+        },
+        "duration_ms": 91694.01820700296,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "tool_call",
+            "tool_name": "calculator",
+            "tool_args": {
+              "expression": "15% of 340"
+            },
+            "tool_result_summary": "Error: Invalid expression - invalid syntax (<string>, line 1)"
+          },
+          {
+            "iteration": 2,
+            "action": "provider_fallback",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "GroqRequestError (HTTP 429)"
+          },
+          {
+            "iteration": 2,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "OpenRouterRequestError (HTTP 429)"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": true,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "moderate_01",
+        "query": "What are the best practices for Python code according to our knowledge base, and how do they compare to current industry standards?",
+        "difficulty": "moderate",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 35490.62450499696,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "provider_fallback",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "GroqRequestError (HTTP 429)"
+          },
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "OpenRouterRequestError (HTTP 429)"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": false,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "moderate_02",
+        "query": "Is the information about AI in our documents still accurate given recent developments in 2024?",
+        "difficulty": "moderate",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 30434.10647100245,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "provider_fallback",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "GroqRequestError (HTTP 429)"
+          },
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "OpenRouterRequestError (HTTP 429)"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": false,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "moderate_03",
+        "query": "What are the key differences between sentence-level and recursive chunking strategies for RAG?",
+        "difficulty": "moderate",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 30467.892507000215,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "provider_fallback",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "GroqRequestError (HTTP 429)"
+          },
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "OpenRouterRequestError (HTTP 429)"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": false,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "complex_01",
+        "query": "Compare RAG vs fine-tuning for enterprise AI deployments. Which approach is more cost-effective and why? Consider both technical and business perspectives.",
+        "difficulty": "complex",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 30491.238765000162,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "provider_fallback",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "GroqRequestError (HTTP 429)"
+          },
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "OpenRouterRequestError (HTTP 429)"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": false,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "complex_02",
+        "query": "What are the security implications of using local LLMs versus cloud-based APIs for sensitive data processing? Include compliance considerations.",
+        "difficulty": "complex",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [
+          "search_knowledge"
+        ],
+        "iterations_used": 2,
+        "total_tokens": {
+          "prompt_tokens": 1133,
+          "completion_tokens": 51
+        },
+        "duration_ms": 91535.10525900128,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "tool_call",
+            "tool_name": "search_knowledge",
+            "tool_args": {
+              "query": "security implications local LLM vs cloud-based APIs sensitive data processing compliance",
+              "top_k": "5"
+            },
+            "tool_result_summary": "Knowledge base results for 'security implications local LLM vs cloud-based APIs sensitive data processing compliance':\n\n[Source 1: rag_guide.md (relevance: 0.47)]\n### Problems with Vanilla LLMs:\n1. **Knowledge Cutoff**: LLMs have a training data cutoff date\n2. **Hallucination**: LLMs may generate plausible but incorrect information\n3. **Domain Specificity**: General LLMs lack specialized knowledge\n4. **Data Privacy**: Sensitive data shouldn't be in training sets\n\n### RAG Benefits:\n- Access to up"
+          },
+          {
+            "iteration": 2,
+            "action": "provider_fallback",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "GroqRequestError (HTTP 429)"
+          },
+          {
+            "iteration": 2,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "OpenRouterRequestError (HTTP 429)"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": false,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "complex_03",
+        "query": "Based on our knowledge base, what embedding models are recommended? How do they compare to the latest embedding benchmarks published in 2024?",
+        "difficulty": "complex",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 30811.929798001074,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "provider_fallback",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "GroqRequestError (HTTP 429)"
+          },
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "OpenRouterRequestError (HTTP 429)"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": false,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "complex_04",
+        "query": "What is the recommended chunk size for our RAG pipeline, and is there evidence from recent research that this is optimal? Consider the trade-offs between retrieval precision and context completeness.",
+        "difficulty": "complex",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 30478.361641002266,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "provider_fallback",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "GroqRequestError (HTTP 429)"
+          },
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "OpenRouterRequestError (HTTP 429)"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": false,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      }
+    ],
+    "total_queries": 10,
+    "task_completion_rate": 0.0,
+    "tool_correctness_rate": 0.0,
+    "avg_trajectory_length": 1.2,
+    "avg_tokens_per_query": {
+      "prompt_tokens": 339,
+      "completion_tokens": 45
+    },
+    "failure_summary": {
+      "total_failures": 10,
+      "hard_failures": 9,
+      "soft_failures": 1,
+      "cascading_soft_failures": 0,
+      "failure_details": [
+        {
+          "query_id": "simple_01",
+          "type": "soft",
+          "notes": "Response did not meet required evidence, content, stopping or trajectory criteria"
+        },
+        {
+          "query_id": "simple_02",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "simple_03",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "moderate_01",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "moderate_02",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "moderate_03",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "complex_01",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "complex_02",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "complex_03",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "complex_04",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        }
+      ]
+    },
+    "total_tokens_all_queries": {
+      "prompt_tokens": 3392,
+      "completion_tokens": 455
+    },
+    "duration_seconds": 1053.7
+  }
+}

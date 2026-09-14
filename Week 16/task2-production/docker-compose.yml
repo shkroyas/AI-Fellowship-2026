@@ -1,8 +1,6 @@
 # Docker Compose - Production AI Assistant
 # Complete deployment configuration for all services
 
-version: "3.9"
-
 services:
   # ── AI Assistant Backend ──
   backend:
@@ -13,19 +11,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - LLM_PROVIDER=${LLM_PROVIDER:-gemini}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-3.6-flash}
-      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
-      - VLLM_BASE_URL=http://vllm:8001/v1
-      - VLLM_MODEL=${VLLM_MODEL:-unsloth/gemma-2b-it}
-      - TEMPERATURE=${TEMPERATURE:-0.7}
-      - TOP_P=${TOP_P:-0.9}
-      - MAX_TOKENS=${MAX_TOKENS:-2048}
       - CHROMA_PERSIST_DIR=/app/data/chroma_db
-      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-all-MiniLM-L6-v2}
-      - AGENTIC_MAX_ITERATIONS=${AGENTIC_MAX_ITERATIONS:-5}
-      - AGENTIC_COMPACT_THRESHOLD=${AGENTIC_COMPACT_THRESHOLD:-6000}
     env_file:
       - ../task1-ai-assistant/.env
     volumes:
@@ -58,44 +44,11 @@ services:
     networks:
       - ai-network
 
-  # ── Local vLLM Server (Optional) ──
-  # Uncomment to serve a local open-source model
-  # Requires NVIDIA GPU with sufficient VRAM
-  vllm:
-    profiles: ["gpu"]
-    image: vllm/vllm-openai:latest
-    container_name: ai-assistant-vllm
-    ports:
-      - "8001:8001"
-    environment:
-      - MODEL_NAME=unsloth/gemma-2b-it
-    command: >
-      --model unsloth/gemma-2b-it
-      --port 8001
-      --max-model-len 1024
-      --gpu-memory-utilization 0.92
-      --enforce-eager
-      --max-num-seqs 16
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
-    volumes:
-      - model_cache:/root/.cache/huggingface
-    networks:
-      - ai-network
-
-volumes:
-  chroma_data:
-    driver: local
-  sample_docs:
-    driver: local
-  model_cache:
-    driver: local
 
 networks:
   ai-network:
     driver: bridge
+
+volumes:
+  chroma_data:
+  sample_docs:

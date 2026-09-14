@@ -13,40 +13,37 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
     # ── LLM Provider Configuration ──
-    # Primary provider: gemini, openai, or local_vllm
-    llm_provider: str = Field(default="gemini", description="Primary LLM provider")
+    # Primary provider: groq, openai, or openrouter
+    llm_provider: str = Field(default="groq", description="Primary LLM provider")
 
-    # Google Gemini
-    google_api_key: Optional[str] = Field(default=None, alias="GOOGLE_API_KEY", exclude=True, repr=False)
-    google_api_key_2: Optional[str] = Field(default=None, alias="GOOGLE_API_KEY_2", exclude=True, repr=False)
-    google_api_key_3: Optional[str] = Field(default=None, alias="GOOGLE_API_KEY_3", exclude=True, repr=False)
-    google_api_key_4: Optional[str] = Field(default=None, alias="GOOGLE_API_KEY_4", exclude=True, repr=False)
-    google_api_key_5: Optional[str] = Field(default=None, alias="GOOGLE_API_KEY_5", exclude=True, repr=False)
-    gemini_active_key: int = Field(default=1, ge=1, le=5, alias="GEMINI_ACTIVE_KEY")
+    # Groq (primary)
+    groq_api_key: Optional[str] = Field(default=None, alias="GROQ_API_KEY", exclude=True, repr=False)
+    groq_api_key_2: Optional[str] = Field(default=None, alias="GROQ_API_KEY_2", exclude=True, repr=False)
+    groq_api_key_3: Optional[str] = Field(default=None, alias="GROQ_API_KEY_3", exclude=True, repr=False)
+    groq_api_key_4: Optional[str] = Field(default=None, alias="GROQ_API_KEY_4", exclude=True, repr=False)
+    groq_api_key_5: Optional[str] = Field(default=None, alias="GROQ_API_KEY_5", exclude=True, repr=False)
+    groq_active_key: int = Field(default=1, ge=1, le=5, alias="GROQ_ACTIVE_KEY")
+    groq_model: str = Field(default="openai/gpt-oss-20b", alias="GROQ_MODEL")
 
-    def gemini_keys(self):
-        return [key.strip() for key in [self.google_api_key, self.google_api_key_2,
-                self.google_api_key_3, self.google_api_key_4, self.google_api_key_5]
+    groq_tokens_per_minute: int = Field(default=6000, ge=1000)
+
+    def groq_keys(self):
+        return [key.strip() for key in [self.groq_api_key, self.groq_api_key_2,
+                self.groq_api_key_3, self.groq_api_key_4, self.groq_api_key_5]
                 if key and key.strip()]
 
-    gemini_model: str = Field(default="gemini-3.6-flash", alias="GEMINI_MODEL")
+    # OpenRouter (fallback)
+    openrouter_api_key: Optional[str] = Field(default=None, alias="OPENROUTER_API_KEY", exclude=True, repr=False)
+    openrouter_model: str = Field(default="nvidia/nemotron-3-super-120b-a12b:free", alias="OPENROUTER_MODEL")
 
-    # OpenAI
+    # OpenAI (optional secondary fallback)
     openai_api_key: Optional[str] = Field(default=None, alias="OPENAI_API_KEY", exclude=True, repr=False)
     openai_model: str = Field(default="gpt-4o-mini", alias="OPENAI_MODEL")
-
-    # Local vLLM
-    vllm_base_url: str = Field(
-        default="http://localhost:8000/v1", alias="VLLM_BASE_URL"
-    )
-    vllm_model: str = Field(
-        default="mistralai/Mistral-7B-Instruct-v0.3", alias="VLLM_MODEL"
-    )
 
     # ── Generation Parameters ──
     temperature: float = Field(default=0.7, ge=0.0, le=2.0)
     top_p: float = Field(default=0.9, ge=0.0, le=1.0)
-    max_tokens: int = Field(default=2048, ge=1, le=8192)
+    max_tokens: int = Field(default=1024, ge=1, le=8192)
 
     # ── RAG Configuration ──
     chroma_persist_dir: str = Field(default="./data/chroma_db")

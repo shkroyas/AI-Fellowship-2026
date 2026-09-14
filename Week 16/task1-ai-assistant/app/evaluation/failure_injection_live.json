@@ -1,0 +1,35 @@
+{
+  "description": "Live provider: gemini-3.6-flash; delay 15.0s per call",
+  "results": [
+    {
+      "test_name": "web_search_unavailable",
+      "injection_reached": false,
+      "inconclusive": true,
+      "passed": false,
+      "agent_answered": true,
+      "acknowledged_failure": false,
+      "false_confidence": false,
+      "sources_consulted": [],
+      "answer_excerpt": "The model service failed; verification could not be completed.",
+      "iterations": 1,
+      "notes": "Agent did not explicitly acknowledge the limitation"
+    },
+    {
+      "test_name": "malformed_rag_output",
+      "inconclusive": true,
+      "passed": false,
+      "agent_answered": true,
+      "references_empty_kb": false,
+      "fell_back_to_web": false,
+      "sources_consulted": [],
+      "answer_excerpt": "The model service failed; verification could not be completed.",
+      "iterations": 1,
+      "notes": "Agent handled empty KB without hallucinating sources"
+    },
+    {
+      "test_name": "provider_timeout",
+      "passed": true,
+      "notes": "Injected TimeoutError into the real loop; scripted fallback invoked. This tests orchestration, not live model quality."
+    }
+  ]
+}

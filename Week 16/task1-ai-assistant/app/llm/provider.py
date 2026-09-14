@@ -7,6 +7,7 @@ to instantiate the correct provider based on configuration.
 
 import json
 import logging
+from functools import lru_cache
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
@@ -78,7 +79,6 @@ class LLMProvider(ABC):
 
     def _validate_json_output(self, content: str) -> dict:
         """Validate and parse JSON from LLM output."""
-        # Try to extract JSON from markdown code blocks
         if "```json" in content:
             start = content.index("```json") + 7
             end = content.index("```", start)
@@ -96,10 +96,17 @@ class LLMProvider(ABC):
 
 
 def get_provider(provider_name: str = None) -> LLMProvider:
+    """Reuse clients within one worker so requests share pacing and cooldowns."""
+    from ..config import settings
+    return _create_provider(provider_name or settings.llm_provider)
+
+
+@lru_cache(maxsize=3)
+def _create_provider(provider_name: str) -> LLMProvider:
     """Factory function to create the appropriate LLM provider.
 
     Args:
-        provider_name: Name of the provider ('gemini', 'openai', 'local_vllm').
+        provider_name: Name of the provider ('groq', 'openrouter', 'openai').
                        If None, uses the configured default.
 
     Returns:
@@ -109,12 +116,22 @@ def get_provider(provider_name: str = None) -> LLMProvider:
 
     provider_name = provider_name or settings.llm_provider
 
-    if provider_name == "gemini":
-        from .gemini import GeminiProvider
-        return GeminiProvider(
-            model=settings.gemini_model,
-            api_keys=settings.gemini_keys(),
-            active_key=settings.gemini_active_key,
+    if provider_name == "groq":
+        from .groq import GroqProvider
+        return GroqProvider(
+            model=settings.groq_model,
+            api_keys=settings.groq_keys(),
+            active_key=settings.groq_active_key,
+            tokens_per_minute=settings.groq_tokens_per_minute,
+            temperature=settings.temperature,
+            top_p=settings.top_p,
+            max_tokens=settings.max_tokens,
+        )
+    elif provider_name == "openrouter":
+        from .openrouter import OpenRouterProvider
+        return OpenRouterProvider(
+            model=settings.openrouter_model,
+            api_key=settings.openrouter_api_key,
             temperature=settings.temperature,
             top_p=settings.top_p,
             max_tokens=settings.max_tokens,
@@ -124,14 +141,6 @@ def get_provider(provider_name: str = None) -> LLMProvider:
         return OpenAIProvider(
             model=settings.openai_model,
             api_key=settings.openai_api_key,
-            temperature=settings.temperature,
-            top_p=settings.top_p,
-            max_tokens=settings.max_tokens,
-        )
-    elif provider_name == "local_vllm":
-        from .local_transformers import LocalTransformersProvider
-        return LocalTransformersProvider(
-            model=settings.vllm_model,
             temperature=settings.temperature,
             top_p=settings.top_p,
             max_tokens=settings.max_tokens,

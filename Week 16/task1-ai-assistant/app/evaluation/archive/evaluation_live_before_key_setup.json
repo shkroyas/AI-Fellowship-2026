@@ -1,0 +1,613 @@
+{
+  "mode": "live",
+  "description": "Live provider: gemini-3.6-flash; delay 15.0s per call",
+  "queries": [
+    {
+      "id": "simple_01",
+      "query": "What is Retrieval-Augmented Generation (RAG)?",
+      "difficulty": "simple",
+      "expected_min_iterations": 1,
+      "expected_max_iterations": 2,
+      "expected_tools": [
+        "search_knowledge"
+      ],
+      "description": "Factual question answerable from knowledge base alone",
+      "expected_quality": "Should define RAG and reference the knowledge base documents",
+      "answer_contains_any": [
+        [
+          "retrieval",
+          "retrieve"
+        ],
+        [
+          "generation",
+          "generate"
+        ],
+        [
+          "rag_guide",
+          "knowledge base"
+        ]
+      ]
+    },
+    {
+      "id": "simple_02",
+      "query": "What is the current date and time?",
+      "difficulty": "simple",
+      "expected_min_iterations": 1,
+      "expected_max_iterations": 2,
+      "expected_tools": [
+        "get_current_datetime"
+      ],
+      "description": "Simple tool call, no cross-source verification needed",
+      "expected_quality": "Should call datetime tool and return current time",
+      "answer_contains_any": [
+        [
+          "2026"
+        ]
+      ]
+    },
+    {
+      "id": "simple_03",
+      "query": "Calculate 15% of 340.",
+      "difficulty": "simple",
+      "expected_min_iterations": 1,
+      "expected_max_iterations": 2,
+      "expected_tools": [
+        "calculator"
+      ],
+      "description": "Math computation, single tool call",
+      "expected_quality": "Should use calculator and return 51",
+      "answer_contains_any": [
+        [
+          "51"
+        ]
+      ]
+    },
+    {
+      "id": "moderate_01",
+      "query": "What are the best practices for Python code according to our knowledge base, and how do they compare to current industry standards?",
+      "difficulty": "moderate",
+      "expected_min_iterations": 2,
+      "expected_max_iterations": 3,
+      "expected_tools": [
+        "search_knowledge",
+        "web_search"
+      ],
+      "description": "Requires both knowledge base and web search for comparison",
+      "expected_quality": "Should find KB practices, search web for current standards, and compare",
+      "answer_contains_any": [
+        [
+          "python"
+        ],
+        [
+          "standard",
+          "pep"
+        ],
+        [
+          "compar",
+          "both",
+          "align"
+        ]
+      ]
+    },
+    {
+      "id": "moderate_02",
+      "query": "Is the information about AI in our documents still accurate given recent developments in 2024?",
+      "difficulty": "moderate",
+      "expected_min_iterations": 2,
+      "expected_max_iterations": 3,
+      "expected_tools": [
+        "search_knowledge",
+        "web_search"
+      ],
+      "description": "Verification task: check KB content against current web info",
+      "expected_quality": "Should retrieve AI docs from KB, search web for recent AI news, note any gaps",
+      "answer_contains_any": [
+        [
+          "2024"
+        ],
+        [
+          "accurate",
+          "outdated",
+          "gap",
+          "changed"
+        ]
+      ]
+    },
+    {
+      "id": "moderate_03",
+      "query": "What are the key differences between sentence-level and recursive chunking strategies for RAG?",
+      "difficulty": "moderate",
+      "expected_min_iterations": 2,
+      "expected_max_iterations": 3,
+      "expected_tools": [
+        "search_knowledge"
+      ],
+      "description": "Knowledge-intensive question that may need multiple KB searches",
+      "expected_quality": "Should find chunking documentation and provide detailed comparison",
+      "answer_contains_any": [
+        [
+          "sentence"
+        ],
+        [
+          "recursive"
+        ]
+      ]
+    },
+    {
+      "id": "complex_01",
+      "query": "Compare RAG vs fine-tuning for enterprise AI deployments. Which approach is more cost-effective and why? Consider both technical and business perspectives.",
+      "difficulty": "complex",
+      "expected_min_iterations": 3,
+      "expected_max_iterations": 5,
+      "expected_tools": [
+        "search_knowledge",
+        "web_search"
+      ],
+      "description": "Multi-faceted comparison requiring multiple sources and perspectives",
+      "expected_quality": "Should gather info from KB and web, compare on multiple dimensions, give nuanced recommendation",
+      "answer_contains_any": [
+        [
+          "rag",
+          "retrieval"
+        ],
+        [
+          "fine-tun",
+          "fine tun"
+        ],
+        [
+          "cost"
+        ],
+        [
+          "depend",
+          "trade",
+          "recommend"
+        ]
+      ]
+    },
+    {
+      "id": "complex_02",
+      "query": "What are the security implications of using local LLMs versus cloud-based APIs for sensitive data processing? Include compliance considerations.",
+      "difficulty": "complex",
+      "expected_min_iterations": 3,
+      "expected_max_iterations": 5,
+      "expected_tools": [
+        "search_knowledge",
+        "web_search"
+      ],
+      "description": "Cross-domain question requiring security, compliance, and technical info",
+      "expected_quality": "Should search multiple sources, cover security and compliance aspects, note trade-offs",
+      "answer_contains_any": [
+        [
+          "local"
+        ],
+        [
+          "cloud"
+        ],
+        [
+          "security",
+          "privacy"
+        ],
+        [
+          "compliance"
+        ]
+      ]
+    },
+    {
+      "id": "complex_03",
+      "query": "Based on our knowledge base, what embedding models are recommended? How do they compare to the latest embedding benchmarks published in 2024?",
+      "difficulty": "complex",
+      "expected_min_iterations": 3,
+      "expected_max_iterations": 4,
+      "expected_tools": [
+        "search_knowledge",
+        "web_search"
+      ],
+      "description": "Requires KB lookup plus external benchmark comparison",
+      "expected_quality": "Should find embedding docs, search for benchmarks, compare old vs new",
+      "answer_contains_any": [
+        [
+          "embedding"
+        ],
+        [
+          "benchmark"
+        ],
+        [
+          "2024"
+        ]
+      ]
+    },
+    {
+      "id": "complex_04",
+      "query": "What is the recommended chunk size for our RAG pipeline, and is there evidence from recent research that this is optimal? Consider the trade-offs between retrieval precision and context completeness.",
+      "difficulty": "complex",
+      "expected_min_iterations": 3,
+      "expected_max_iterations": 4,
+      "expected_tools": [
+        "search_knowledge",
+        "web_search"
+      ],
+      "description": "Technical deep-dive requiring KB settings lookup and research validation",
+      "expected_quality": "Should find chunk config, search for research on optimal chunk sizes, discuss trade-offs",
+      "answer_contains_any": [
+        [
+          "chunk"
+        ],
+        [
+          "precision"
+        ],
+        [
+          "context"
+        ],
+        [
+          "research",
+          "evidence"
+        ]
+      ]
+    }
+  ],
+  "report": {
+    "results": [
+      {
+        "query_id": "simple_01",
+        "query": "What is Retrieval-Augmented Generation (RAG)?",
+        "difficulty": "simple",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 15783.712562999426,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "ResourceExhausted"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": true,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "simple_02",
+        "query": "What is the current date and time?",
+        "difficulty": "simple",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 15446.97402300153,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "ResourceExhausted"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": true,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "simple_03",
+        "query": "Calculate 15% of 340.",
+        "difficulty": "simple",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 15437.990408001497,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "ResourceExhausted"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": true,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "moderate_01",
+        "query": "What are the best practices for Python code according to our knowledge base, and how do they compare to current industry standards?",
+        "difficulty": "moderate",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 15372.234029997344,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "ResourceExhausted"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": false,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "moderate_02",
+        "query": "Is the information about AI in our documents still accurate given recent developments in 2024?",
+        "difficulty": "moderate",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 15486.799948001135,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "ResourceExhausted"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": false,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "moderate_03",
+        "query": "What are the key differences between sentence-level and recursive chunking strategies for RAG?",
+        "difficulty": "moderate",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 15461.207656000624,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "ResourceExhausted"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": false,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "complex_01",
+        "query": "Compare RAG vs fine-tuning for enterprise AI deployments. Which approach is more cost-effective and why? Consider both technical and business perspectives.",
+        "difficulty": "complex",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 15407.93842399944,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "ResourceExhausted"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": false,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "complex_02",
+        "query": "What are the security implications of using local LLMs versus cloud-based APIs for sensitive data processing? Include compliance considerations.",
+        "difficulty": "complex",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 15403.874919000373,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "ResourceExhausted"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": false,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "complex_03",
+        "query": "Based on our knowledge base, what embedding models are recommended? How do they compare to the latest embedding benchmarks published in 2024?",
+        "difficulty": "complex",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 15385.642846998962,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "ResourceExhausted"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": false,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      },
+      {
+        "query_id": "complex_04",
+        "query": "What is the recommended chunk size for our RAG pipeline, and is there evidence from recent research that this is optimal? Consider the trade-offs between retrieval precision and context completeness.",
+        "difficulty": "complex",
+        "answer": "The model service failed; verification could not be completed.",
+        "sources_consulted": [],
+        "iterations_used": 1,
+        "total_tokens": {
+          "prompt_tokens": 0,
+          "completion_tokens": 0
+        },
+        "duration_ms": 15524.57554600187,
+        "stopped_reason": "error",
+        "compacted": false,
+        "steps": [
+          {
+            "iteration": 1,
+            "action": "error",
+            "tool_name": null,
+            "tool_args": null,
+            "tool_result_summary": "ResourceExhausted"
+          }
+        ],
+        "task_completed": false,
+        "tools_correct": false,
+        "trajectory_reasonable": false,
+        "failure_type": "hard",
+        "failure_notes": "Execution failed or no response was produced"
+      }
+    ],
+    "total_queries": 10,
+    "task_completion_rate": 0.0,
+    "tool_correctness_rate": 0.0,
+    "avg_trajectory_length": 1.0,
+    "avg_tokens_per_query": {
+      "prompt_tokens": 0,
+      "completion_tokens": 0
+    },
+    "failure_summary": {
+      "total_failures": 10,
+      "hard_failures": 10,
+      "soft_failures": 0,
+      "cascading_soft_failures": 0,
+      "failure_details": [
+        {
+          "query_id": "simple_01",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "simple_02",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "simple_03",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "moderate_01",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "moderate_02",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "moderate_03",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "complex_01",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "complex_02",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "complex_03",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        },
+        {
+          "query_id": "complex_04",
+          "type": "hard",
+          "notes": "Execution failed or no response was produced"
+        }
+      ]
+    },
+    "total_tokens_all_queries": {
+      "prompt_tokens": 0,
+      "completion_tokens": 0
+    },
+    "duration_seconds": 154.71
+  }
+}

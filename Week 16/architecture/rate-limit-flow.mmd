@@ -1,0 +1,22 @@
+stateDiagram-v2
+    [*] --> Ready
+    Ready --> GroqCall: Send request
+    GroqCall --> GroqOK: 200 OK
+    GroqCall --> Groq429: 429 Rate Limited
+    GroqCall --> GroqError: 4xx/5xx Error
+    
+    GroqOK --> Ready: Record usage
+    Groq429 --> ReadHeaders: Read retry-after
+    ReadHeaders --> Cooldown: Wait 120s
+    Cooldown --> Ready: Quota reset
+    GroqError --> RotateKey: Try next key
+    RotateKey --> Ready: Backoff 2-8s
+    
+    Ready --> OpenRouterFallback: Groq exhausted
+    OpenRouterFallback --> OpenRouterCall: Send request
+    OpenRouterCall --> OpenRouterOK: 200 OK
+    OpenRouterCall --> OpenRouter429: 429 Rate Limited
+    
+    OpenRouterOK --> Ready: Record usage
+    OpenRouter429 --> OpenRouterCooldown: Wait 30s
+    OpenRouterCooldown --> Ready: Cooldown complete
