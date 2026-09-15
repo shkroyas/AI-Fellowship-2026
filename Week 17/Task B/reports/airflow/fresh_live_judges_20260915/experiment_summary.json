@@ -1,0 +1,123 @@
+{
+  "execution_id": "20260915T141621_159245",
+  "status": "finished",
+  "timestamp": "2026-09-15T14:18:39.635891",
+  "model": "openai/gpt-oss-120b",
+  "versions": {
+    "v3": {
+      "run_id": "567ab0a7aee84e9c81cf1f10abb91591",
+      "regression": {
+        "pct_tests_passed": 0.6,
+        "total_tests": 5,
+        "correct": 3,
+        "judge_model": "openai/gpt-oss-120b",
+        "judge_checks": [
+          "correctness",
+          "grounding"
+        ],
+        "judge_agreement": null,
+        "agreement_note": "Not measured: no independent human labels supplied",
+        "per_case_verdicts": [
+          {
+            "golden_id": "rag_basic",
+            "query": "What is RAG?",
+            "new_response": "**RAG (Retrieval\u2011Augmented Generation)** is a hybrid AI architecture that combines a large language model (LLM) with an external information retrieval component.  \n\n- **Retrieval**: When given a prompt, the system first searches a knowledge base (documents, databases, the web, etc.) to fetch relevant passages.  \n- **Augmented Generation**: The retrieved passages are then fed to the LLM as additional context, allowing it to generate answers that are grounded in up\u2011to\u2011date or domain\u2011specific information rather than relying solely on the model\u2019s internal parameters.\n\nThis approach improves factual accuracy, reduces hallucinations, and enables the model to handle queries about recent events or specialized topics without needing to retrain the entire model. RAG is widely used in question\u2011answering systems, chatbots, and enterprise knowledge\u2011management tools.",
+            "target_response": "RAG (Retrieval-Augmented Generation) combines retrieval from an external knowledge base with LLM generation to produce more accurate, grounded responses.",
+            "tool_evidence": "[]",
+            "required_tool": "",
+            "deterministic_pass": true,
+            "deterministic_reason": "Required concepts and negation check",
+            "result_found": true,
+            "terminated": true,
+            "correctness": "PASS",
+            "correctness reasoning": "The text accurately explains that RAG (Retrieval\u2011Augmented Generation) combines a retrieval component with a large language model to provide grounded, up\u2011to\u2011date answers, matching the reference description.",
+            "correctness: equals PASS": true,
+            "grounding": "PASS",
+            "grounding reasoning": "The response accurately defines Retrieval\u2011Augmented Generation (RAG), explains its components (retrieval and augmented generation), and describes its benefits and typical applications, directly answering the question.",
+            "grounding: equals PASS": true,
+            "passed": true
+          },
+          {
+            "golden_id": "datetime_now",
+            "query": "What is the current date?",
+            "new_response": "**Current date:** September\u202f15,\u202f2026.",
+            "target_response": "Answer using the date and timezone in this captured tool evidence: [{\"iteration\": 1, \"action\": \"tool_call\", \"tool_name\": \"get_current_datetime\", \"tool_args\": {}, \"result\": \"Current date and time: 2026-09-15T14:16:28+05:45\"}]",
+            "tool_evidence": "[{\"iteration\": 1, \"action\": \"tool_call\", \"tool_name\": \"get_current_datetime\", \"tool_args\": {}, \"result\": \"Current date and time: 2026-09-15T14:16:28+05:45\"}]",
+            "required_tool": "get_current_datetime",
+            "deterministic_pass": true,
+            "deterministic_reason": "Parsed date matches captured tool date",
+            "result_found": true,
+            "terminated": true,
+            "correctness": "PASS",
+            "correctness reasoning": "The response states the current date as September 15, 2026, which matches the date provided in the reference tool evidence (2026-09-15). Therefore it correctly answers the question.",
+            "correctness: equals PASS": true,
+            "grounding": "PASS",
+            "grounding reasoning": "The response correctly states the current date as September\u202f15,\u202f2026, which matches the result returned by the required get_current_datetime tool.",
+            "grounding: equals PASS": true,
+            "passed": true
+          },
+          {
+            "golden_id": "calculator_pct",
+            "query": "Calculate 15% of 340.",
+            "new_response": "**15\u202f% of\u202f340 = 51.0**  \n\n(Computed using the expression\u202f0.15\u202f\u00d7\u202f340.)",
+            "target_response": "15% of 340 is 51.",
+            "tool_evidence": "[{\"iteration\": 1, \"action\": \"tool_call\", \"tool_name\": \"calculator\", \"tool_args\": {\"expression\": \"0.15 * 340\"}, \"result\": \"Result: 51.0\"}]",
+            "required_tool": "calculator",
+            "deterministic_pass": false,
+            "deterministic_reason": "Final numeric answer comparison",
+            "result_found": true,
+            "terminated": true,
+            "correctness": "PASS",
+            "correctness reasoning": "The response correctly states that 15% of 340 equals 51.0, which matches the reference answer.",
+            "correctness: equals PASS": true,
+            "grounding": "PASS",
+            "grounding reasoning": "The response correctly reports the result of the required calculator tool (0.15 * 340 = 51.0) and presents the answer without any fabricated information.",
+            "grounding: equals PASS": true,
+            "passed": false
+          },
+          {
+            "golden_id": "python_practices",
+            "query": "What are Python best practices?",
+            "new_response": "The model service failed; verification could not be completed.",
+            "target_response": "Python best practices include: use virtual environments, follow PEP 8, write docstrings, use type hints, and test your code.",
+            "tool_evidence": "[]",
+            "required_tool": "",
+            "deterministic_pass": false,
+            "deterministic_reason": "Required concepts and negation check",
+            "result_found": true,
+            "terminated": false,
+            "correctness": "FAIL",
+            "correctness reasoning": "The provided text does not contain any answer to the question about Python best practices; it only states a service failure, thus insufficient to determine a pass.",
+            "correctness: equals PASS": false,
+            "grounding": "FAIL",
+            "grounding reasoning": "The provided text states that verification could not be completed, offering no substantive information to assess whether it meets the criteria for PASS. Therefore, there is insufficient evidence to determine a clear pass outcome.",
+            "grounding: equals PASS": false,
+            "passed": false
+          },
+          {
+            "golden_id": "rag_vs_ft",
+            "query": "Compare RAG vs fine-tuning.",
+            "new_response": "**Answer:**  \nRetrieval\u2011Augmented Generation (RAG) and fine\u2011tuning are two distinct strategies for improving the performance of large language models (LLMs). Below is a side\u2011by\u2011side comparison covering their core concepts, strengths, weaknesses, typical use\u2011cases, and practical considerations.\n\n| Aspect | Retrieval\u2011Augmented Generation (RAG) | Fine\u2011Tuning |\n|--------|--------------------------------------|-------------|\n| **What it does** | At inference time the model queries an external knowledge source (e.g., a vector store, search engine, or database) and conditions its generation on the retrieved passages. The base LLM itself is **not** changed. | The model\u2019s parameters are updated (via supervised or reinforcement learning) on a task\u2011specific dataset, permanently altering its weights. |\n| **Typical workflow** | 1. Index a corpus (documents, FAQs, code snippets, etc.)  <br>2. For each user query, retrieve top\u2011k relevant chunks  <br>3. Concatenate retrieved text with the prompt and generate a response. | 1. Collect a labeled dataset (prompt\u2011response pairs, instruction data, etc.)  <br>2. Train the model (full\u2011model or LoRA/adapter) on that data  <br>3. Deploy the newly\u2011trained checkpoint for inference. |\n| **Key benefits** | \u2022 **Up\u2011to\u2011date knowledge** \u2013 can incorporate new documents without re\u2011training. <br>\u2022 **Parameter efficiency** \u2013 no extra GPU cost for training; the base model stays unchanged. <br>\u2022 **Scalable to large corpora** \u2013 retrieval can handle millions of passages. <br>\u2022 **Interpretability** \u2013 you can inspect which documents were used. | \u2022 **Task\u2011specific performance** \u2013 can achieve higher accuracy on narrow tasks (e.g., sentiment analysis, code generation). <br>\u2022 **Consistent style/behavior** \u2013 the model learns to internalize desired patterns, reducing reliance on prompt engineering. <br>\u2022 **No latency from retrieval** \u2013 inference is a single forward pass. |\n| **Main drawbacks** | \u2022 **Latency** \u2013 retrieval adds extra time (search + re\u2011ranking). <br>\u2022 **Prompt length limits** \u2013 retrieved text must fit within the model\u2019s context window. <br>\u2022 **Quality depends on retrieval** \u2013 noisy or irrelevant chunks can degrade output. | \u2022 **Costly training** \u2013 requires GPU resources, especially for large models. <br>\u2022 **Staleness** \u2013 once trained, the model does not automatically learn new information; you must re\u2011fine\u2011tune. <br>\u2022 **Risk of over\u2011fitting** \u2013 limited data can cause the model to forget general knowledge (catastrophic forgetting). |\n| **When to choose RAG** | \u2022 Need **current** information (e.g., news, product catalogs). <br>\u2022 Want to **avoid** heavy compute or licensing costs for model training. <br>\u2022 The task is **open\u2011ended** or varies frequently (customer support, Q&A over a changing knowledge base). | \u2022 The problem is **well\u2011defined** with a stable dataset (e.g., legal contract classification, medical coding). <br>\u2022 You need **high precision** on a narrow domain and can afford the training budget. <br>\u2022 Latency must be minimal and you can embed the knowledge directly into the model. |\n| **Typical resources** | \u2022 Vector database (FAISS, Milvus, Pinecone, etc.) <br>\u2022 Embedding model for indexing (e.g., OpenAI embeddings, Sentence\u2011Transformers) <br>\u2022 Base LLM (GPT\u20114, LLaMA, etc.) | \u2022 GPU clusters or cloud\u2011based fine\u2011tuning services <br>\u2022 Training framework (PEFT/LoRA, Hugging Face Trainer, DeepSpeed) <br>\u2022 Labeled dataset (often thousands to millions of examples) |\n| **Examples** | \u2022 OpenAI\u2019s **ChatGPT with browsing** <br>\u2022 Microsoft\u2019s **Azure Cognitive Search + GPT** <br>\u2022 LangChain\u2011based RAG pipelines for internal docs | \u2022 OpenAI\u2019s **fine\u2011tuned ChatGPT** for a specific brand voice <br>\u2022 Anthropic\u2019s **Claude** fine\u2011tuned on customer\u2011service transcripts <br>\u2022 LoRA\u2011adapted LLaMA for biomedical literature summarization |\n| **Hybrid approaches** | Some systems combine both: fine\u2011tune a model on a domain, then augment it with retrieval for the latest facts. This gives the robustness\n\n[Note: response was truncated by token limit]",
+            "target_response": "RAG is better for up-to-date knowledge without retraining; fine-tuning is better for domain-specific behavior and style.",
+            "tool_evidence": "[]",
+            "required_tool": "",
+            "deterministic_pass": true,
+            "deterministic_reason": "Required concepts and negation check",
+            "result_found": true,
+            "terminated": true,
+            "correctness": "PASS",
+            "correctness reasoning": "The answer provides a detailed comparison of RAG and fine\u2011tuning, highlighting that RAG offers up\u2011to\u2011date knowledge without retraining and fine\u2011tuning yields domain\u2011specific behavior and style, which aligns with the reference answer.",
+            "correctness: equals PASS": true,
+            "grounding": "PASS",
+            "grounding reasoning": "The provided text offers a clear, structured comparison of Retrieval\u2011Augmented Generation and fine\u2011tuning, covering definitions, workflows, benefits, drawbacks, use\u2011cases, resources, and examples. It fulfills the requirement to compare the two approaches, so it can be classified as PASS.",
+            "grounding: equals PASS": true,
+            "passed": true
+          }
+        ]
+      },
+      "task_success_rate": 0.6,
+      "avg_iterations": 1.6,
+      "avg_latency_ms": 9100.2
+    }
+  }
+}

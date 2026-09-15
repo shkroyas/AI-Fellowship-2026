@@ -68,19 +68,26 @@ def scale_features(X_train: pd.DataFrame, X_test: pd.DataFrame):
 
 
 def prepare_pipeline():
-    df = load_raw()
-    df = preprocess(df)
-    X_train, X_test, y_train, y_test = split_data(df)
-    feature_cols = get_feature_cols(X_train)
-    X_train_scaled, X_test_scaled, scaler = scale_features(X_train, X_test)
-    return {
-        "df": df,
-        "X_train": X_train, "X_test": X_test,
-        "X_train_scaled": X_train_scaled, "X_test_scaled": X_test_scaled,
-        "y_train": y_train, "y_test": y_test,
-        "feature_cols": feature_cols,
-        "scaler": scaler,
-    }
+    raw = load_raw()
+    raw["TotalCharges"] = pd.to_numeric(raw["TotalCharges"], errors="coerce").fillna(0)
+    X = raw.drop(columns=["customerID", "Churn"])
+    y = raw["Churn"].map({"Yes": 1, "No": 0})
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42, stratify=y)
+    return {"X_train": X_train, "X_test": X_test, "y_train": y_train,
+            "y_test": y_test, "feature_cols": list(X.columns)}
+
+
+def make_model_pipeline(model):
+    from sklearn.compose import ColumnTransformer
+    from sklearn.preprocessing import OneHotEncoder, StandardScaler
+    from sklearn.pipeline import Pipeline
+    numeric = ["tenure", "MonthlyCharges", "TotalCharges", "SeniorCitizen"]
+    preprocessing = ColumnTransformer([
+        ("numeric", StandardScaler(), numeric),
+        ("categorical", OneHotEncoder(handle_unknown="ignore", sparse_output=False), CATEGORICAL_COLS),
+    ])
+    return Pipeline([("preprocessing", preprocessing), ("classifier", model)])
 
 
 if __name__ == "__main__":

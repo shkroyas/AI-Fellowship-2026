@@ -1,0 +1,172 @@
+{
+  "prompt_version": "v3",
+  "timestamp": "2026-09-15T14:16:12.609149",
+  "results": [
+    {
+      "query": "What is RAG?",
+      "response": "RAG (Retrieval\u2011Augmented Generation) is a hybrid AI architecture that combines a large language model (LLM) with an external information\u2011retrieval component. When given a prompt, the system first searches a knowledge source (e.g., a document corpus, vector database, or the web) to fetch relevant passages, and then feeds those passages into the LLM as additional context. The LLM generates its response using both its internal knowledge and the retrieved information, which improves factual accuracy, reduces hallucinations, and allows the model to stay up\u2011to\u2011date without retraining. RAG is widely used for question\u2011answering, chatbots, and knowledge\u2011base assistants.\n\n**Key points**\n- **Retrieval step**: a search engine or vector similarity search selects the most relevant documents.\n- **Augmentation step**: the retrieved text is concatenated with the original query and passed to the generator.\n- **Generation step**: the LLM produces the final answer, grounding it in the retrieved evidence.\n\n**Benefits**\n- Better factual grounding and lower hallucination rates.\n- Ability to incorporate new data without fine\u2011tuning the LLM.\n- Scalable to large, dynamic knowledge bases.\n\n**Typical implementations**\n- Facebook AI\u2019s \u201cRAG\u201d model (2020) that couples a BART generator with a DPR retriever.\n- LangChain, LlamaIndex, and other frameworks that provide RAG pipelines.\n\n*Limitations*: the quality of the answer depends on the relevance of the retrieved documents and the LLM\u2019s ability to correctly cite them. Retrieval latency and index maintenance are additional engineering considerations.",
+      "iterations": 3,
+      "tokens": {
+        "prompt_tokens": 1369,
+        "completion_tokens": 483
+      },
+      "duration_ms": 3907.141221992788,
+      "tools_used": [],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "invalid_decision",
+          "tool_name": null,
+          "tool_args": null,
+          "result": null
+        },
+        {
+          "iteration": 2,
+          "action": "invalid_decision",
+          "tool_name": null,
+          "tool_args": null,
+          "result": null
+        },
+        {
+          "iteration": 3,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "RAG (Retrieval\u2011Augmented Generation) is a hybrid AI architecture that combines a large language model (LLM) with an external information\u2011retrieval component. When given a prompt, the system first searches a knowledge source (e.g., a document corpus, vector database, or the web) to fetch relevant passages, and then feeds those passages into the LLM as additional context. The LLM generates its response using both its internal knowledge and the retrieved information, which improves factual accuracy, reduces hallucinations, and allows the model to stay up\u2011to\u2011date without retraining. RAG is widely used for question\u2011answering, chatbots, and knowledge\u2011base assistants.\n\n**Key points**\n- **Retrieval step**: a search engine or vector similarity search selects the most relevant documents.\n- **Augmentation step**: the retrieved text is concatenated with the original query and passed to the generator.\n- **Generation step**: the LLM produces the final answer, grounding it in the retrieved evidence.\n\n**Benefits**\n- Better factual grounding and lower hallucination rates.\n- Ability to incorporate new data without fine\u2011tuning the LLM.\n- Scalable to large, dynamic knowledge bases.\n\n**Typical implementations**\n- Facebook AI\u2019s \u201cRAG\u201d model (2020) that couples a BART generator with a DPR retriever.\n- LangChain, LlamaIndex, and other frameworks that provide RAG pipelines.\n\n*Limitations*: the quality of the answer depends on the relevance of the retrieved documents and the LLM\u2019s ability to correctly cite them. Retrieval latency and index maintenance are additional engineering considerations."
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "rag_basic"
+    },
+    {
+      "query": "What is the current date?",
+      "response": "**Current date:** September\u202f15,\u202f2026\u3010get_current_datetime\u3011",
+      "iterations": 2,
+      "tokens": {
+        "prompt_tokens": 1222,
+        "completion_tokens": 67
+      },
+      "duration_ms": 7245.596881999518,
+      "tools_used": [
+        "get_current_datetime"
+      ],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "tool_call",
+          "tool_name": "get_current_datetime",
+          "tool_args": {},
+          "result": "Current date and time: 2026-09-15T14:13:45+05:45"
+        },
+        {
+          "iteration": 2,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "**Current date:** September\u202f15,\u202f2026\u3010get_current_datetime\u3011"
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "datetime_now"
+    },
+    {
+      "query": "Calculate 15% of 340.",
+      "response": "**Answer:** 15\u202f% of 340 is **51**.",
+      "iterations": 2,
+      "tokens": {
+        "prompt_tokens": 1219,
+        "completion_tokens": 84
+      },
+      "duration_ms": 41512.975202000234,
+      "tools_used": [
+        "calculator"
+      ],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "tool_call",
+          "tool_name": "calculator",
+          "tool_args": {
+            "expression": "0.15 * 340"
+          },
+          "result": "Result: 51.0"
+        },
+        {
+          "iteration": 2,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "**Answer:** 15\u202f% of 340 is **51**."
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "calculator_pct"
+    },
+    {
+      "query": "What are Python best practices?",
+      "response": "**Python Best Practices**\n\nBelow is a concise checklist of widely\u2011accepted best practices for writing clean, maintainable, and performant Python code. They are organized by topic so you can quickly find the guidance most relevant to your project.\n\n---\n\n## 1. Code Style & Formatting\n| Practice | Why it matters | How to apply |\n|----------|----------------|--------------|\n| **PEP\u202f8** compliance | Standardizes indentation, naming, line length, etc. | Use `flake8`, `pycodestyle`, or an IDE with PEP\u202f8 linting. |\n| **Consistent line length (\u2264\u202f79\u202fchars)** | Improves readability on narrow screens and diff tools. | Configure your editor or `black` to wrap lines. |\n| **Trailing whitespace removal** | Prevents noisy diffs. | Enable \u201ctrim trailing whitespace\u201d in your editor. |\n| **Docstrings** (PEP\u202f257) | Documents modules, classes, functions, and methods. | Use triple\u2011quoted strings; include a short summary, args, returns, and raises sections. |\n| **Automatic formatting** | Reduces style debates and manual reformatting. | Run `black` (or `ruff format`) on every commit or pre\u2011commit hook. |\n\n---\n\n## 2. Naming Conventions\n| Element | Recommended style |\n|---------|-------------------|\n| Modules & packages | `lowercase_with_underscores` |\n| Classes | `CapWords` (PascalCase) |\n| Functions & methods | `lowercase_with_underscores` |\n| Variables | `lowercase_with_underscores` |\n| Constants | `UPPERCASE_WITH_UNDERSCORES` |\n| Private/internal names | Prefix with a single underscore (`_internal`) |\n| \u201cMagic\u201d methods | Exact names defined by Python (`__init__`, `__str__`, \u2026) |\n\n---\n\n## 3. Imports\n| Rule | Reason |\n|------|--------|\n| **Absolute imports** preferred over relative imports | Improves clarity and avoids import\u2011time surprises. |\n| **Group imports** in the order: standard library \u2192 third\u2011party \u2192 local project | Keeps the header tidy. |\n| **One import per line** (except `from module import (a, b, c)`) | Simplifies diffing and auto\u2011formatting. |\n| **Avoid wildcard imports** (`from module import *`) | Prevents namespace pollution and makes static analysis easier. |\n| **Lazy imports** for heavy optional dependencies | Reduces startup time and memory usage. Use `importlib.import_module` inside functions if needed. |\n\n---\n\n## 4. Functions & Methods\n| Practice | Details |\n|----------|---------|\n| **Small, single\u2011purpose functions** | Aim for <\u202f20\u202flines; each does one logical thing. |\n| **Explicit arguments** | Prefer positional\u2011only (`def func(a, /, b)`) or keyword\u2011only (`def func(*, a)`) when it clarifies usage. |\n| **Default mutable arguments** \u2192 **Never** use mutable objects (`list`, `dict`) as defaults. Use `None` and create inside the function. |\n| **Type hints** (PEP\u202f484) | Improves readability, IDE support, and static analysis (`mypy`, `pyright`). |\n| **Docstrings** with `Args`, `Returns`, `Raises` sections | Provides clear API documentation. |\n| **Guard clauses** early returns | Reduce nesting and improve readability. |\n\n---\n\n## 5. Classes & OOP\n| Practice | Reason |\n|----------|--------|\n| **Prefer composition over inheritance** when it simplifies relationships. |\n| **Use `@dataclass`** for plain data containers (Python\u202f3.7+). |\n| **Encapsulation** \u2013 keep attributes \u201cprivate\u201d (`self._value`) unless they\u2019re part of the public API. |\n| **Avoid \u201cgod objects\u201d** \u2013 keep classes focused (single responsibility). |\n| **Implement `__repr__`** for debugging; make it unambiguous and, if possible, evaluable. |\n| **Implement `__str__`** for user\u2011friendly display. |\n| **Use properties** (`@property`) for computed attributes instead of getter/setter methods. |\n\n---\n\n## 6. Error Handling\n| Guideline | Details |\n|-----------|---------|\n| **EAFP (Easier to Ask Forgiveness than Permission)** | Use `try/except` for operations that may fail (e.g., file I/O, dict look\u2011ups). |\n| **Specific exceptions** | Catch the narrowest exception type possible; never use bare `except:`. |\n| **Preserve traceback** | Use `raise ... from e` to maintain context when re\u2011raising. |\n| **Custom exception hierarchy** | Derive from `\n\n[Note: response was truncated by token limit]",
+      "iterations": 3,
+      "tokens": {
+        "prompt_tokens": 1334,
+        "completion_tokens": 1107
+      },
+      "duration_ms": 7638.737489993218,
+      "tools_used": [],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "invalid_decision",
+          "tool_name": null,
+          "tool_args": null,
+          "result": null
+        },
+        {
+          "iteration": 2,
+          "action": "invalid_decision",
+          "tool_name": null,
+          "tool_args": null,
+          "result": null
+        },
+        {
+          "iteration": 3,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "**Python Best Practices**\n\nBelow is a concise checklist of widely\u2011accepted best practices for writing clean, maintainable, and performant Python code. They are organized by topic so you can quickly find the guidance most relevant to your project.\n\n---\n\n## 1. Code Style & Formatting\n| Practice | Why it matters | How to apply |\n|----------|----------------|--------------|\n| **PEP\u202f8** compliance | Standardizes indentation, naming, line length, etc. | Use `flake8`, `pycodestyle`, or an IDE with PEP\u202f8 linting. |\n| **Consistent line length (\u2264\u202f79\u202fchars)** | Improves readability on narrow screens and diff tools. | Configure your editor or `black` to wrap lines. |\n| **Trailing whitespace removal** | Prevents noisy diffs. | Enable \u201ctrim trailing whitespace\u201d in your editor. |\n| **Docstrings** (PEP\u202f257) | Documents modules, classes, functions, and methods. | Use triple\u2011quoted strings; include a short summary, args, returns, and raises sections. |\n| **Automatic formatting** | Reduces style debates and manual reformatting. | Run `black` (or `ruff format`) on every commit or pre\u2011commit hook. |\n\n---\n\n## 2. Naming Conventions\n| Element | Recommended style |\n|---------|-------------------|\n| Modules & packages | `lowercase_with_underscores` |\n| Classes | `CapWords` (PascalCase) |\n| Functions & methods | `lowercase_with_underscores` |\n| Variables | `lowercase_with_underscores` |\n| Constants | `UPPERCASE_WITH_UNDERSCORES` |\n| Private/internal names | Prefix with a single underscore (`_internal`) |\n| \u201cMagic\u201d methods | Exact names defined by Python (`__init__`, `__str__`, \u2026) |\n\n---\n\n## 3. Imports\n| Rule | Reason |\n|------|--------|\n| **Absolute imports** preferred over relative imports | Improves clarity and avoids import\u2011time surprises. |\n| **Group imports** in the order: standard library \u2192 third\u2011party \u2192 local project | Keeps the header tidy. |\n| **One import per line** (except `from module import (a, b, c)`) | Simplifies diffing and auto\u2011formatting. |\n| **Avoid wildcard imports** (`from module import *`) | Prevents namespace pollution and makes static analysis easier. |\n| **Lazy imports** for heavy optional dependencies | Reduces startup time and memory usage. Use `importlib.import_module` inside functions if needed. |\n\n---\n\n## 4. Functions & Methods\n| Practice | Details |\n|----------|---------|\n| **Small, single\u2011purpose functions** | Aim for <\u202f20\u202flines; each does one logical thing. |\n| **Explicit arguments** | Prefer positional\u2011only (`def func(a, /, b)`) or keyword\u2011only (`def func(*, a)`) when it clarifies usage. |\n| **Default mutable arguments** \u2192 **Never** use mutable objects (`list`, `dict`) as defaults. Use `None` and create inside the function. |\n| **Type hints** (PEP\u202f484) | Improves readability, IDE support, and static analysis (`mypy`, `pyright`). |\n| **Docstrings** with `Args`, `Returns`, `Raises` sections | Provides clear API documentation. |\n| **Guard clauses** early returns | Reduce nesting and improve readability. |\n\n---\n\n## 5. Classes & OOP\n| Practice | Reason |\n|----------|--------|\n| **Prefer composition over inheritance** when it simplifies relationships. |\n| **Use `@dataclass`** for plain data containers (Python\u202f3.7+). |\n| **Encapsulation** \u2013 keep attributes \u201cprivate\u201d (`self._value`) unless they\u2019re part of the public API. |\n| **Avoid \u201cgod objects\u201d** \u2013 keep classes focused (single responsibility). |\n| **Implement `__repr__`** for debugging; make it unambiguous and, if possible, evaluable. |\n| **Implement `__str__`** for user\u2011friendly display. |\n| **Use properties** (`@property`) for computed attributes instead of getter/setter methods. |\n\n---\n\n## 6. Error Handling\n| Guideline | Details |\n|-----------|---------|\n| **EAFP (Easier to Ask Forgiveness than Permission)** | Use `try/except` for operations that may fail (e.g., file I/O, dict look\u2011ups). |\n| **Specific exceptions** | Catch the narrowest exception type possible; never use bare `except:`. |\n| **Preserve traceback** | Use `raise ... from e` to maintain context when re\u2011raising. |\n| **Custom exception hierarchy** | Derive from `\n\n[Note: response was truncated by token limit]"
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "python_practices"
+    },
+    {
+      "query": "Compare RAG vs fine-tuning.",
+      "response": "The model service failed; verification could not be completed.",
+      "iterations": 1,
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "duration_ms": 625.2475240034983,
+      "tools_used": [],
+      "stopped_reason": "error",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "error",
+          "tool_name": null,
+          "tool_args": null,
+          "result": "Groq HTTP 429; rate limit or quota exhausted"
+        }
+      ],
+      "golden_id": "rag_vs_ft"
+    }
+  ]
+}

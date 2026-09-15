@@ -1,9 +1,5 @@
 """Evidently monitoring utility for Track A — evidently 0.7+ API.
 Meets rubric: Data Drift, Target Drift, Custom Metric, MLflow artifact logging.
-
-Custom metrics (ChurnRateShift, MonthlyChargesShift) are standalone calculations
-supplementary to Evidently's built-in drift detection. They provide business-specific
-insights that Evidently's generic metrics don't cover.
 """
 
 import pandas as pd
@@ -11,7 +7,7 @@ import numpy as np
 from pathlib import Path
 from evidently import DataDefinition, Dataset, Report
 from evidently.metrics import ValueDrift, MeanValue
-from evidently.presets import DataDriftPreset
+from evidently.presets import DataDriftPreset, DataSummaryPreset
 from typing import Optional
 
 
@@ -84,7 +80,7 @@ class ChurnRateShift:
         }
 
 
-class MonthlyChargesShift:
+class MonthlyChargesSummary:
     """Custom metric: difference in mean MonthlyCharges between reference and current."""
     def __init__(self):
         self.name = "MonthlyChargesShift"
@@ -100,6 +96,26 @@ class MonthlyChargesShift:
         }
 
 
+from evidently.core.metric_types import SingleValueMetric, SingleValueCalculation
+from evidently.tests import lt
+
+class MonthlyChargesShift(SingleValueMetric):
+    """Absolute relative change in mean monthly charges, in percent."""
+
+class MonthlyChargesShiftCalculation(SingleValueCalculation[MonthlyChargesShift]):
+    def calculate(self, context, current_data, reference_data):
+        if reference_data is None:
+            raise ValueError("MonthlyChargesShift requires reference data")
+        ref = reference_data.as_dataframe()["MonthlyCharges"].mean()
+        cur = current_data.as_dataframe()["MonthlyCharges"].mean()
+        if ref == 0:
+            raise ValueError("Reference monthly charges mean cannot be zero")
+        return self.result(float(abs(cur-ref)/abs(ref)*100)), None
+
+    def display_name(self):
+        return "MonthlyChargesShift (%)"
+
+
 def run_data_drift_report(reference_df: pd.DataFrame, current_df: pd.DataFrame,
                            feature_cols: list = None):
     """Run Data Drift preset — flags columns where distribution changed."""
@@ -107,7 +123,7 @@ def run_data_drift_report(reference_df: pd.DataFrame, current_df: pd.DataFrame,
         feature_cols = [c for c in reference_df.columns
                         if c not in ("customerID", "Churn")
                         and (reference_df[c].dtype != "object"
-                             or reference_df[c].nunique() < 10)]
+                        or reference_df[c].nunique() < 10)]
 
     num_cols = [c for c in feature_cols if reference_df[c].dtype in ("int64", "float64")]
     cat_cols = [c for c in feature_cols if c not in num_cols]
@@ -115,7 +131,7 @@ def run_data_drift_report(reference_df: pd.DataFrame, current_df: pd.DataFrame,
     ref_dataset = make_dataset(reference_df, num_cols=num_cols, cat_cols=cat_cols)
     cur_dataset = make_dataset(current_df, num_cols=num_cols, cat_cols=cat_cols)
 
-    report = Report(metrics=[DataDriftPreset(include_tests=True)])
+    report = Report(metrics=[DataDriftPreset(include_tests=True), MonthlyChargesShift(tests=[lt(10)])])
     snapshot = report.run(current_data=cur_dataset, reference_data=ref_dataset)
     return snapshot
 
@@ -140,7 +156,7 @@ def run_target_drift_report(reference_df: pd.DataFrame, current_df: pd.DataFrame
 def compute_custom_metrics(reference_df: pd.DataFrame, current_df: pd.DataFrame):
     """Compute custom metrics: ChurnRateShift and MonthlyChargesShift."""
     churn_metric = ChurnRateShift()
-    charges_metric = MonthlyChargesShift()
+    charges_metric = MonthlyChargesSummary()
     return {
         "churn_rate_shift": churn_metric.calculate(reference_df, current_df),
         "monthly_charges_shift": charges_metric.calculate(reference_df, current_df),
@@ -195,7 +211,7 @@ class EvidentlyReporter:
         results["target_drift_path"] = target_path
         results["target_drift_snapshot"] = target_snapshot
 
-        # 3. Custom metrics (standalone calculations, not Evidently metrics)
+        # 3. Custom metrics
         custom = compute_custom_metrics(reference_df, current_df)
         results["custom_metrics"] = custom
 
@@ -205,7 +221,7 @@ class EvidentlyReporter:
             logger.log_artifact(run, str(drift_path), artifact_path="evidently_reports")
             logger.log_artifact(run, str(target_path), artifact_path="evidently_reports")
 
-            # Log custom metrics as MLflow metrics
+            # Log custom metrics
             for metric_name, metric_vals in custom.items():
                 for k, v in metric_vals.items():
                     logger.client.log_metric(

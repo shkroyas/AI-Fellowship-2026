@@ -173,7 +173,7 @@ class AgenticLoop:
                 if not result.startswith("Error:") and tc.name not in sources:
                     sources.append(tc.name)
                 self.context_manager.add_finding(tc.name, f"Arguments: {tc.arguments}\n{result}")
-                steps.append(AgenticStep(iteration, "tool_call", tc.name, tc.arguments, result[:500], response.usage))
+                steps.append(AgenticStep(iteration, "tool_call", tc.name, tc.arguments, result, response.usage))
 
             if reason in ("model_answered", "clarification"):
                 break

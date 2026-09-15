@@ -1,0 +1,57 @@
+2026/09/15 14:16:18 INFO mlflow.agent.hint: Load the `instrumenting-with-mlflow-tracing` skill at /home/royas-shakya/Downloads/Week15/Week 15/Week 17/Task B/.venv/lib/python3.12/site-packages/mlflow/assistant/skills/instrumenting-with-mlflow-tracing/SKILL.md before writing any tracing code; it ships with this MLflow install. Set MLFLOW_DISABLE_AGENT_HINT=1 to silence this.
+2026-09-15 14:16:20,630 [INFO] Starting Track B experiment runner
+2026-09-15 14:16:20,630 [INFO] Provider: groq, Model: openai/gpt-oss-120b
+2026-09-15 14:16:20,643 [INFO] Loaded 1 prompt versions: ['v3']
+2026-09-15 14:16:21,159 [INFO] MLflow experiment ID: 1
+2026-09-15 14:16:21,159 [INFO] 
+============================================================
+2026-09-15 14:16:21,159 [INFO] Running experiment for prompt version: v3
+2026-09-15 14:16:21,159 [INFO] ============================================================
+2026-09-15 14:16:21,223 [INFO] 
+============================================================
+2026-09-15 14:16:21,223 [INFO] Evaluating prompt version: v3
+2026-09-15 14:16:21,223 [INFO] ============================================================
+2026-09-15 14:16:21,223 [INFO]   [rag_basic] What is RAG?...
+2026-09-15 14:16:21,700 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 400 Bad Request"
+2026-09-15 14:16:22,594 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:16:22,595 [INFO]   -> stopped=model_answered, iters=1, tools=[]
+2026-09-15 14:16:27,599 [INFO]   [datetime_now] What is the current date?...
+2026-09-15 14:16:28,232 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:16:28,824 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:16:28,825 [INFO]   -> stopped=model_answered, iters=2, tools=['get_current_datetime']
+2026-09-15 14:16:33,830 [INFO]   [calculator_pct] Calculate 15% of 340....
+2026-09-15 14:16:34,472 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:16:35,109 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:16:35,110 [INFO]   -> stopped=model_answered, iters=2, tools=['calculator']
+2026-09-15 14:16:40,116 [INFO]   [python_practices] What are Python best practices?...
+2026-09-15 14:16:40,701 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 400 Bad Request"
+2026-09-15 14:16:41,237 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:16:41,822 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 400 Bad Request"
+2026-09-15 14:16:41,885 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-09-15 14:16:41,886 [INFO]   -> stopped=error, iters=2, tools=[]
+2026-09-15 14:16:46,890 [INFO]   [rag_vs_ft] Compare RAG vs fine-tuning....
+2026-09-15 14:17:24,290 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 400 Bad Request"
+2026-09-15 14:17:26,744 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:17:26,745 [INFO]   -> stopped=model_answered, iters=1, tools=[]
+2026-09-15 14:17:33,530 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:17:40,219 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:17:46,752 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:17:53,127 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:18:00,003 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:18:06,647 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:18:13,203 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:18:19,914 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:18:26,607 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:18:33,461 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-15 14:18:39,621 [INFO] 
+Version v3 results:
+2026-09-15 14:18:39,621 [INFO]   Task success rate: 60.0%
+2026-09-15 14:18:39,621 [INFO]   Avg iterations: 1.6
+2026-09-15 14:18:39,621 [INFO]   Avg latency: 9100ms
+2026-09-15 14:18:39,621 [INFO]   Tests passed: 60.0%
+2026-09-15 14:18:39,636 [INFO] 
+============================================================
+2026-09-15 14:18:39,636 [INFO] Experiment complete!
+2026-09-15 14:18:39,636 [INFO] Summary saved to /home/royas-shakya/Downloads/Week15/Week 15/Week 17/Task B/reports/airflow/fresh_live_judges_20260915/experiment_summary.json
+2026-09-15 14:18:39,636 [INFO] MLflow UI: http://localhost:5000
+2026-09-15 14:18:39,636 [INFO] ============================================================

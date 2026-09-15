@@ -1,0 +1,4 @@
+v1 3b0d1d94ab29444eb208a8cfb38fffb0 combined pass rate 1.0
+v2 1d76c194477a4508bdb0ff06dbe85004 combined pass rate 0.8
+v3 b9a8fdc27f0a4c90beca64d38ead7cfc combined pass rate 0.4
+Verified fresh datasets, selection, run IDs, both live judge checks, all 15 verdicts, MLflow metrics and HTML artifacts

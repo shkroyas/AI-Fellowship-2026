@@ -11,7 +11,7 @@ import numpy as np
 class MLFlowLogger:
     def __init__(self, tracking_uri: str = None):
         if tracking_uri is None:
-            tracking_uri = str(Path(__file__).resolve().parents[2] / "data" / "mlflow.db")
+            tracking_uri = str(Path(__file__).resolve().parents[3] / "data" / "mlflow.db")
             tracking_uri = f"sqlite:///{tracking_uri}"
         self.tracking_uri = tracking_uri
         mlflow.set_tracking_uri(tracking_uri)
@@ -24,16 +24,10 @@ class MLFlowLogger:
         return exp.experiment_id
 
     def get_run(self, run_name: str, experiment_id: str, create_new: bool = True):
-        runs = self.client.search_runs(
-            experiment_ids=[experiment_id],
-            filter_string=f"tags.`mlflow.runName` = '{run_name}'",
-        )
-        if runs:
-            return runs[0]
-        if create_new:
-            run = self.client.create_run(experiment_id, run_name=run_name)
-            return run
-        return None
+        """Create a new run for every execution; never resume by display name."""
+        from datetime import datetime, timezone
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%fZ")
+        return self.client.create_run(experiment_id, run_name=f"{run_name}_{stamp}")
 
     def log_run(self, run, metrics: dict, params: dict, tags: dict = None):
         for k, v in params.items():
@@ -65,6 +59,7 @@ class MLFlowLogger:
                     conda_env=conda_env,
                     signature=signature,
                     input_example=input_example,
+                    skops_trusted_types=["xgboost.core.Booster", "xgboost.sklearn.XGBClassifier"],
                 )
 
     def register_model(self, model_name: str, model_uri: str, alias: str = None):
