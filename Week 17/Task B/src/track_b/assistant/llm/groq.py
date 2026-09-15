@@ -68,6 +68,8 @@ class GroqProvider(LLMProvider):
 
     async def _pace(self, payload, actual_tokens=0):
         cost = actual_tokens if actual_tokens > 0 else (len(json.dumps(payload).encode("utf-8")) + 2) // 3 + self.max_tokens + 100
+        if cost > self._budget:
+            raise ValueError("Request exceeds configured per-minute token budget")
         while True:
             now = self._clock()
             while self._reservations and self._reservations[0][0] <= now - 61:
@@ -198,6 +200,7 @@ class GroqProvider(LLMProvider):
                     result = self._parse_response(data)
 
                     total_tokens = result.usage.get("prompt_tokens", 0) + result.usage.get("completion_tokens", 0)
+                    self._reservations = deque((t, c) for t, c in self._reservations if t != reservation_key)
                     if total_tokens > 0:
                         self._reservations.append((self._clock(), total_tokens))
 

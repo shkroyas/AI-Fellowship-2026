@@ -1,0 +1,151 @@
+{
+  "prompt_version": "v3",
+  "timestamp": "2026-09-15T14:18:39.619417",
+  "results": [
+    {
+      "query": "What is RAG?",
+      "response": "**RAG (Retrieval\u2011Augmented Generation)** is a hybrid AI architecture that combines a large language model (LLM) with an external information retrieval component.  \n\n- **Retrieval**: When given a prompt, the system first searches a knowledge base (documents, databases, the web, etc.) to fetch relevant passages.  \n- **Augmented Generation**: The retrieved passages are then fed to the LLM as additional context, allowing it to generate answers that are grounded in up\u2011to\u2011date or domain\u2011specific information rather than relying solely on the model\u2019s internal parameters.\n\nThis approach improves factual accuracy, reduces hallucinations, and enables the model to handle queries about recent events or specialized topics without needing to retrain the entire model. RAG is widely used in question\u2011answering systems, chatbots, and enterprise knowledge\u2011management tools.",
+      "iterations": 1,
+      "tokens": {
+        "prompt_tokens": 404,
+        "completion_tokens": 218
+      },
+      "duration_ms": 1371.685581994825,
+      "tools_used": [],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "**RAG (Retrieval\u2011Augmented Generation)** is a hybrid AI architecture that combines a large language model (LLM) with an external information retrieval component.  \n\n- **Retrieval**: When given a prompt, the system first searches a knowledge base (documents, databases, the web, etc.) to fetch relevant passages.  \n- **Augmented Generation**: The retrieved passages are then fed to the LLM as additional context, allowing it to generate answers that are grounded in up\u2011to\u2011date or domain\u2011specific information rather than relying solely on the model\u2019s internal parameters.\n\nThis approach improves factual accuracy, reduces hallucinations, and enables the model to handle queries about recent events or specialized topics without needing to retrain the entire model. RAG is widely used in question\u2011answering systems, chatbots, and enterprise knowledge\u2011management tools."
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "rag_basic"
+    },
+    {
+      "query": "What is the current date?",
+      "response": "**Current date:** September\u202f15,\u202f2026.",
+      "iterations": 2,
+      "tokens": {
+        "prompt_tokens": 1222,
+        "completion_tokens": 63
+      },
+      "duration_ms": 1225.85848000017,
+      "tools_used": [
+        "get_current_datetime"
+      ],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "tool_call",
+          "tool_name": "get_current_datetime",
+          "tool_args": {},
+          "result": "Current date and time: 2026-09-15T14:16:28+05:45"
+        },
+        {
+          "iteration": 2,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "**Current date:** September\u202f15,\u202f2026."
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "datetime_now"
+    },
+    {
+      "query": "Calculate 15% of 340.",
+      "response": "**15\u202f% of\u202f340 = 51.0**  \n\n(Computed using the expression\u202f0.15\u202f\u00d7\u202f340.)",
+      "iterations": 2,
+      "tokens": {
+        "prompt_tokens": 1219,
+        "completion_tokens": 90
+      },
+      "duration_ms": 1279.7575220029103,
+      "tools_used": [
+        "calculator"
+      ],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "tool_call",
+          "tool_name": "calculator",
+          "tool_args": {
+            "expression": "0.15 * 340"
+          },
+          "result": "Result: 51.0"
+        },
+        {
+          "iteration": 2,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "**15\u202f% of\u202f340 = 51.0**  \n\n(Computed using the expression\u202f0.15\u202f\u00d7\u202f340.)"
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "calculator_pct"
+    },
+    {
+      "query": "What are Python best practices?",
+      "response": "The model service failed; verification could not be completed.",
+      "iterations": 2,
+      "tokens": {
+        "prompt_tokens": 405,
+        "completion_tokens": 53
+      },
+      "duration_ms": 1769.6116900042398,
+      "tools_used": [],
+      "stopped_reason": "error",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "invalid_decision",
+          "tool_name": null,
+          "tool_args": null,
+          "result": null
+        },
+        {
+          "iteration": 2,
+          "action": "error",
+          "tool_name": null,
+          "tool_args": null,
+          "result": "Groq HTTP 429; rate limit or quota exhausted"
+        }
+      ],
+      "golden_id": "python_practices"
+    },
+    {
+      "query": "Compare RAG vs fine-tuning.",
+      "response": "**Answer:**  \nRetrieval\u2011Augmented Generation (RAG) and fine\u2011tuning are two distinct strategies for improving the performance of large language models (LLMs). Below is a side\u2011by\u2011side comparison covering their core concepts, strengths, weaknesses, typical use\u2011cases, and practical considerations.\n\n| Aspect | Retrieval\u2011Augmented Generation (RAG) | Fine\u2011Tuning |\n|--------|--------------------------------------|-------------|\n| **What it does** | At inference time the model queries an external knowledge source (e.g., a vector store, search engine, or database) and conditions its generation on the retrieved passages. The base LLM itself is **not** changed. | The model\u2019s parameters are updated (via supervised or reinforcement learning) on a task\u2011specific dataset, permanently altering its weights. |\n| **Typical workflow** | 1. Index a corpus (documents, FAQs, code snippets, etc.)  <br>2. For each user query, retrieve top\u2011k relevant chunks  <br>3. Concatenate retrieved text with the prompt and generate a response. | 1. Collect a labeled dataset (prompt\u2011response pairs, instruction data, etc.)  <br>2. Train the model (full\u2011model or LoRA/adapter) on that data  <br>3. Deploy the newly\u2011trained checkpoint for inference. |\n| **Key benefits** | \u2022 **Up\u2011to\u2011date knowledge** \u2013 can incorporate new documents without re\u2011training. <br>\u2022 **Parameter efficiency** \u2013 no extra GPU cost for training; the base model stays unchanged. <br>\u2022 **Scalable to large corpora** \u2013 retrieval can handle millions of passages. <br>\u2022 **Interpretability** \u2013 you can inspect which documents were used. | \u2022 **Task\u2011specific performance** \u2013 can achieve higher accuracy on narrow tasks (e.g., sentiment analysis, code generation). <br>\u2022 **Consistent style/behavior** \u2013 the model learns to internalize desired patterns, reducing reliance on prompt engineering. <br>\u2022 **No latency from retrieval** \u2013 inference is a single forward pass. |\n| **Main drawbacks** | \u2022 **Latency** \u2013 retrieval adds extra time (search + re\u2011ranking). <br>\u2022 **Prompt length limits** \u2013 retrieved text must fit within the model\u2019s context window. <br>\u2022 **Quality depends on retrieval** \u2013 noisy or irrelevant chunks can degrade output. | \u2022 **Costly training** \u2013 requires GPU resources, especially for large models. <br>\u2022 **Staleness** \u2013 once trained, the model does not automatically learn new information; you must re\u2011fine\u2011tune. <br>\u2022 **Risk of over\u2011fitting** \u2013 limited data can cause the model to forget general knowledge (catastrophic forgetting). |\n| **When to choose RAG** | \u2022 Need **current** information (e.g., news, product catalogs). <br>\u2022 Want to **avoid** heavy compute or licensing costs for model training. <br>\u2022 The task is **open\u2011ended** or varies frequently (customer support, Q&A over a changing knowledge base). | \u2022 The problem is **well\u2011defined** with a stable dataset (e.g., legal contract classification, medical coding). <br>\u2022 You need **high precision** on a narrow domain and can afford the training budget. <br>\u2022 Latency must be minimal and you can embed the knowledge directly into the model. |\n| **Typical resources** | \u2022 Vector database (FAISS, Milvus, Pinecone, etc.) <br>\u2022 Embedding model for indexing (e.g., OpenAI embeddings, Sentence\u2011Transformers) <br>\u2022 Base LLM (GPT\u20114, LLaMA, etc.) | \u2022 GPU clusters or cloud\u2011based fine\u2011tuning services <br>\u2022 Training framework (PEFT/LoRA, Hugging Face Trainer, DeepSpeed) <br>\u2022 Labeled dataset (often thousands to millions of examples) |\n| **Examples** | \u2022 OpenAI\u2019s **ChatGPT with browsing** <br>\u2022 Microsoft\u2019s **Azure Cognitive Search + GPT** <br>\u2022 LangChain\u2011based RAG pipelines for internal docs | \u2022 OpenAI\u2019s **fine\u2011tuned ChatGPT** for a specific brand voice <br>\u2022 Anthropic\u2019s **Claude** fine\u2011tuned on customer\u2011service transcripts <br>\u2022 LoRA\u2011adapted LLaMA for biomedical literature summarization |\n| **Hybrid approaches** | Some systems combine both: fine\u2011tune a model on a domain, then augment it with retrieval for the latest facts. This gives the robustness\n\n[Note: response was truncated by token limit]",
+      "iterations": 1,
+      "tokens": {
+        "prompt_tokens": 407,
+        "completion_tokens": 1024
+      },
+      "duration_ms": 39854.12974000792,
+      "tools_used": [],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "**Answer:**  \nRetrieval\u2011Augmented Generation (RAG) and fine\u2011tuning are two distinct strategies for improving the performance of large language models (LLMs). Below is a side\u2011by\u2011side comparison covering their core concepts, strengths, weaknesses, typical use\u2011cases, and practical considerations.\n\n| Aspect | Retrieval\u2011Augmented Generation (RAG) | Fine\u2011Tuning |\n|--------|--------------------------------------|-------------|\n| **What it does** | At inference time the model queries an external knowledge source (e.g., a vector store, search engine, or database) and conditions its generation on the retrieved passages. The base LLM itself is **not** changed. | The model\u2019s parameters are updated (via supervised or reinforcement learning) on a task\u2011specific dataset, permanently altering its weights. |\n| **Typical workflow** | 1. Index a corpus (documents, FAQs, code snippets, etc.)  <br>2. For each user query, retrieve top\u2011k relevant chunks  <br>3. Concatenate retrieved text with the prompt and generate a response. | 1. Collect a labeled dataset (prompt\u2011response pairs, instruction data, etc.)  <br>2. Train the model (full\u2011model or LoRA/adapter) on that data  <br>3. Deploy the newly\u2011trained checkpoint for inference. |\n| **Key benefits** | \u2022 **Up\u2011to\u2011date knowledge** \u2013 can incorporate new documents without re\u2011training. <br>\u2022 **Parameter efficiency** \u2013 no extra GPU cost for training; the base model stays unchanged. <br>\u2022 **Scalable to large corpora** \u2013 retrieval can handle millions of passages. <br>\u2022 **Interpretability** \u2013 you can inspect which documents were used. | \u2022 **Task\u2011specific performance** \u2013 can achieve higher accuracy on narrow tasks (e.g., sentiment analysis, code generation). <br>\u2022 **Consistent style/behavior** \u2013 the model learns to internalize desired patterns, reducing reliance on prompt engineering. <br>\u2022 **No latency from retrieval** \u2013 inference is a single forward pass. |\n| **Main drawbacks** | \u2022 **Latency** \u2013 retrieval adds extra time (search + re\u2011ranking). <br>\u2022 **Prompt length limits** \u2013 retrieved text must fit within the model\u2019s context window. <br>\u2022 **Quality depends on retrieval** \u2013 noisy or irrelevant chunks can degrade output. | \u2022 **Costly training** \u2013 requires GPU resources, especially for large models. <br>\u2022 **Staleness** \u2013 once trained, the model does not automatically learn new information; you must re\u2011fine\u2011tune. <br>\u2022 **Risk of over\u2011fitting** \u2013 limited data can cause the model to forget general knowledge (catastrophic forgetting). |\n| **When to choose RAG** | \u2022 Need **current** information (e.g., news, product catalogs). <br>\u2022 Want to **avoid** heavy compute or licensing costs for model training. <br>\u2022 The task is **open\u2011ended** or varies frequently (customer support, Q&A over a changing knowledge base). | \u2022 The problem is **well\u2011defined** with a stable dataset (e.g., legal contract classification, medical coding). <br>\u2022 You need **high precision** on a narrow domain and can afford the training budget. <br>\u2022 Latency must be minimal and you can embed the knowledge directly into the model. |\n| **Typical resources** | \u2022 Vector database (FAISS, Milvus, Pinecone, etc.) <br>\u2022 Embedding model for indexing (e.g., OpenAI embeddings, Sentence\u2011Transformers) <br>\u2022 Base LLM (GPT\u20114, LLaMA, etc.) | \u2022 GPU clusters or cloud\u2011based fine\u2011tuning services <br>\u2022 Training framework (PEFT/LoRA, Hugging Face Trainer, DeepSpeed) <br>\u2022 Labeled dataset (often thousands to millions of examples) |\n| **Examples** | \u2022 OpenAI\u2019s **ChatGPT with browsing** <br>\u2022 Microsoft\u2019s **Azure Cognitive Search + GPT** <br>\u2022 LangChain\u2011based RAG pipelines for internal docs | \u2022 OpenAI\u2019s **fine\u2011tuned ChatGPT** for a specific brand voice <br>\u2022 Anthropic\u2019s **Claude** fine\u2011tuned on customer\u2011service transcripts <br>\u2022 LoRA\u2011adapted LLaMA for biomedical literature summarization |\n| **Hybrid approaches** | Some systems combine both: fine\u2011tune a model on a domain, then augment it with retrieval for the latest facts. This gives the robustness\n\n[Note: response was truncated by token limit]"
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "rag_vs_ft"
+    }
+  ]
+}

@@ -30,8 +30,8 @@ def web_search(query: str, max_results: str = "3") -> str:
 
 
 def get_current_datetime() -> str:
-    now = datetime.now()
-    return f"Current date and time: {now.strftime('%Y-%m-%d %H:%M:%S')}"
+    now = datetime.now().astimezone()
+    return f"Current date and time: {now.isoformat(timespec='seconds')}"
 
 
 web_search_tool = {

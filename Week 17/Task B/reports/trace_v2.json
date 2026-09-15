@@ -1,0 +1,144 @@
+{
+  "prompt_version": "v2",
+  "timestamp": "2026-09-15T14:13:36.017903",
+  "results": [
+    {
+      "query": "What is RAG?",
+      "response": "RAG (Retrieval\u2011Augmented Generation) is a technique that combines a large language model\u2019s generative capabilities with an external information retrieval component. The model first retrieves relevant documents or passages from a knowledge base (or the web) and then uses that retrieved context to generate more accurate, up\u2011to\u2011date, and fact\u2011grounded responses. This approach helps mitigate hallucinations and keeps the output grounded in real\u2011world data. \n\n**Key points**\n- **Retrieval**: A search engine or vector store fetches top\u2011k relevant texts based on the user query.  \n- **Augmentation**: Retrieved texts are fed into the language model as additional context.  \n- **Generation**: The model produces its answer conditioned on both the original query and the retrieved information.  \n\nRAG is widely used in question\u2011answering systems, chatbots, and any application where factual accuracy and up\u2011to\u2011date knowledge are critical.",
+      "iterations": 1,
+      "tokens": {
+        "prompt_tokens": 351,
+        "completion_tokens": 238
+      },
+      "duration_ms": 2152.3986469983356,
+      "tools_used": [],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "RAG (Retrieval\u2011Augmented Generation) is a technique that combines a large language model\u2019s generative capabilities with an external information retrieval component. The model first retrieves relevant documents or passages from a knowledge base (or the web) and then uses that retrieved context to generate more accurate, up\u2011to\u2011date, and fact\u2011grounded responses. This approach helps mitigate hallucinations and keeps the output grounded in real\u2011world data. \n\n**Key points**\n- **Retrieval**: A search engine or vector store fetches top\u2011k relevant texts based on the user query.  \n- **Augmentation**: Retrieved texts are fed into the language model as additional context.  \n- **Generation**: The model produces its answer conditioned on both the original query and the retrieved information.  \n\nRAG is widely used in question\u2011answering systems, chatbots, and any application where factual accuracy and up\u2011to\u2011date knowledge are critical."
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "rag_basic"
+    },
+    {
+      "query": "What is the current date?",
+      "response": "Today's date is **September 15, 2026**.",
+      "iterations": 2,
+      "tokens": {
+        "prompt_tokens": 1116,
+        "completion_tokens": 78
+      },
+      "duration_ms": 1114.0836320118979,
+      "tools_used": [
+        "get_current_datetime"
+      ],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "tool_call",
+          "tool_name": "get_current_datetime",
+          "tool_args": {},
+          "result": "Current date and time: 2026-09-15T14:12:00+05:45"
+        },
+        {
+          "iteration": 2,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "Today's date is **September 15, 2026**."
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "datetime_now"
+    },
+    {
+      "query": "Calculate 15% of 340.",
+      "response": "**Answer:** 15\u202f% of 340 is **51**.",
+      "iterations": 2,
+      "tokens": {
+        "prompt_tokens": 1113,
+        "completion_tokens": 85
+      },
+      "duration_ms": 1217.1696610021172,
+      "tools_used": [
+        "calculator"
+      ],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "tool_call",
+          "tool_name": "calculator",
+          "tool_args": {
+            "expression": "340 * 0.15"
+          },
+          "result": "Result: 51.0"
+        },
+        {
+          "iteration": 2,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "**Answer:** 15\u202f% of 340 is **51**."
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "calculator_pct"
+    },
+    {
+      "query": "What are Python best practices?",
+      "response": "Python best practices encompass writing clean, readable, and maintainable code. Key recommendations include:\n\n1. **Follow PEP\u202f8** \u2013 Use the official style guide for indentation, naming, imports, and spacing.  \n2. **Write docstrings** \u2013 Document modules, classes, and functions with clear docstrings (PEP\u202f257).  \n3. **Use type hints** \u2013 Add type annotations (PEP\u202f484) and run static checkers like `mypy`.  \n4. **Leverage virtual environments** \u2013 Isolate dependencies with `venv` or `conda`.  \n5. **Pin dependencies** \u2013 Record exact package versions in `requirements.txt` or `Pipfile.lock`.  \n6. **Write tests** \u2013 Use `unittest` or `pytest`; aim for high coverage and CI integration.  \n7. **Prefer built\u2011ins & standard library** \u2013 Use Python\u2019s standard library before adding third\u2011party packages.  \n8. **Handle exceptions properly** \u2013 Catch specific exceptions, avoid bare `except:` blocks, and clean up resources with `with` statements.  \n9. **Use comprehensions & generators** \u2013 For concise, memory\u2011efficient loops.  \n10. **Avoid mutable default arguments** \u2013 Use `None` and set defaults inside the function.  \n11. **Keep functions small** \u2013 One function should do one thing; aim for readability.  \n12. **Follow SOLID principles** \u2013 Apply object\u2011oriented design principles where appropriate.  \n13. **Use linters & formatters** \u2013 Tools like `flake8`, `pylint`, and `black` enforce style and catch bugs.  \n14. **Document project metadata** \u2013 Include a `README`, `LICENSE`, and `setup.cfg`/`pyproject.toml`.  \n15. **Profile and optimize later** \u2013 Write clear code first; only optimize after profiling.\n\nThese practices are widely recommended in the Python community and help ensure code quality, collaboration ease, and long\u2011term maintainability.",
+      "iterations": 1,
+      "tokens": {
+        "prompt_tokens": 352,
+        "completion_tokens": 457
+      },
+      "duration_ms": 4226.6998139966745,
+      "tools_used": [],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "Python best practices encompass writing clean, readable, and maintainable code. Key recommendations include:\n\n1. **Follow PEP\u202f8** \u2013 Use the official style guide for indentation, naming, imports, and spacing.  \n2. **Write docstrings** \u2013 Document modules, classes, and functions with clear docstrings (PEP\u202f257).  \n3. **Use type hints** \u2013 Add type annotations (PEP\u202f484) and run static checkers like `mypy`.  \n4. **Leverage virtual environments** \u2013 Isolate dependencies with `venv` or `conda`.  \n5. **Pin dependencies** \u2013 Record exact package versions in `requirements.txt` or `Pipfile.lock`.  \n6. **Write tests** \u2013 Use `unittest` or `pytest`; aim for high coverage and CI integration.  \n7. **Prefer built\u2011ins & standard library** \u2013 Use Python\u2019s standard library before adding third\u2011party packages.  \n8. **Handle exceptions properly** \u2013 Catch specific exceptions, avoid bare `except:` blocks, and clean up resources with `with` statements.  \n9. **Use comprehensions & generators** \u2013 For concise, memory\u2011efficient loops.  \n10. **Avoid mutable default arguments** \u2013 Use `None` and set defaults inside the function.  \n11. **Keep functions small** \u2013 One function should do one thing; aim for readability.  \n12. **Follow SOLID principles** \u2013 Apply object\u2011oriented design principles where appropriate.  \n13. **Use linters & formatters** \u2013 Tools like `flake8`, `pylint`, and `black` enforce style and catch bugs.  \n14. **Document project metadata** \u2013 Include a `README`, `LICENSE`, and `setup.cfg`/`pyproject.toml`.  \n15. **Profile and optimize later** \u2013 Write clear code first; only optimize after profiling.\n\nThese practices are widely recommended in the Python community and help ensure code quality, collaboration ease, and long\u2011term maintainability."
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "python_practices"
+    },
+    {
+      "query": "Compare RAG vs fine-tuning.",
+      "response": "The model service failed; verification could not be completed.",
+      "iterations": 1,
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "duration_ms": 1438.815853005508,
+      "tools_used": [],
+      "stopped_reason": "error",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "error",
+          "tool_name": null,
+          "tool_args": null,
+          "result": "Groq HTTP 400"
+        }
+      ],
+      "golden_id": "rag_vs_ft"
+    }
+  ]
+}
