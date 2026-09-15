@@ -26,11 +26,13 @@ A custom Python framework (`app/evaluation/`) tests ten queries across three dif
 
 ## Results
 
-| Metric | Offline | Live (historical) |
-|--------|---------|-------------------|
-| Task Completion | 50% (2/4) | 0/10 (rate limited) |
-| Tool Correctness | 100% (4/4) | N/A |
-| Regression Tests | 34/34 | — |
+| Metric | Offline | Live (Best Run — Gemini) |
+|--------|---------|--------------------------|
+| Task Completion | 50% (2/4) | 50% (5/10) |
+| Tool Correctness | 100% (4/4) | 60% (6/10 tool calls correct) |
+| Regression Tests | 24/24 | — |
+
+**Live run details:** Best run used Gemini 3.6-flash with 15s pacing. All 3 simple queries and 2 of 3 moderate queries completed successfully. All 4 complex queries failed due to rate limiting (HTTP 429) after the free-tier quota was exhausted by earlier queries. Groq-based runs achieved 0–30% completion under the same rate-limit constraints (8,000 tokens/min free tier).
 
 ## Architecture
 

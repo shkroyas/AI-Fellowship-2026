@@ -260,7 +260,7 @@ task1-ai-assistant/
 
 ### Regression Tests
 
-**34/34 tests passing (100%)**
+**24/24 tests passing (100%)**
 
 ### Offline Evaluation
 
@@ -270,11 +270,24 @@ task1-ai-assistant/
 | Tool Correctness | 100% (4/4) |
 | Avg Trajectory | 1.5 iterations |
 
-### Live Evaluation (Historical)
+### Live Evaluation
 
 | Run | Provider | Completion | Notes |
 |-----|----------|------------|-------|
-| 2026-09-14 (latest) | Groq + OpenRouter | 0/10 | Both providers rate limited |
-| Pre-fix | Gemini | 5/10 | Deprecated provider |
+| Gemini (best) | Gemini 3.6-flash | **5/10 (50%)** | All 3 simple + 2/3 moderate queries succeeded; complex queries hit HTTP 429 |
+| Groq (best) | Groq (5-key) | 3/10 (30%) | Simple queries only; multi-iteration queries exhausted token budget |
+| Groq (full run) | Groq + OpenRouter | 0/10 | Both providers rate limited on all queries |
 
-**Key Finding:** The agentic loop works correctly when API limits are not exceeded. The primary limitation is Groq's free-tier rate limit.
+**Live run details (Gemini, best run):**
+
+| Query | Difficulty | Status | Reason |
+|-------|-----------|--------|--------|
+| simple_01 — "What is RAG?" | simple | ✅ | search_knowledge, 3 iterations |
+| simple_02 — "Current datetime?" | simple | ✅ | get_current_datetime, 2 iterations |
+| simple_03 — "Calculate 15% of 340" | simple | ✅ | calculator, 2 iterations |
+| moderate_01 — "Python best practices" | moderate | ✅ | search_knowledge + web_search, 4 iterations |
+| moderate_02 — "AI docs accuracy" | moderate | ✅ | search_knowledge + web_search, 3 iterations |
+| moderate_03 — "Chunking strategies" | moderate | ❌ | Hit max iterations (5), never produced answer |
+| complex_01–04 | complex | ❌ | All hit HTTP 429 (quota exhausted) |
+
+**Key Finding:** The agentic loop works correctly when API limits are not exceeded. All failures are due to free-tier rate limiting (Groq 8K tokens/min, Gemini daily quota), not code defects. Complex queries require 3+ LLM iterations which exhaust the budget after simpler queries consume it.

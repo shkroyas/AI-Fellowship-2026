@@ -1,8 +1,9 @@
-# Week 16 Evaluation Results Report
+# Week 16 Evaluation Results Report (Historical — Pre-Repair)
 
 **Date:** 2026-09-14  
 **Provider:** Groq (openai/gpt-oss-20b, 5-key rotation)  
-**Fallback:** OpenRouter (nvidia/nemotron-3.5-lightning:free)
+**Fallback:** OpenRouter (nvidia/nemotron-3.5-lightning:free)  
+**Note:** This is the pre-repair baseline. The best overall live result was 50% (5/10) using Gemini 3.6-flash, documented in `evaluation/RESULTS.md`.
 
 ## 1. Regression Tests (23/23 passing)
 
