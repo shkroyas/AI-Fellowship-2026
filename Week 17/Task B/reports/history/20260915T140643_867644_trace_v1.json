@@ -1,0 +1,123 @@
+{
+  "version": "v1",
+  "prompt_length": 606,
+  "completion_rate": 0.0,
+  "avg_iterations": 1.0,
+  "avg_latency_ms": 8220.1,
+  "total_tokens": {
+    "prompt": 0,
+    "completion": 0
+  },
+  "results": [
+    {
+      "query": "What is RAG?",
+      "response": "The model service failed; verification could not be completed.",
+      "iterations": 1,
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "duration_ms": 115.90320599498227,
+      "tools_used": [],
+      "stopped_reason": "error",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "error",
+          "tool_name": null,
+          "tool_args": null,
+          "result": "Groq HTTP 429; rate limit or quota exhausted"
+        }
+      ],
+      "golden_id": "rag_basic"
+    },
+    {
+      "query": "What is the current date?",
+      "response": "The model service failed; verification could not be completed.",
+      "iterations": 1,
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "duration_ms": 93.86898099910468,
+      "tools_used": [],
+      "stopped_reason": "error",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "error",
+          "tool_name": null,
+          "tool_args": null,
+          "result": "Groq HTTP 429; rate limit or quota exhausted"
+        }
+      ],
+      "golden_id": "datetime_now"
+    },
+    {
+      "query": "Calculate 15% of 340.",
+      "response": "The model service failed; verification could not be completed.",
+      "iterations": 1,
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "duration_ms": 127.76794300589245,
+      "tools_used": [],
+      "stopped_reason": "error",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "error",
+          "tool_name": null,
+          "tool_args": null,
+          "result": "Groq HTTP 429; rate limit or quota exhausted"
+        }
+      ],
+      "golden_id": "calculator_pct"
+    },
+    {
+      "query": "What are Python best practices?",
+      "response": "The model service failed; verification could not be completed.",
+      "iterations": 1,
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "duration_ms": 96.49700501176994,
+      "tools_used": [],
+      "stopped_reason": "error",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "error",
+          "tool_name": null,
+          "tool_args": null,
+          "result": "Groq HTTP 429; rate limit or quota exhausted"
+        }
+      ],
+      "golden_id": "python_practices"
+    },
+    {
+      "query": "Compare RAG vs fine-tuning.",
+      "response": "The model service failed; verification could not be completed.",
+      "iterations": 1,
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "duration_ms": 40666.28045600373,
+      "tools_used": [],
+      "stopped_reason": "error",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "error",
+          "tool_name": null,
+          "tool_args": null,
+          "result": "Groq HTTP 429; rate limit or quota exhausted"
+        }
+      ],
+      "golden_id": "rag_vs_ft"
+    }
+  ]
+}

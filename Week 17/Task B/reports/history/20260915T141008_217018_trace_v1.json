@@ -1,0 +1,146 @@
+{
+  "prompt_version": "v1",
+  "timestamp": "2026-09-15T14:08:27.767514",
+  "results": [
+    {
+      "query": "What is RAG?",
+      "response": "**RAG (Retrieval\u2011Augmented Generation)**  \n\nRetrieval\u2011Augmented Generation is an approach that combines a **retrieval component** with a **generative language model**.  \n\n1. **Retrieval step** \u2013 When given a prompt, the system first searches an external knowledge source (e.g., a document corpus, database, or the web) to fetch relevant passages or facts.  \n2. **Generation step** \u2013 The retrieved information is then fed into a large language model, which uses it as context to produce a response that is both fluent and grounded in up\u2011to\u2011date data.  \n\n### Why use RAG?\n- **Improved factuality** \u2013 The model can cite concrete sources rather than relying solely on memorized knowledge, reducing hallucinations.  \n- **Dynamic knowledge** \u2013 It can incorporate the latest information without needing to retrain the entire model.  \n- **Efficiency** \u2013 Smaller generative models can achieve strong performance when supplemented with retrieved evidence.  \n\n### Typical architecture\n```\nUser query \u2192 Retriever (e.g., BM25, dense vector search) \u2192 Top\u2011k documents\n               \u2193\n          Retriever output + Query \u2192 Generator (e.g., T5, GPT) \u2192 Final answer\n```\n\n### Applications\n- Open\u2011domain question answering  \n- Conversational agents that need up\u2011to\u2011date facts  \n- Knowledge\u2011base chatbots  \n- Summarization of specific documents  \n\nIn short, RAG augments the generative power of language models with targeted, real\u2011time retrieval, yielding answers that are both coherent and evidence\u2011based.",
+      "iterations": 1,
+      "tokens": {
+        "prompt_tokens": 264,
+        "completion_tokens": 357
+      },
+      "duration_ms": 1968.4197380120168,
+      "tools_used": [],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "**RAG (Retrieval\u2011Augmented Generation)**  \n\nRetrieval\u2011Augmented Generation is an approach that combines a **retrieval component** with a **generative language model**.  \n\n1. **Retrieval step** \u2013 When given a prompt, the system first searches an external knowledge source (e.g., a document corpus, database, or the web) to fetch relevant passages or facts.  \n2. **Generation step** \u2013 The retrieved information is then fed into a large language model, which uses it as context to produce a response that is both fluent and grounded in up\u2011to\u2011date data.  \n\n### Why use RAG?\n- **Improved factuality** \u2013 The model can cite concrete sources rather than relying solely on memorized knowledge, reducing hallucinations.  \n- **Dynamic knowledge** \u2013 It can incorporate the latest information without needing to retrain the entire model.  \n- **Efficiency** \u2013 Smaller generative models can achieve strong performance when supplemented with retrieved evidence.  \n\n### Typical architecture\n```\nUser query \u2192 Retriever (e.g., BM25, dense vector search) \u2192 Top\u2011k documents\n               \u2193\n          Retriever output + Query \u2192 Generator (e.g., T5, GPT) \u2192 Final answer\n```\n\n### Applications\n- Open\u2011domain question answering  \n- Conversational agents that need up\u2011to\u2011date facts  \n- Knowledge\u2011base chatbots  \n- Summarization of specific documents  \n\nIn short, RAG augments the generative power of language models with targeted, real\u2011time retrieval, yielding answers that are both coherent and evidence\u2011based."
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "rag_basic"
+    },
+    {
+      "query": "What is the current date?",
+      "response": "The current date is **September\u202f15,\u202f2026**.",
+      "iterations": 2,
+      "tokens": {
+        "prompt_tokens": 942,
+        "completion_tokens": 64
+      },
+      "duration_ms": 1252.2166050039232,
+      "tools_used": [
+        "get_current_datetime"
+      ],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "tool_call",
+          "tool_name": "get_current_datetime",
+          "tool_args": {},
+          "result": "Current date and time: 2026-09-15T14:06:51+05:45"
+        },
+        {
+          "iteration": 2,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "The current date is **September\u202f15,\u202f2026**."
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "datetime_now"
+    },
+    {
+      "query": "Calculate 15% of 340.",
+      "response": "**15\u202f% of 340 = 51**.",
+      "iterations": 2,
+      "tokens": {
+        "prompt_tokens": 939,
+        "completion_tokens": 81
+      },
+      "duration_ms": 1242.4156130000483,
+      "tools_used": [
+        "calculator"
+      ],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "tool_call",
+          "tool_name": "calculator",
+          "tool_args": {
+            "expression": "0.15 * 340"
+          },
+          "result": "Result: 51.0"
+        },
+        {
+          "iteration": 2,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "**15\u202f% of 340 = 51**."
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "calculator_pct"
+    },
+    {
+      "query": "What are Python best practices?",
+      "response": "**Python Best\u2011Practice Cheat Sheet**\n\nBelow is a concise, practical guide that covers the most widely\u2011recommended conventions, style rules, and development habits for writing clean, maintainable, and performant Python code. It draws on the official Python documentation, the *PEP* series, and the collective wisdom of the Python community (e.g., the *Python Cookbook*, *Effective Python*, and the *real\u2011world Python* style guides).\n\n---\n\n## 1. Follow the Official Style Guide \u2013 **PEP\u202f8**\n\n| Area | Recommendation | Why it matters |\n|------|----------------|----------------|\n| **Indentation** | Use **4 spaces** per level (no tabs). | Guarantees consistent visual structure across editors. |\n| **Line length** | Keep lines \u2264 **79** characters (PEP\u202f8) or \u2264\u202f99 for code (PEP\u202f8\u2011style). | Improves readability on narrow terminals and side\u2011by\u2011side diffs. |\n| **Naming** | <ul><li>Modules & packages: `snake_case`</li><li>Classes: `CapWords` (PascalCase)</li><li>Functions & variables: `snake_case`</li><li>Constants: `UPPER_SNAKE_CASE`</li></ul> | Conveys intent and makes it easy to spot the kind of object you\u2019re dealing with. |\n| **Imports** | <ul><li>One import per line.</li><li>Group: standard library \u2192 third\u2011party \u2192 local.</li><li>Use absolute imports; avoid wildcard (`*`) imports.</li></ul> | Prevents namespace collisions and clarifies dependencies. |\n| **Whitespace** | <ul><li>Surround binary operators with a single space (`a = b + c`).</li><li>No space before a function call (`func(arg)`).</li></ul> | Keeps code tidy and avoids subtle bugs (e.g., `a = b[1:3]`). |\n| **Trailing commas** | Include a trailing comma in multi\u2011line collections (`[a, b,]`). | Simplifies diffs when items are added/removed. |\n\n*Tooling*: Run `flake8`, `pycodestyle`, or `ruff` in CI to enforce PEP\u202f8 automatically.\n\n---\n\n## 2. Write **Idiomatic Python** \u2013 **PEP\u202f20 (The Zen)** & **PEP\u202f257 (Docstrings)**\n\n| Principle | Practical tip |\n|-----------|----------------|\n| **Explicit is better than implicit** | Prefer clear variable names (`num_items` vs. `n`). |\n| **Simple is better than complex** | Use built\u2011in constructs (`any`, `sum`, list comprehensions) instead of manual loops. |\n| **Readability counts** | Add docstrings to every public module, class, method, and function. Follow the *Google* or *NumPy* style for consistency. |\n| **Flat is better than nested** | Break deep nesting into helper functions or early\u2011return guards. |\n| **Errors should never pass silently** | Use specific exception types; avoid bare `except:`. |\n| **Namespaces are one honking great idea** | Keep the public API minimal (`__all__`), hide internal helpers with a leading underscore. |\n\n*Tooling*: `pylint` or `flake8-docstrings` can flag missing/invalid docstrings.\n\n---\n\n## 3. Use **Type Hints** (PEP\u202f484) & Static Checking\n\n```python\ndef fetch_user(id_: int) -> Optional[User]:\n    ...\n```\n\n*Benefits*  \n- Improves IDE autocompletion and refactoring.  \n- Allows `mypy`, `pyright`, or `pyre` to catch type mismatches before runtime.  \n\n*Best practices*  \n- Add hints to public functions; internal code can be gradually typed.  \n- Use `typing` constructs (`Union`, `Literal`, `Protocol`, `TypedDict`).  \n- Keep stub files (`.pyi`) for third\u2011party libraries lacking hints.\n\n---\n\n## 4. Embrace **Testing** Early & Often\n\n| Type | Recommended tool | Typical usage |\n|------|------------------|---------------|\n| **Unit tests** | `pytest` (or `unittest`) | Test individual functions/methods. |\n| **Property\u2011based testing** | `hypothesis` | Generate diverse inputs automatically. |\n| **Integration tests** | `pytest` + fixtures, Docker Compose, or `tox` | Verify components work together. |\n| **Coverage** | `coverage.py` | Aim for \u2265\u202f80\u202f% (but prioritize meaningful tests). |\n| **CI** | GitHub Actions, GitLab CI, CircleCI | Run tests on every push/PR. |\n\n*Tips*  \n- Follow the **AAA**\n\n[Note: response was truncated by token limit]",
+      "iterations": 1,
+      "tokens": {
+        "prompt_tokens": 459,
+        "completion_tokens": 1024
+      },
+      "duration_ms": 2573.873460991308,
+      "tools_used": [],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "**Python Best\u2011Practice Cheat Sheet**\n\nBelow is a concise, practical guide that covers the most widely\u2011recommended conventions, style rules, and development habits for writing clean, maintainable, and performant Python code. It draws on the official Python documentation, the *PEP* series, and the collective wisdom of the Python community (e.g., the *Python Cookbook*, *Effective Python*, and the *real\u2011world Python* style guides).\n\n---\n\n## 1. Follow the Official Style Guide \u2013 **PEP\u202f8**\n\n| Area | Recommendation | Why it matters |\n|------|----------------|----------------|\n| **Indentation** | Use **4 spaces** per level (no tabs). | Guarantees consistent visual structure across editors. |\n| **Line length** | Keep lines \u2264 **79** characters (PEP\u202f8) or \u2264\u202f99 for code (PEP\u202f8\u2011style). | Improves readability on narrow terminals and side\u2011by\u2011side diffs. |\n| **Naming** | <ul><li>Modules & packages: `snake_case`</li><li>Classes: `CapWords` (PascalCase)</li><li>Functions & variables: `snake_case`</li><li>Constants: `UPPER_SNAKE_CASE`</li></ul> | Conveys intent and makes it easy to spot the kind of object you\u2019re dealing with. |\n| **Imports** | <ul><li>One import per line.</li><li>Group: standard library \u2192 third\u2011party \u2192 local.</li><li>Use absolute imports; avoid wildcard (`*`) imports.</li></ul> | Prevents namespace collisions and clarifies dependencies. |\n| **Whitespace** | <ul><li>Surround binary operators with a single space (`a = b + c`).</li><li>No space before a function call (`func(arg)`).</li></ul> | Keeps code tidy and avoids subtle bugs (e.g., `a = b[1:3]`). |\n| **Trailing commas** | Include a trailing comma in multi\u2011line collections (`[a, b,]`). | Simplifies diffs when items are added/removed. |\n\n*Tooling*: Run `flake8`, `pycodestyle`, or `ruff` in CI to enforce PEP\u202f8 automatically.\n\n---\n\n## 2. Write **Idiomatic Python** \u2013 **PEP\u202f20 (The Zen)** & **PEP\u202f257 (Docstrings)**\n\n| Principle | Practical tip |\n|-----------|----------------|\n| **Explicit is better than implicit** | Prefer clear variable names (`num_items` vs. `n`). |\n| **Simple is better than complex** | Use built\u2011in constructs (`any`, `sum`, list comprehensions) instead of manual loops. |\n| **Readability counts** | Add docstrings to every public module, class, method, and function. Follow the *Google* or *NumPy* style for consistency. |\n| **Flat is better than nested** | Break deep nesting into helper functions or early\u2011return guards. |\n| **Errors should never pass silently** | Use specific exception types; avoid bare `except:`. |\n| **Namespaces are one honking great idea** | Keep the public API minimal (`__all__`), hide internal helpers with a leading underscore. |\n\n*Tooling*: `pylint` or `flake8-docstrings` can flag missing/invalid docstrings.\n\n---\n\n## 3. Use **Type Hints** (PEP\u202f484) & Static Checking\n\n```python\ndef fetch_user(id_: int) -> Optional[User]:\n    ...\n```\n\n*Benefits*  \n- Improves IDE autocompletion and refactoring.  \n- Allows `mypy`, `pyright`, or `pyre` to catch type mismatches before runtime.  \n\n*Best practices*  \n- Add hints to public functions; internal code can be gradually typed.  \n- Use `typing` constructs (`Union`, `Literal`, `Protocol`, `TypedDict`).  \n- Keep stub files (`.pyi`) for third\u2011party libraries lacking hints.\n\n---\n\n## 4. Embrace **Testing** Early & Often\n\n| Type | Recommended tool | Typical usage |\n|------|------------------|---------------|\n| **Unit tests** | `pytest` (or `unittest`) | Test individual functions/methods. |\n| **Property\u2011based testing** | `hypothesis` | Generate diverse inputs automatically. |\n| **Integration tests** | `pytest` + fixtures, Docker Compose, or `tox` | Verify components work together. |\n| **Coverage** | `coverage.py` | Aim for \u2265\u202f80\u202f% (but prioritize meaningful tests). |\n| **CI** | GitHub Actions, GitLab CI, CircleCI | Run tests on every push/PR. |\n\n*Tips*  \n- Follow the **AAA**\n\n[Note: response was truncated by token limit]"
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "python_practices"
+    },
+    {
+      "query": "Compare RAG vs fine-tuning.",
+      "response": "**Retrieval\u2011Augmented Generation (RAG) vs. Fine\u2011tuning**\n\n| Aspect | Retrieval\u2011Augmented Generation (RAG) | Fine\u2011tuning |\n|--------|--------------------------------------|--------------|\n| **What it is** | The model generates text while simultaneously pulling in external documents (or passages) from a searchable index at inference time. The retrieved text is fed to the language model as additional context. | The model\u2019s weights are updated on a task\u2011specific dataset so that the model \u201clearns\u201d the desired behavior directly in its parameters. |\n| **Typical workflow** | 1. Build an external knowledge store (e.g., Wikipedia, product manuals, internal docs). <br>2. Index it with a dense retriever (e.g., FAISS, ElasticSearch, or a vector DB). <br>3. At query time, retrieve the top\u2011k relevant passages and concatenate them with the prompt. <br>4. The language model generates a response conditioned on both the prompt and the retrieved text. | 1. Gather a labeled dataset for the target task (e.g., Q&A pairs, style\u2011transfer examples). <br>2. Choose a base model (e.g., GPT\u20113, LLaMA). <br>3. Run a training loop (full\u2011model or parameter\u2011efficient methods like LoRA, adapters). <br>4. Deploy the fine\u2011tuned checkpoint for inference. |\n| **Strengths** | \u2022 **Up\u2011to\u2011date knowledge** \u2013 can incorporate the latest documents without re\u2011training. <br>\u2022 **Parameter efficiency** \u2013 the base model stays unchanged; only the retriever/index needs maintenance. <br>\u2022 **Scalability of knowledge** \u2013 you can add billions of tokens of text to the store without blowing up model size. <br>\u2022 **Explainability** \u2013 the retrieved passages can be shown to users as evidence. | \u2022 **High performance on narrow tasks** \u2013 the model internalizes patterns, style, or domain\u2011specific language, often yielding more fluent, coherent outputs. <br>\u2022 **No latency from retrieval** \u2013 inference is a single forward pass (unless you also use a retriever). <br>\u2022 **Works when external data is unavailable or proprietary** \u2013 everything the model needs is baked into its weights. |\n| **Weaknesses** | \u2022 **Retrieval latency & infrastructure** \u2013 you need a fast, reliable vector store and similarity search service. <br>\u2022 **Hallucination risk** \u2013 the model may still generate statements not grounded in the retrieved text. <br>\u2022 **Prompt length limits** \u2013 you can only feed a limited amount of retrieved context (typically a few hundred tokens). | \u2022 **Costly training** \u2013 even parameter\u2011efficient methods require GPU time and careful hyper\u2011parameter tuning. <br>\u2022 **Stale knowledge** \u2013 once trained, the model only knows what was in the training data; updating requires re\u2011training or additional fine\u2011tuning. <br>\u2022 **Data requirements** \u2013 high\u2011quality, task\u2011specific labeled data can be hard to obtain. |\n| **When to choose RAG** | \u2022 You need **current or rapidly changing information** (e.g., news, product catalogs). <br>\u2022 The domain has a **large, searchable corpus** that can be indexed. <br>\u2022 You want **transparent evidence** for each answer. <br>\u2022 Budget for training is limited, but you can invest in retrieval infrastructure. | \u2022 The task is **well\u2011defined and narrow** (e.g., sentiment classification, legal contract drafting) and you have a **sizable labeled dataset**. <br>\u2022 Low latency is critical and you can afford the compute cost of training. <br>\u2022 You need the model to **internalize style or formatting rules** that are hard to convey via retrieval alone. |\n| **Hybrid possibilities** | RAG and fine\u2011tuning are not mutually exclusive. Common patterns include: <br>1. **Fine\u2011tune the generator** on a small task\u2011specific dataset *and* use retrieval for factual grounding. <br>2. **Fine\u2011tune the retriever** (e.g., using contrastive learning) to improve relevance. <br>3. **Adapter\u2011based fine\u2011tuning** on top of a base model that already works with a retriever. | \u2014 |\n| **Key research / practical references** | \u2022 **\u201cRetrieval\u2011Augmented Generation for Knowledge\u2011Intensive NLP Tasks\u201d** (Lewis et\u202fal., 2020) \u2013 introduced the RAG architecture. <br>\u2022 **LangChain**, **LlamaIndex**, **Haystack** \u2013 open\u2011source frameworks that implement RAG pipelines. <\n\n[Note: response was truncated by token limit]",
+      "iterations": 1,
+      "tokens": {
+        "prompt_tokens": 461,
+        "completion_tokens": 1024
+      },
+      "duration_ms": 2650.2074469899526,
+      "tools_used": [],
+      "stopped_reason": "model_answered",
+      "steps": [
+        {
+          "iteration": 1,
+          "action": "answer",
+          "tool_name": null,
+          "tool_args": {
+            "answer": "**Retrieval\u2011Augmented Generation (RAG) vs. Fine\u2011tuning**\n\n| Aspect | Retrieval\u2011Augmented Generation (RAG) | Fine\u2011tuning |\n|--------|--------------------------------------|--------------|\n| **What it is** | The model generates text while simultaneously pulling in external documents (or passages) from a searchable index at inference time. The retrieved text is fed to the language model as additional context. | The model\u2019s weights are updated on a task\u2011specific dataset so that the model \u201clearns\u201d the desired behavior directly in its parameters. |\n| **Typical workflow** | 1. Build an external knowledge store (e.g., Wikipedia, product manuals, internal docs). <br>2. Index it with a dense retriever (e.g., FAISS, ElasticSearch, or a vector DB). <br>3. At query time, retrieve the top\u2011k relevant passages and concatenate them with the prompt. <br>4. The language model generates a response conditioned on both the prompt and the retrieved text. | 1. Gather a labeled dataset for the target task (e.g., Q&A pairs, style\u2011transfer examples). <br>2. Choose a base model (e.g., GPT\u20113, LLaMA). <br>3. Run a training loop (full\u2011model or parameter\u2011efficient methods like LoRA, adapters). <br>4. Deploy the fine\u2011tuned checkpoint for inference. |\n| **Strengths** | \u2022 **Up\u2011to\u2011date knowledge** \u2013 can incorporate the latest documents without re\u2011training. <br>\u2022 **Parameter efficiency** \u2013 the base model stays unchanged; only the retriever/index needs maintenance. <br>\u2022 **Scalability of knowledge** \u2013 you can add billions of tokens of text to the store without blowing up model size. <br>\u2022 **Explainability** \u2013 the retrieved passages can be shown to users as evidence. | \u2022 **High performance on narrow tasks** \u2013 the model internalizes patterns, style, or domain\u2011specific language, often yielding more fluent, coherent outputs. <br>\u2022 **No latency from retrieval** \u2013 inference is a single forward pass (unless you also use a retriever). <br>\u2022 **Works when external data is unavailable or proprietary** \u2013 everything the model needs is baked into its weights. |\n| **Weaknesses** | \u2022 **Retrieval latency & infrastructure** \u2013 you need a fast, reliable vector store and similarity search service. <br>\u2022 **Hallucination risk** \u2013 the model may still generate statements not grounded in the retrieved text. <br>\u2022 **Prompt length limits** \u2013 you can only feed a limited amount of retrieved context (typically a few hundred tokens). | \u2022 **Costly training** \u2013 even parameter\u2011efficient methods require GPU time and careful hyper\u2011parameter tuning. <br>\u2022 **Stale knowledge** \u2013 once trained, the model only knows what was in the training data; updating requires re\u2011training or additional fine\u2011tuning. <br>\u2022 **Data requirements** \u2013 high\u2011quality, task\u2011specific labeled data can be hard to obtain. |\n| **When to choose RAG** | \u2022 You need **current or rapidly changing information** (e.g., news, product catalogs). <br>\u2022 The domain has a **large, searchable corpus** that can be indexed. <br>\u2022 You want **transparent evidence** for each answer. <br>\u2022 Budget for training is limited, but you can invest in retrieval infrastructure. | \u2022 The task is **well\u2011defined and narrow** (e.g., sentiment classification, legal contract drafting) and you have a **sizable labeled dataset**. <br>\u2022 Low latency is critical and you can afford the compute cost of training. <br>\u2022 You need the model to **internalize style or formatting rules** that are hard to convey via retrieval alone. |\n| **Hybrid possibilities** | RAG and fine\u2011tuning are not mutually exclusive. Common patterns include: <br>1. **Fine\u2011tune the generator** on a small task\u2011specific dataset *and* use retrieval for factual grounding. <br>2. **Fine\u2011tune the retriever** (e.g., using contrastive learning) to improve relevance. <br>3. **Adapter\u2011based fine\u2011tuning** on top of a base model that already works with a retriever. | \u2014 |\n| **Key research / practical references** | \u2022 **\u201cRetrieval\u2011Augmented Generation for Knowledge\u2011Intensive NLP Tasks\u201d** (Lewis et\u202fal., 2020) \u2013 introduced the RAG architecture. <br>\u2022 **LangChain**, **LlamaIndex**, **Haystack** \u2013 open\u2011source frameworks that implement RAG pipelines. <\n\n[Note: response was truncated by token limit]"
+          },
+          "result": null
+        }
+      ],
+      "golden_id": "rag_vs_ft"
+    }
+  ]
+}

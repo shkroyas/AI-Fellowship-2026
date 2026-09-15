@@ -1,14 +1,72 @@
-# Week 17 — MLOps execution
+# Week 17 — MLOps: Experiment Tracking, Monitoring & Orchestration
 
-[Current execution status](EXECUTION_STATUS.md) is the authoritative completion record.
+## Structure
 
-- [Track A: IBM Telco churn](Task%20A/README.md) — fresh training, CV selection, real-probability serving, Evidently drift and executed Airflow branches.
-- [Track B: agent evaluation](Task%20B/README.md) — three prompt variants, stable-ID regression, live correctness/grounding judges and isolated Airflow execution.
-- [Airflow execution export](airflow_execution.json)
-- [Regression test evidence](tests/verification.txt)
+```
+Week 17/
+├── Task A/          # IBM Telco Churn — sklearn/XGBoost MLOps pipeline
+│   ├── src/track_a/ # data_prep.py · train.py · serve.py · utils/
+│   ├── dags/        # churn_drift_dag.py (Airflow)
+│   ├── reports/     # Evidently HTML + JSON + Airflow run artifacts
+│   ├── screenshots/ # MLflow run comparison, registry export
+│   ├── pyproject.toml · uv.lock
+│   └── README.md    ← detailed docs for this track
+├── Task B/          # Agentic assistant — prompt MLOps pipeline
+│   ├── src/track_b/ # assistant/ · prompts/ · utils/
+│   ├── dags/        # nightly_regression_dag.py (Airflow)
+│   ├── reports/     # Evidently HTML + traces + verdicts
+│   ├── screenshots/ # MLflow export, Evidently captures
+│   ├── run_experiment.py
+│   ├── pyproject.toml · uv.lock
+│   └── README.md    ← detailed docs for this track
+├── tests/           # unit + integration tests (both tracks)
+├── THRESHOLD_POLICY.md   ← acceptance gates, drift thresholds, rationale
+├── EXECUTION_STATUS.md   ← verified outcomes from fresh runs
+├── airflow_execution.json ← both DAG task-state exports
+└── README.md        ← this file
+```
 
-Each track has its own `pyproject.toml` and `uv.lock`; use `uv sync --locked`. Local MLflow SQLite databases/model stores are excluded from Git. Portable reports, run IDs, metrics, traces and task-state exports are the committed evidence. Historical audits describe earlier commits and are not current success claims.
+## Reproduction
 
-## Acceptance policy
+```bash
+# Track A — churn pipeline
+cd "Week 17/Task A" && uv sync --locked
+uv run python -m src.track_a.train       # train → track → register
 
-See the [project threshold policy](THRESHOLD_POLICY.md) for chosen thresholds, rationale, promotion decisions and monitoring actions. The numbers are project choices, not assignment-mandated targets.
+# Track B — prompt experiments
+cd "Week 17/Task B"
+cp .env.example .env                      # add provider API key
+uv sync --locked
+uv run python run_experiment.py           # run 3 versions → judge → compare
+```
+
+## Results Summary
+
+### Track A
+
+| Model | CV F1 | Holdout F1 | ROC-AUC | Decision |
+|---|---:|---:|---:|---|
+| XGBoost weighted | **0.6341** | 0.6367 | **0.8443** | ✅ **Promoted** |
+| RF deep balanced | 0.6293 | 0.6369 | 0.8413 | staging |
+| RF balanced | 0.6326 | 0.6285 | 0.8430 | staging |
+| LR balanced | 0.6283 | 0.6136 | 0.8416 | staging |
+
+Airflow drift-check DAG: both branches executed. Injected +21.7% charge shift triggered retraining; undrifted split kept existing model.
+
+### Track B
+
+| Prompt | Combined pass rate | Eligible? |
+|---|---:|---|
+| v1 | 100% | ✅ Yes |
+| v2 | 80% | ✅ Yes (at gate) |
+| v3 | 40% | ❌ No |
+
+Airflow nightly regression DAG: independent v3 run scored 60% → `alert_regression` fired.
+
+## Acceptance Policy
+
+See [THRESHOLD_POLICY.md](THRESHOLD_POLICY.md) — project-defined gates with rationale and action for each threshold.
+
+## Completion Record
+
+See [EXECUTION_STATUS.md](EXECUTION_STATUS.md) — authoritative record of what ran, what passed, and scope limits.

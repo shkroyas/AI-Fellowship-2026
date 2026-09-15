@@ -1,0 +1,25 @@
+artifact_path: /home/royas-shakya/Downloads/Week15/Week 15/Week 17/Task A/mlruns/1/models/m-4cd0265c9c704278b7f969708e169e1e/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.12.3
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.9.1
+    skops_trusted_types:
+    - xgboost.core.Booster
+    - xgboost.sklearn.XGBClassifier
+mlflow_version: 3.16.0
+model_id: m-4cd0265c9c704278b7f969708e169e1e
+model_size_bytes: 512948
+model_uuid: m-4cd0265c9c704278b7f969708e169e1e
+prompts: null
+run_id: dc54099a8b5a49048cdd8a064d617670
+utc_time_created: '2026-09-15 07:12:11.161477'

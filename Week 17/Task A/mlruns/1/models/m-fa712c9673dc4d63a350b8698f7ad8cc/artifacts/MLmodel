@@ -1,0 +1,22 @@
+artifact_path: /home/royas-shakya/Downloads/Week15/Week 15/Week 17/Task A/mlruns/1/models/m-fa712c9673dc4d63a350b8698f7ad8cc/artifacts
+flavors:
+  python_function:
+    data: model.ubj
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.xgboost
+    python_version: 3.12.3
+  xgboost:
+    code: null
+    data: model.ubj
+    model_class: xgboost.sklearn.XGBClassifier
+    model_format: ubj
+    xgb_version: 3.4.1
+mlflow_version: 3.16.0
+model_id: m-fa712c9673dc4d63a350b8698f7ad8cc
+model_size_bytes: 332007
+model_uuid: m-fa712c9673dc4d63a350b8698f7ad8cc
+prompts: null
+run_id: a1e724e2be9b4b40800c6b127561833d
+utc_time_created: '2026-09-15 05:43:47.045291'
