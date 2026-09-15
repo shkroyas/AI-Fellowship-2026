@@ -142,6 +142,12 @@ def train_and_log(logger: MLFlowLogger, experiment_id: str, run_name: str,
     # Log model
     logger.log_model(run, model, artifact_path="model")
 
+    # Save and log feature list so the serving layer can align columns
+    import json
+    features_path = run_dir / "features.json"
+    features_path.write_text(json.dumps(feature_cols))
+    logger.log_artifact(run, str(features_path), artifact_path="metadata")
+
     print(f"  [{run_name}] Acc={metrics['accuracy']:.4f}  F1={metrics['f1']:.4f}  "
           f"AUC={metrics['roc_auc']:.4f}  CV-F1={metrics['cv_f1_mean']:.4f}±{metrics['cv_f1_std']:.4f}")
     return run, metrics
