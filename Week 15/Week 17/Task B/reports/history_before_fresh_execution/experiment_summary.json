@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-09-15T11:48:30.996296",
+  "model": "openai/gpt-oss-20b",
+  "versions": {
+    "v1": {
+      "task_success_rate": 1.0,
+      "avg_iterations": 2.2,
+      "avg_latency_ms": 45251.2
+    },
+    "v2": {
+      "task_success_rate": 0.8,
+      "avg_iterations": 2.4,
+      "avg_latency_ms": 56898.2
+    },
+    "v3": {
+      "task_success_rate": 1.0,
+      "avg_iterations": 2.6,
+      "avg_latency_ms": 68609.2
+    }
+  }
+}

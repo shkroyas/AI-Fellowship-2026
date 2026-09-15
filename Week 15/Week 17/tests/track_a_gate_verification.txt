@@ -1,0 +1,8 @@
+2026/09/15 14:52:32 INFO mlflow.agent.hint: Load the `instrumenting-with-mlflow-tracing` skill at /home/royas-shakya/Downloads/Week15/Week 15/Week 17/Task A/.venv/lib/python3.12/site-packages/mlflow/assistant/skills/instrumenting-with-mlflow-tracing/SKILL.md before writing any tracing code; it ships with this MLflow install. Set MLFLOW_DISABLE_AGENT_HINT=1 to silence this.
+/home/royas-shakya/.config/matplotlib is not a writable directory
+Matplotlib created a temporary cache directory at /tmp/matplotlib-l1hnfwh9 because there was an issue with the default path (/home/royas-shakya/.config/matplotlib); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+OK

@@ -1,0 +1,138 @@
+2026/09/15 10:24:11 INFO mlflow.agent.hint: Load the `instrumenting-with-mlflow-tracing` skill at /tmp/w17-audit-clean/Week 17/Task A/.venv/lib/python3.12/site-packages/mlflow/assistant/skills/instrumenting-with-mlflow-tracing/SKILL.md before writing any tracing code; it ships with this MLflow install. Set MLFLOW_DISABLE_AGENT_HINT=1 to silence this.
+2026/09/15 10:24:17 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
+2026/09/15 10:24:17 INFO mlflow.store.db.utils: Updating database tables
+Loading and preprocessing data...
+  Train: (5634, 30), Test: (1409, 30)
+  Churn rate (train): 0.585
+
+Training models...
+/tmp/w17-audit-clean/Week 17/Task A/.venv/lib/python3.12/site-packages/sklearn/linear_model/_logistic.py:599: ConvergenceWarning: lbfgs failed to converge after 1000 iteration(s) (status=1):
+STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT
+
+Increase the number of iterations to improve the convergence (max_iter=1000).
+You might also want to scale the data as shown in:
+    https://scikit-learn.org/stable/modules/preprocessing.html
+Please also refer to the documentation for alternative solver options:
+    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
+  n_iter_i = _check_optimize_result(
+/tmp/w17-audit-clean/Week 17/Task A/.venv/lib/python3.12/site-packages/sklearn/linear_model/_logistic.py:599: ConvergenceWarning: lbfgs failed to converge after 1000 iteration(s) (status=1):
+STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT
+
+Increase the number of iterations to improve the convergence (max_iter=1000).
+You might also want to scale the data as shown in:
+    https://scikit-learn.org/stable/modules/preprocessing.html
+Please also refer to the documentation for alternative solver options:
+    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
+  n_iter_i = _check_optimize_result(
+/tmp/w17-audit-clean/Week 17/Task A/.venv/lib/python3.12/site-packages/sklearn/linear_model/_logistic.py:599: ConvergenceWarning: lbfgs failed to converge after 1000 iteration(s) (status=1):
+STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT
+
+Increase the number of iterations to improve the convergence (max_iter=1000).
+You might also want to scale the data as shown in:
+    https://scikit-learn.org/stable/modules/preprocessing.html
+Please also refer to the documentation for alternative solver options:
+    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
+  n_iter_i = _check_optimize_result(
+/tmp/w17-audit-clean/Week 17/Task A/.venv/lib/python3.12/site-packages/sklearn/linear_model/_logistic.py:599: ConvergenceWarning: lbfgs failed to converge after 1000 iteration(s) (status=1):
+STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT
+
+Increase the number of iterations to improve the convergence (max_iter=1000).
+You might also want to scale the data as shown in:
+    https://scikit-learn.org/stable/modules/preprocessing.html
+Please also refer to the documentation for alternative solver options:
+    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
+  n_iter_i = _check_optimize_result(
+/tmp/w17-audit-clean/Week 17/Task A/.venv/lib/python3.12/site-packages/sklearn/linear_model/_logistic.py:599: ConvergenceWarning: lbfgs failed to converge after 1000 iteration(s) (status=1):
+STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT
+
+Increase the number of iterations to improve the convergence (max_iter=1000).
+You might also want to scale the data as shown in:
+    https://scikit-learn.org/stable/modules/preprocessing.html
+Please also refer to the documentation for alternative solver options:
+    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
+  n_iter_i = _check_optimize_result(
+/tmp/w17-audit-clean/Week 17/Task A/.venv/lib/python3.12/site-packages/sklearn/linear_model/_logistic.py:599: ConvergenceWarning: lbfgs failed to converge after 1000 iteration(s) (status=1):
+STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT
+
+Increase the number of iterations to improve the convergence (max_iter=1000).
+You might also want to scale the data as shown in:
+    https://scikit-learn.org/stable/modules/preprocessing.html
+Please also refer to the documentation for alternative solver options:
+    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
+  n_iter_i = _check_optimize_result(
+2026/09/15 10:24:20 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
+2026/09/15 10:24:20 INFO mlflow.utils.uv_utils: Detected uv project: found uv.lock and pyproject.toml in /tmp/w17-audit-clean/Week 17/Task A
+2026/09/15 10:24:22 INFO mlflow.utils.uv_utils: Detected uv project: found uv.lock and pyproject.toml in /tmp/w17-audit-clean/Week 17/Task A
+2026/09/15 10:24:22 INFO mlflow.utils.environment: Detected uv project at /tmp/w17-audit-clean/Week 17/Task A. Attempting to export requirements via 'uv export'.
+2026/09/15 10:24:23 WARNING mlflow.utils.uv_utils: uv export failed with exit code 2. stderr: error: Could not acquire lock
+  Caused by: Could not create temporary file
+  Caused by: Read-only file system (os error 30) at path "/home/royas-shakya/.cache/uv/.tmp63m8lH"
+. Falling back to pip-based inference.
+2026/09/15 10:24:23 WARNING mlflow.utils.environment: uv export failed or returned no requirements. Falling back to package capture based inference.
+2026/09/15 10:24:27 WARNING mlflow.utils.environment: Failed to resolve installed pip version. ``pip`` will be added to conda.yaml environment spec without a version specifier.
+2026/09/15 10:24:29 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
+2026/09/15 10:24:29 INFO mlflow.utils.uv_utils: Detected uv project: found uv.lock and pyproject.toml in /tmp/w17-audit-clean/Week 17/Task A
+2026/09/15 10:24:30 INFO mlflow.utils.uv_utils: Detected uv project: found uv.lock and pyproject.toml in /tmp/w17-audit-clean/Week 17/Task A
+2026/09/15 10:24:30 INFO mlflow.utils.environment: Detected uv project at /tmp/w17-audit-clean/Week 17/Task A. Attempting to export requirements via 'uv export'.
+2026/09/15 10:24:30 WARNING mlflow.utils.uv_utils: uv export failed with exit code 2. stderr: error: Could not acquire lock
+  Caused by: Could not create temporary file
+  Caused by: Read-only file system (os error 30) at path "/home/royas-shakya/.cache/uv/.tmpFeWrYi"
+. Falling back to pip-based inference.
+2026/09/15 10:24:30 WARNING mlflow.utils.environment: uv export failed or returned no requirements. Falling back to package capture based inference.
+2026/09/15 10:24:33 WARNING mlflow.utils.environment: Failed to resolve installed pip version. ``pip`` will be added to conda.yaml environment spec without a version specifier.
+2026/09/15 10:24:34 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
+2026/09/15 10:24:34 INFO mlflow.utils.uv_utils: Detected uv project: found uv.lock and pyproject.toml in /tmp/w17-audit-clean/Week 17/Task A
+2026/09/15 10:24:34 INFO mlflow.utils.uv_utils: Detected uv project: found uv.lock and pyproject.toml in /tmp/w17-audit-clean/Week 17/Task A
+2026/09/15 10:24:34 INFO mlflow.utils.environment: Detected uv project at /tmp/w17-audit-clean/Week 17/Task A. Attempting to export requirements via 'uv export'.
+2026/09/15 10:24:34 WARNING mlflow.utils.uv_utils: uv export failed with exit code 2. stderr: error: Could not acquire lock
+  Caused by: Could not create temporary file
+  Caused by: Read-only file system (os error 30) at path "/home/royas-shakya/.cache/uv/.tmpPitPcf"
+. Falling back to pip-based inference.
+2026/09/15 10:24:34 WARNING mlflow.utils.environment: uv export failed or returned no requirements. Falling back to package capture based inference.
+2026/09/15 10:24:36 WARNING mlflow.utils.environment: Failed to resolve installed pip version. ``pip`` will be added to conda.yaml environment spec without a version specifier.
+2026/09/15 10:24:40 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
+2026/09/15 10:24:40 INFO mlflow.utils.uv_utils: Detected uv project: found uv.lock and pyproject.toml in /tmp/w17-audit-clean/Week 17/Task A
+2026/09/15 10:24:41 INFO mlflow.utils.uv_utils: Detected uv project: found uv.lock and pyproject.toml in /tmp/w17-audit-clean/Week 17/Task A
+2026/09/15 10:24:41 INFO mlflow.utils.environment: Detected uv project at /tmp/w17-audit-clean/Week 17/Task A. Attempting to export requirements via 'uv export'.
+2026/09/15 10:24:41 WARNING mlflow.utils.uv_utils: uv export failed with exit code 2. stderr: error: Could not acquire lock
+  Caused by: Could not create temporary file
+  Caused by: Read-only file system (os error 30) at path "/home/royas-shakya/.cache/uv/.tmpIqXpKd"
+. Falling back to pip-based inference.
+2026/09/15 10:24:41 WARNING mlflow.utils.environment: uv export failed or returned no requirements. Falling back to package capture based inference.
+2026/09/15 10:24:45 WARNING mlflow.utils.environment: Failed to resolve installed pip version. ``pip`` will be added to conda.yaml environment spec without a version specifier.
+Successfully registered model 'ChurnClassifier'.
+2026/09/15 10:24:45 WARNING mlflow.tracking._model_registry.fluent: Run with id 3c2e7f05d688469aa942e47faadd1d99 has no artifacts at artifact path 'model', registering model based on models:/m-fb717ccd2ded484083e25ba99a7a3bab instead
+Created version '1' of model 'ChurnClassifier'.
+/tmp/w17-audit-clean/Week 17/Task A/.venv/lib/python3.12/site-packages/evidently/descriptors/text_match.py:118: SyntaxWarning: invalid escape sequence '\d'
+  """
+  [lr_balanced] Acc=0.7353  F1=0.7623  AUC=0.8132  CV-F1=0.7511±0.0050
+  [rf_balanced] Acc=0.7211  F1=0.7498  AUC=0.7987  CV-F1=0.7467±0.0061
+  [xgb_weighted] Acc=0.7189  F1=0.7525  AUC=0.8006  CV-F1=0.7510±0.0079
+  [rf_deep_balanced] Acc=0.7246  F1=0.7572  AUC=0.7976  CV-F1=0.7516±0.0052
+
+=== Run Comparison (sorted by F1) ===
+Run                      Accuracy         F1        AUC        CV-F1
+------------------------------------------------------------------
+lr_balanced                0.7353     0.7623     0.8132 0.7511±0.0050
+rf_deep_balanced           0.7246     0.7572     0.7976 0.7516±0.0052
+xgb_weighted               0.7189     0.7525     0.8006 0.7510±0.0079
+rf_balanced                0.7211     0.7498     0.7987 0.7467±0.0061
+
+Best model: lr_balanced
+Registered model version 1 with alias 'staging'
+Transitioned version 1 to alias 'production'
+
+--- Evidently Monitoring ---
+  Reference: 4930 rows, Current: 2113 rows
+  Injected drift: MonthlyCharges +15, tenure -10, Contract skew, 5% label flip
+
+  Custom Metrics:
+    Churn rate shift: 0.585 -> 0.580 (-0.9%)
+    MonthlyCharges shift: 67.92 -> 82.96 (+15.04)
+
+  Reports saved:
+    Data Drift: /tmp/w17-audit-clean/Week 17/Task A/reports/data_drift.html
+    Target Drift: /tmp/w17-audit-clean/Week 17/Task A/reports/target_drift.html
+    All reports logged to MLflow as artifacts
+
+Done! Start MLflow UI: uv run mlflow ui --backend-store-uri sqlite:///data/mlflow.db

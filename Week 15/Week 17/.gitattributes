@@ -1,0 +1,4 @@
+# Preserve generated Evidently HTML and execution logs exactly as exported.
+**/*.html -whitespace
+**/*.log -whitespace
+**/screenshots/*.txt -whitespace

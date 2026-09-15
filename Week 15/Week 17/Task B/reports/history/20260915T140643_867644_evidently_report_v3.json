@@ -1,0 +1,38 @@
+{
+  "pct_tests_passed": 0.6,
+  "total_tests": 5,
+  "correct": 3,
+  "judge_agreement": 0.6,
+  "per_case_verdicts": [
+    {
+      "golden_id": "rag_basic",
+      "check_type": "rag",
+      "correct": "correct",
+      "verdict_reason": "RAG keyword check: must_contain=['retrieval', 'generation', 'knowledge']"
+    },
+    {
+      "golden_id": "datetime_now",
+      "check_type": "datetime",
+      "correct": "correct",
+      "verdict_reason": "datetime check: today=2026-09-15 in response: True"
+    },
+    {
+      "golden_id": "calculator_pct",
+      "check_type": "numeric",
+      "correct": "correct",
+      "verdict_reason": "numeric check for 51.0: found"
+    },
+    {
+      "golden_id": "python_practices",
+      "check_type": "general",
+      "correct": "incorrect",
+      "verdict_reason": "keyword check: all(['PEP 8']) in response: False"
+    },
+    {
+      "golden_id": "rag_vs_ft",
+      "check_type": "rag",
+      "correct": "incorrect",
+      "verdict_reason": "RAG keyword check: must_contain=['retrieval', 'fine-tun']"
+    }
+  ]
+}

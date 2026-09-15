@@ -1,0 +1,75 @@
+{
+  "reason": "Groq daily token quota exhausted during live Evidently judging",
+  "runs": [
+    {
+      "run_uuid": "e070037e58f64661b962832eedaf90d7",
+      "name": "prompt_v1_20260915T071708_869603Z",
+      "status": "FAILED",
+      "start_time": 1789456628869,
+      "end_time": 1789456896655
+    },
+    {
+      "run_uuid": "839d0e580bed4093956670c387c39200",
+      "name": "prompt_v1_20260915T071033_770242Z",
+      "status": "RUNNING",
+      "start_time": 1789456233770,
+      "end_time": null
+    },
+    {
+      "run_uuid": "20861174913d45008ba739bc8396e9c3",
+      "name": "prompt_v1_20260915T070716_158887Z",
+      "status": "RUNNING",
+      "start_time": 1789456036158,
+      "end_time": null
+    },
+    {
+      "run_uuid": "05c4b25999354880bb52dcb625127eb1",
+      "name": "prompt_v1_20260915T070408_723923Z",
+      "status": "RUNNING",
+      "start_time": 1789455848723,
+      "end_time": null
+    },
+    {
+      "run_uuid": "d10de85323634e5996ba04ba87bdb1af",
+      "name": "prompt_v1_20260915T070150_851529Z",
+      "status": "RUNNING",
+      "start_time": 1789455710851,
+      "end_time": null
+    },
+    {
+      "run_uuid": "e1593842395744339f80137feff9ac38",
+      "name": "prompt_v3_20260915_114222",
+      "status": "FINISHED",
+      "start_time": 1789451842799,
+      "end_time": 1789452210989
+    },
+    {
+      "run_uuid": "3cb868ca573c4111b2012346b47842c8",
+      "name": "prompt_v2_20260915_113713",
+      "status": "FINISHED",
+      "start_time": 1789451533163,
+      "end_time": 1789451842794
+    },
+    {
+      "run_uuid": "91a68378c0684044aec5f2fd638d0877",
+      "name": "prompt_v1_20260915_113301",
+      "status": "FINISHED",
+      "start_time": 1789451281744,
+      "end_time": 1789451533157
+    },
+    {
+      "run_uuid": "d800c79966194490a5b0951b0724f61b",
+      "name": "prompt_v3",
+      "status": "FINISHED",
+      "start_time": 1789443966351,
+      "end_time": 1789444716501
+    },
+    {
+      "run_uuid": "913a94529fa1477f851ec60ed7ba827d",
+      "name": "prompt_v2",
+      "status": "FINISHED",
+      "start_time": 1789443096083,
+      "end_time": 1789444525145
+    }
+  ]
+}

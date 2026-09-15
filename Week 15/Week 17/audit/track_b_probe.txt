@@ -1,0 +1,7 @@
+/home/royas-shakya/Downloads/Week15/Week 15/Week 17/audit/probe.py:1: SyntaxWarning: invalid escape sequence '\ '
+  """Read-only application probes; writes temporary reports only under /tmp.
+2026-09-15 10:30:21,616 [INFO]   Evidently report saved: /tmp/w17-regression-probe-e4h6gvxo/evidently_report_wrong_answers.html
+Environment example exists: False
+ddgs installed: False
+Deliberately wrong responses scored: {"pct_tests_passed": 1.0, "total_tests": 1, "correct": 1, "judge_agreement": 1.0}
+Actual Evidently snapshot: {"metrics": [{"id": "00404ffe284d7862baa4095093452630", "metric_name": "RowCount()", "config": {"type": "evidently:metric_v2:RowCount"}, "value": 1.0}], "tests": []}

@@ -1,6 +1,9 @@
 """Training script for Track A — trains 3+ models with MLflow tracking."""
 
 import sys
+import json
+import hashlib
+from datetime import datetime, timezone
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
@@ -22,12 +25,22 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from xgboost import XGBClassifier
 
-from src.track_a.data_prep import prepare_pipeline
+from src.track_a.data_prep import prepare_pipeline, make_model_pipeline
 from src.track_a.utils.mlflow_utils import MLFlowLogger
 
 
 EXPERIMENT_NAME = "TelcoChurn"
 ARTIFACT_DIR = Path(__file__).resolve().parents[2] / "reports"
+
+
+MIN_CV_F1 = 0.60
+MIN_HOLDOUT_ROC_AUC = 0.80
+
+
+def promotion_allowed(metrics):
+    """Project acceptance floors; ranking remains based on training CV F1."""
+    return (metrics.get("cv_f1_mean", float("-inf")) >= MIN_CV_F1
+            and metrics.get("roc_auc", float("-inf")) >= MIN_HOLDOUT_ROC_AUC)
 
 
 def compute_metrics(y_true, y_pred, y_prob) -> dict:
@@ -94,6 +107,8 @@ def train_and_log(logger: MLFlowLogger, experiment_id: str, run_name: str,
     y_train, y_test = data["y_train"], data["y_test"]
     feature_cols = data["feature_cols"]
 
+    model = make_model_pipeline(model)
+
     # Cross-validate on training set
     cv_results = cross_validate_model(model, X_train, y_train)
 
@@ -113,7 +128,7 @@ def train_and_log(logger: MLFlowLogger, experiment_id: str, run_name: str,
 
     # Create run
     run = logger.get_run(run_name, experiment_id)
-    all_tags = {"model_type": type(model).__name__}
+    all_tags = {"model_type": type(model).__name__, "execution_id": logger.execution_id, "dataset_sha256": logger.dataset_sha256}
     if tags:
         all_tags.update(tags)
     logger.log_run(run, metrics=metrics, params=params, tags=all_tags)
@@ -128,7 +143,7 @@ def train_and_log(logger: MLFlowLogger, experiment_id: str, run_name: str,
     roc_path = plot_roc_curve(y_test, y_prob, run_name, run_dir)
     logger.log_artifact(run, str(roc_path), artifact_path="plots")
 
-    feat_path = plot_feature_importance(model, feature_cols, run_name, run_dir)
+    feat_path = plot_feature_importance(model.named_steps["classifier"], list(model.named_steps["preprocessing"].get_feature_names_out()), run_name, run_dir)
     if feat_path:
         logger.log_artifact(run, str(feat_path), artifact_path="plots")
 
@@ -160,6 +175,8 @@ def main():
     print(f"  Churn rate (train): {data['y_train'].mean():.3f}")
 
     logger = MLFlowLogger()
+    logger.execution_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%fZ")
+    logger.dataset_sha256 = hashlib.sha256((Path(__file__).resolve().parents[2] / "data/raw/Telco-Customer-Churn.csv").read_bytes()).hexdigest()
     experiment_id = logger.get_or_create_experiment(EXPERIMENT_NAME)
 
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
@@ -218,8 +235,8 @@ def main():
                   tags={"model_family": "ensemble", "class_weight": "balanced"})
 
     # Compare runs
-    runs = logger.search_runs(experiment_id, order_by="metrics.f1 DESC")
-    print("\n=== Run Comparison (sorted by F1) ===")
+    runs = [r for r in logger.search_runs(experiment_id, order_by="metrics.cv_f1_mean DESC") if r.data.tags.get("execution_id") == logger.execution_id]
+    print("\n=== Run Comparison (sorted by training CV F1) ===")
     print(f"{'Run':<22} {'Accuracy':>10} {'F1':>10} {'AUC':>10} {'CV-F1':>12}")
     print("-" * 66)
     best_run = None
@@ -234,7 +251,8 @@ def main():
         if best_run is None:
             best_run = (name, r)
 
-    # Register best model
+    # Register the CV-selected candidate; promote only when acceptance floors pass.
+    promoted = False
     if best_run:
         name, run = best_run
         print(f"\nBest model: {name}")
@@ -242,9 +260,14 @@ def main():
         mv = logger.register_model("ChurnClassifier", model_uri, alias="staging")
         print(f"Registered model version {mv.version} with alias 'staging'")
 
-        # Transition to production
-        logger.set_alias("ChurnClassifier", "production", int(mv.version))
-        print(f"Transitioned version {mv.version} to alias 'production'")
+        promoted = promotion_allowed(run.data.metrics)
+        logger.log_run(run, metrics={"promotion_gate_passed": int(promoted)},
+                       params={"min_cv_f1": MIN_CV_F1, "min_holdout_roc_auc": MIN_HOLDOUT_ROC_AUC})
+        if promoted:
+            logger.set_alias("ChurnClassifier", "production", int(mv.version))
+            print(f"Promoted version {mv.version}: acceptance floors passed")
+        else:
+            print("Promotion blocked: candidate below acceptance floor; existing production alias retained")
 
     # === EVIDENTLY MONITORING ===
     print("\n--- Evidently Monitoring ---")
@@ -253,7 +276,7 @@ def main():
     )
 
     # Load raw data (before one-hot encoding) for monitoring
-    raw_df = pd.read_csv(Path(__file__).resolve().parents[2] / "data" / "raw" / "WA_Fn-UseC_-Telco-Customer-Churn.csv")
+    raw_df = pd.read_csv(Path(__file__).resolve().parents[2] / "data" / "raw" / "Telco-Customer-Churn.csv")
     raw_df["TotalCharges"] = pd.to_numeric(raw_df["TotalCharges"], errors="coerce").fillna(0)
     raw_df["Churn"] = raw_df["Churn"].map({"Yes": 1, "No": 0})
     raw_df = raw_df.drop(columns=["customerID"])
@@ -291,6 +314,17 @@ def main():
     print(f"    Target Drift: {results['target_drift_path']}")
     print(f"    All reports logged to MLflow as artifacts")
 
+    export = {"execution_id": logger.execution_id, "dataset_sha256": logger.dataset_sha256,
+              "selection_policy": "highest training cross-validation F1 within this execution",
+              "candidate_run_id": best_run[1].info.run_id,
+              "production_run_id": (logger.client.get_model_version_by_alias("ChurnClassifier", "production").run_id
+                                    if promoted else None),
+              "promoted": promoted,
+              "promotion_policy": {"min_cv_f1": MIN_CV_F1, "min_holdout_roc_auc": MIN_HOLDOUT_ROC_AUC},
+              "runs": [{"run_id": r.info.run_id, "name": r.data.tags.get("mlflow.runName"),
+                        "metrics": r.data.metrics, "params": r.data.params} for r in runs],
+              "custom_metrics": custom}
+    (ARTIFACT_DIR / "training_summary.json").write_text(json.dumps(export, indent=2))
     print("\nDone! Start MLflow UI: uv run mlflow ui --backend-store-uri sqlite:///data/mlflow.db")
 
 

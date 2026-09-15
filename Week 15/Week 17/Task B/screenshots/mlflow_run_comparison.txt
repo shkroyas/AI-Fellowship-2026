@@ -1,0 +1,26 @@
+[
+  {
+    "version": "v1",
+    "run_id": "3b0d1d94ab29444eb208a8cfb38fffb0",
+    "model": "openai/gpt-oss-120b",
+    "pass_rate": 1.0,
+    "avg_iterations": 1.4,
+    "avg_latency_ms": 1926.3
+  },
+  {
+    "version": "v2",
+    "run_id": "1d76c194477a4508bdb0ff06dbe85004",
+    "model": "openai/gpt-oss-120b",
+    "pass_rate": 0.8,
+    "avg_iterations": 1.4,
+    "avg_latency_ms": 2029.8
+  },
+  {
+    "version": "v3",
+    "run_id": "b9a8fdc27f0a4c90beca64d38ead7cfc",
+    "model": "openai/gpt-oss-120b",
+    "pass_rate": 0.4,
+    "avg_iterations": 2.2,
+    "avg_latency_ms": 12185.9
+  }
+]

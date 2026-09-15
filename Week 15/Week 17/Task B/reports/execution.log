@@ -1,0 +1,14 @@
+2026/09/15 12:46:48 INFO mlflow.agent.hint: Load the `instrumenting-with-mlflow-tracing` skill at /home/royas-shakya/Downloads/Week15/Week 15/Week 17/Task B/.venv/lib/python3.12/site-packages/mlflow/assistant/skills/instrumenting-with-mlflow-tracing/SKILL.md before writing any tracing code; it ships with this MLflow install. Set MLFLOW_DISABLE_AGENT_HINT=1 to silence this.
+2026-09-15 12:46:50,274 [INFO] Starting Track B experiment runner
+2026-09-15 12:46:50,274 [INFO] Provider: groq, Model: openai/gpt-oss-20b
+2026-09-15 12:46:50,292 [INFO] Loaded 3 prompt versions: ['v1', 'v2', 'v3']
+2026-09-15 12:46:50,851 [INFO] MLflow experiment ID: 1
+2026-09-15 12:46:50,851 [INFO] 
+============================================================
+2026-09-15 12:46:50,851 [INFO] Running experiment for prompt version: v1
+2026-09-15 12:46:50,851 [INFO] ============================================================
+2026-09-15 12:46:50,900 [INFO] 
+============================================================
+2026-09-15 12:46:50,900 [INFO] Evaluating prompt version: v1
+2026-09-15 12:46:50,900 [INFO] ============================================================
+2026-09-15 12:46:50,900 [INFO]   [rag_basic] What is RAG?...
