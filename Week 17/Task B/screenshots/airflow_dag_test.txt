@@ -1,0 +1,26 @@
+[2026-09-15T10:02:44.571+0545] {dag.py:4396} INFO - [DAG TEST] starting task_id=start map_index=-1
+[2026-09-15T10:02:44.571+0545] {dag.py:4399} INFO - [DAG TEST] running task <TaskInstance: nightly_regression.start manual__2026-09-15T00:00:00+00:00 [scheduled]>
+[2026-09-15T10:02:44.600+0545] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=nightly_regression, task_id=start, run_id=manual__2026-09-15T00:00:00+00:00, execution_date=20260915T000000, start_date=, end_date=20260915T041744
+[2026-09-15T10:02:44.611+0545] {dag.py:4410} INFO - [DAG TEST] end task task_id=start map_index=-1
+[2026-09-15T10:02:44.622+0545] {dag.py:4396} INFO - [DAG TEST] starting task_id=run_harness map_index=-1
+[2026-09-15T10:02:44.622+0545] {dag.py:4399} INFO - [DAG TEST] running task <TaskInstance: nightly_regression.run_harness manual__2026-09-15T00:00:00+00:00 [scheduled]>
+[2026-09-15T10:04:47.649+0545] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=nightly_regression, task_id=run_harness, run_id=manual__2026-09-15T00:00:00+00:00, execution_date=20260915T000000, start_date=, end_date=20260915T041947
+[2026-09-15T10:04:47.659+0545] {dag.py:4410} INFO - [DAG TEST] end task task_id=run_harness map_index=-1
+[2026-09-15T10:04:47.674+0545] {dag.py:4396} INFO - [DAG TEST] starting task_id=run_regression map_index=-1
+[2026-09-15T10:04:47.674+0545] {dag.py:4399} INFO - [DAG TEST] running task <TaskInstance: nightly_regression.run_regression manual__2026-09-15T00:00:00+00:00 [scheduled]>
+[2026-09-15T10:04:47.703+0545] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=nightly_regression, task_id=run_regression, run_id=manual__2026-09-15T00:00:00+00:00, execution_date=20260915T000000, start_date=, end_date=20260915T041947
+[2026-09-15T10:04:47.713+0545] {dag.py:4410} INFO - [DAG TEST] end task task_id=run_regression map_index=-1
+[2026-09-15T10:04:47.723+0545] {dag.py:4396} INFO - [DAG TEST] starting task_id=check_threshold map_index=-1
+[2026-09-15T10:04:47.723+0545] {dag.py:4399} INFO - [DAG TEST] running task <TaskInstance: nightly_regression.check_threshold manual__2026-09-15T00:00:00+00:00 [scheduled]>
+[2026-09-15T10:04:47.755+0545] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=nightly_regression, task_id=check_threshold, run_id=manual__2026-09-15T00:00:00+00:00, execution_date=20260915T000000, start_date=, end_date=20260915T041947
+[2026-09-15T10:04:47.766+0545] {dag.py:4410} INFO - [DAG TEST] end task task_id=check_threshold map_index=-1
+[2026-09-15T10:04:47.776+0545] {dag.py:4396} INFO - [DAG TEST] starting task_id=log_success map_index=-1
+[2026-09-15T10:04:47.776+0545] {dag.py:4399} INFO - [DAG TEST] running task <TaskInstance: nightly_regression.log_success manual__2026-09-15T00:00:00+00:00 [scheduled]>
+PASS: Regression test passed with 100.0% (threshold: 80%)
+[2026-09-15T10:04:47.795+0545] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=nightly_regression, task_id=log_success, run_id=manual__2026-09-15T00:00:00+00:00, execution_date=20260915T000000, start_date=, end_date=20260915T041947
+[2026-09-15T10:04:47.806+0545] {dag.py:4410} INFO - [DAG TEST] end task task_id=log_success map_index=-1
+[2026-09-15T10:04:47.816+0545] {dag.py:4396} INFO - [DAG TEST] starting task_id=end map_index=-1
+[2026-09-15T10:04:47.816+0545] {dag.py:4399} INFO - [DAG TEST] running task <TaskInstance: nightly_regression.end manual__2026-09-15T00:00:00+00:00 [scheduled]>
+[2026-09-15T10:04:47.833+0545] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=nightly_regression, task_id=end, run_id=manual__2026-09-15T00:00:00+00:00, execution_date=20260915T000000, start_date=, end_date=20260915T041947
+[2026-09-15T10:04:47.846+0545] {dag.py:4410} INFO - [DAG TEST] end task task_id=end map_index=-1
+[2026-09-15T10:04:47.848+0545] {dagrun.py:905} INFO - DagRun Finished: dag_id=nightly_regression, execution_date=2026-09-15 00:00:00+00:00, run_id=manual__2026-09-15T00:00:00+00:00, run_start_date=2026-09-15 00:00:00+00:00, run_end_date=2026-09-15 04:19:47.848327+00:00, run_duration=15587.848327, state=success, external_trigger=False, run_type=manual, data_interval_start=2026-09-14 00:00:00+00:00, data_interval_end=2026-09-15 00:00:00+00:00, dag_hash=None

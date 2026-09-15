@@ -1,0 +1,22 @@
+================================================================================
+MLflow Run Comparison — AgenticMLOps Experiment
+================================================================================
+
+Version    Run ID                               Success    Avg Iters  Latency      Tests   
+--------------------------------------------------------------------------------
+v1         d5481b13b2554bc6b5f6354687fb4e24     100%      2.67       37694     ms 100%
+v2         913a94529fa1477f851ec60ed7ba827d     100%      2.67       56305     ms 100%
+v3         d800c79966194490a5b0951b0724f61b     100%      3.00       58750     ms 100%
+--------------------------------------------------------------------------------
+
+Parameters per run:
+  v1: model=openai/gpt-oss-20b, temp=0.7, max_iter=5
+  v2: model=openai/gpt-oss-20b, temp=0.7, max_iter=5
+  v3: model=openai/gpt-oss-20b, temp=0.7, max_iter=5
+
+Token usage:
+  v1: prompt=3498, completion=739
+  v2: prompt=4386, completion=1237
+  v3: prompt=5418, completion=1054
+
+MLflow UI: http://localhost:5000/#/experiments/1

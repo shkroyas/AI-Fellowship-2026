@@ -1,0 +1,68 @@
+[
+  {
+    "run_id": "d5481b13b2554bc6b5f6354687fb4e24",
+    "version": "v1",
+    "metrics": {
+      "task_success_rate": 1.0,
+      "avg_iterations": 2.67,
+      "avg_latency_ms": 37694.3,
+      "total_prompt_tokens": 3498.0,
+      "total_completion_tokens": 739.0,
+      "num_queries": 3.0,
+      "pct_tests_passed": 1.0,
+      "judge_agreement": 1.0
+    },
+    "params": {
+      "prompt_version": "v1",
+      "prompt_length": "606",
+      "temperature": "0.7",
+      "max_iterations": "5",
+      "model": "openai/gpt-oss-20b",
+      "provider": "groq"
+    }
+  },
+  {
+    "run_id": "913a94529fa1477f851ec60ed7ba827d",
+    "version": "v2",
+    "metrics": {
+      "task_success_rate": 1.0,
+      "avg_iterations": 2.67,
+      "avg_latency_ms": 56305.4,
+      "total_prompt_tokens": 4386.0,
+      "total_completion_tokens": 1237.0,
+      "num_queries": 3.0,
+      "pct_tests_passed": 1.0,
+      "judge_agreement": 1.0
+    },
+    "params": {
+      "prompt_version": "v2",
+      "prompt_length": "1030",
+      "temperature": "0.7",
+      "max_iterations": "5",
+      "model": "openai/gpt-oss-20b",
+      "provider": "groq"
+    }
+  },
+  {
+    "run_id": "d800c79966194490a5b0951b0724f61b",
+    "version": "v3",
+    "metrics": {
+      "task_success_rate": 1.0,
+      "avg_iterations": 3.0,
+      "avg_latency_ms": 58750.1,
+      "total_prompt_tokens": 5418.0,
+      "total_completion_tokens": 1054.0,
+      "num_queries": 3.0,
+      "pct_tests_passed": 1.0,
+      "judge_agreement": 1.0
+    },
+    "params": {
+      "prompt_version": "v3",
+      "prompt_length": "1345",
+      "temperature": "0.7",
+      "max_iterations": "5",
+      "model": "openai/gpt-oss-20b",
+      "provider": "groq"
+    }
+  }
+]
